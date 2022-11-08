@@ -6,4 +6,9 @@
 venv/
 
 
-node_modules/
+frontend/node_modules/
+frontend/build
+frontend/x.git
+frontend/.gitignore
+frontend/yarn.lock
+frontend/package-lock.json
