@@ -1,8 +1,10 @@
-from rest_framework import generics, status
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from . import serializers as user_serializers, models as user_models
 from django.contrib.auth import login
+from django.utils.decorators import method_decorator
+from rest_framework import generics, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from . import models as user_models
+from . import serializers as user_serializers
 
 
 class RegisterUser(APIView):
@@ -22,7 +24,7 @@ class SendOTP(APIView):
         serialized_data = self.serializer_class(data=self.request.data)
         if serialized_data.is_valid(raise_exception=True):
             serialized_data.save()
-        return Response({"messsage": "OTP is sent. Valid for next 15minutes."})
+        return Response({"messsage": f"OTP is sent. Valid for next 15minutes."})
 
 
 class VerifyOTP(APIView):

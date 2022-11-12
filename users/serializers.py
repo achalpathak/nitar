@@ -86,6 +86,7 @@ class PhoneOtpSerializer(serializers.Serializer):
                 data = {
                     "otp": randint(100000, 999999),
                     "valid_till": datetime.now() + timedelta(minutes=15),
+                    "attempts_remaining": 3
                 }
                 otp_obj, created = user_models.LoginPhoneOtp.objects.update_or_create(
                     user=user_obj, defaults=data
