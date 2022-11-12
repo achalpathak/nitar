@@ -21,6 +21,6 @@ COPY . .
 RUN useradd -ms /bin/bash docker_user
 RUN chown -R docker_user:docker_user /application
 RUN chmod -R 755 /application
+RUN chmod -R 775 /application/run_server.sh
 USER docker_user
 RUN pip install -r requirements.txt
-RUN chmod +x /application/run_server.sh

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 while ! nc -z mysqldb 3306 ; do
     echo "Waiting for the MySQL Server"
