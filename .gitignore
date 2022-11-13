@@ -12,3 +12,4 @@ frontend/x.git
 frontend/.gitignore
 frontend/yarn.lock
 frontend/package-lock.json
+frontend/dist

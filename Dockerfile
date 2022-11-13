@@ -16,12 +16,14 @@ RUN npm install npm@latest -g && \
 
 
 RUN useradd -ms /bin/bash docker_user
+WORKDIR /application
+COPY . .
 RUN chown -R docker_user:docker_user /application
 RUN chmod -R 755 /application
+
 RUN chmod -R 775 /application/run_server.sh
+#RUN file="$(ls -lrt | grep -a 'run_server')" && echo $file
 USER docker_user
 
-WORKDIR /home/docker-user/application
-COPY . .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
