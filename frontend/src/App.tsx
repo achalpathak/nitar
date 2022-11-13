@@ -1,24 +1,21 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-// import "./App.scss";
-import Login from "./pages/login";
-import Home from "./pages/home";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Home, Login, Register } from "@pages";
 
-function App() {
-	const [count, setCount] = useState(0);
+const router = createBrowserRouter([
+	{
+		path: "/",
+		element: <Home />,
+	},
+	{
+		path: "/login",
+		element: <Login />,
+	},
+	{
+		path: "/register",
+		element: <Register />,
+	},
+]);
 
-	if (window.location.pathname === "/") {
-		window.location.href = "/register";
-	}
-
-	if (
-		window.location.pathname === "/login" ||
-		window.location.pathname === "/register"
-	) {
-		return <Login />;
-	} else {
-		return <Home />;
-	}
-}
+const App = () => <RouterProvider router={router} />;
 
 export default App;
