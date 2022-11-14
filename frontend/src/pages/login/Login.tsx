@@ -1,7 +1,7 @@
 //*All imports go here!
 import "./Login.scss";
 import logo from "@assets/common/logo.png";
-import { Button } from "@components";
+import { Button, CustomInput } from "@components";
 import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
 import OtpInput from "react-otp-input";
 import { AxiosError } from "axios";
@@ -40,10 +40,10 @@ const Login = () => {
 
 	const [message, setMessage] = useState<IMessage | null>(null);
 	const [errors, setErrors] = useState<IError>({
-		name: [],
+		full_name: [],
 		email: [],
 		phone: [],
-		dob: [],
+		age: [],
 	});
 
 	// * --- states ends here ----------////
@@ -51,7 +51,7 @@ const Login = () => {
 	const addMessage = (
 		severity: AlertColor,
 		title: string,
-		description: string | string[] = ""
+		description: string = ""
 	) => {
 		setMessage({
 			severity,
@@ -63,24 +63,25 @@ const Login = () => {
 		}, 4000);
 	};
 
-	const errorHandler = () => {
-		const tError: IError = {
-			name: [],
-			email: [],
-			phone: [],
-			dob: [],
-		};
+	// const errorHandler = () => {
+	// 	const tError: IError = {
+	// 		full_name: [],
+	// 		email: [],
+	// 		phone: [],
+	// 		age: [],
+	// 	};
 
-		if (!phone) {
-			tError.phone?.push("Phone cannot be blank");
-		} else if (phone.length !== 10 || isNaN(parseInt(phone))) {
-			tError.phone?.push("Phone number should be 10 digits");
-		}
+	// 	if (!phone) {
+	// 		tError.phone?.push("Phone cannot be blank");
+	// 	} else if (phone.length !== 10 || isNaN(parseInt(phone))) {
+	// 		tError.phone?.push("Phone number should be 10 digits");
+	// 	}
 
-		setErrors(tError);
+	// 	setErrors(tError);
 
-		return Object.values(tError).every((e) => e.length === 0);
-	};
+	// 	return Object.values(tError).every((e) => e.length === 0);
+	// };
+
 	//? ----Checking if the input is number-----
 	const checkIfNumber = (event: KeyboardEvent<HTMLInputElement>) => {
 		/**
@@ -96,18 +97,18 @@ const Login = () => {
 
 	const sendOtp = async (phoneNum: string = phone) => {
 		try {
-			if (location?.state?.phone || errorHandler()) {
+			if (location?.state?.phone) {
 				location.state.phone = "";
+			}
 
-				const res = await api.post<IResponse>("/api/users/send-otp/", {
-					phone: phoneNum,
-				});
+			const res = await api.post<IResponse>("/api/users/send-otp/", {
+				phone: phoneNum,
+			});
 
-				if (res.status === 200) {
-					console.log("OTP Sent");
-					setProcess("otp");
-					addMessage("success", "Success", res?.data?.message);
-				}
+			if (res.status === 200) {
+				console.log("OTP Sent");
+				setProcess("otp");
+				addMessage("success", "Success", res?.data?.message);
 			}
 		} catch (error) {
 			const err = error as AxiosError<IResponse>;
@@ -172,13 +173,10 @@ const Login = () => {
 								<label>
 									Enter your phone number below to continue
 								</label>
-								<input
+								<CustomInput
 									type='number'
 									id='phone-number'
 									name='phone-number'
-									className={`${
-										errors?.phone?.length > 0 ? "error" : ""
-									}`}
 									placeholder='Enter your phone number'
 									value={phone}
 									onChangeCapture={(
@@ -189,14 +187,8 @@ const Login = () => {
 											setPhone(e.target.value);
 										}
 									}}
-									onKeyDownCapture={(e) => checkIfNumber(e)}
+									errors={errors?.phone}
 								/>
-								{errors?.phone?.length > 0 &&
-									errors?.phone?.map((v) => (
-										<span className='error' key={v}>
-											{v}
-										</span>
-									))}
 							</>
 						)}
 						{process === "otp" && (
@@ -268,20 +260,7 @@ const Login = () => {
 				{message?.severity && (
 					<Alert severity={message?.severity}>
 						<AlertTitle>{message?.title}</AlertTitle>
-						<div
-							dangerouslySetInnerHTML={{
-								__html:
-									message?.description !== undefined
-										? Array.isArray(message?.description)
-											? message?.description
-													?.map(
-														(v) => `<div>${v}</div>`
-													)
-													?.join("")
-											: message?.description
-										: "",
-							}}
-						/>
+						{message?.description}
 					</Alert>
 				)}
 			</div>

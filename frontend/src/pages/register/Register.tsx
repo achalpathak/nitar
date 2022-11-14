@@ -1,19 +1,26 @@
 //*All imports go here!
 import "../login/Login.scss";
 import logo from "@assets/common/logo.png";
-import { Button } from "@components";
-import { ChangeEvent, KeyboardEvent, MouseEvent, useState } from "react";
+import { Button, CustomInput } from "@components";
+import {
+	ChangeEvent,
+	KeyboardEvent,
+	MouseEvent,
+	useState,
+} from "react";
 import { AxiosError } from "axios";
 import api from "@api";
 import {
 	Alert,
 	AlertColor,
 	AlertTitle,
+	Checkbox,
+	FormControlLabel,
 	Grid,
 	Paper,
 	Typography,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IMessage, IResponse, IError } from "@types";
 
 const EMAIL_REGEX =
@@ -31,14 +38,16 @@ const Register = () => {
 	const [name, setName] = useState<string>("");
 	const [email, setEmail] = useState<string>("");
 	const [dob, setDob] = useState<string>("");
+	const [ageRequirement, setAgeRequirement] = useState<boolean>(true);
+	const [termsAndConditions, setTermsAndConditions] = useState<boolean>(true);
 
 	const [message, setMessage] = useState<IMessage | null>(null);
 
 	const [errors, setErrors] = useState<IError>({
-		name: [],
+		full_name: [],
 		email: [],
 		phone: [],
-		dob: [],
+		age: [],
 	});
 
 	// * --- states ends here ----------////
@@ -46,7 +55,7 @@ const Register = () => {
 	const addMessage = (
 		severity: AlertColor,
 		title: string,
-		description: string | string[] = ""
+		description: string = ""
 	) => {
 		setMessage({
 			severity,
@@ -69,38 +78,39 @@ const Register = () => {
 		return age;
 	};
 
-	const errorHandler = () => {
-		const tError: IError = {
-			name: [],
-			email: [],
-			phone: [],
-			dob: [],
-		};
-		if (!name) {
-			tError.name?.push("Name cannot be blank");
-		}
+	// const errorHandler = () => {
+	// 	const tError: IError = {
+	// 		full_name: [],
+	// 		email: [],
+	// 		phone: [],
+	// 		age: [],
+	// 	};
+	// 	if (!name) {
+	// 		tError.full_name?.push("Name cannot be blank");
+	// 	}
 
-		if (!email) {
-			tError.email?.push("Email cannot be blank");
-		} else if (!EMAIL_REGEX.test(email)) {
-			tError.email?.push("Email Id is not valid");
-		}
+	// 	if (!email) {
+	// 		tError.email?.push("Email cannot be blank");
+	// 	} else if (!EMAIL_REGEX.test(email)) {
+	// 		tError.email?.push("Email Id is not valid");
+	// 	}
 
-		if (!phone) {
-			tError.phone?.push("Phone cannot be blank");
-		} else if (phone.length !== 10 || isNaN(parseInt(phone))) {
-			tError.phone?.push("Phone number should be 10 digits");
-		}
+	// 	if (!phone) {
+	// 		tError.phone?.push("Phone cannot be blank");
+	// 	} else if (phone.length !== 10 || isNaN(parseInt(phone))) {
+	// 		tError.phone?.push("Phone number should be 10 digits");
+	// 	}
 
-		if (!dob) {
-			tError.dob?.push("DOB cannot be blank");
-		} else if (getAge() < 18) {
-			tError.dob?.push("Minimum age must be 18 years");
-		}
-		setErrors(tError);
+	// 	if (!dob) {
+	// 		tError.age?.push("Date of Birth cannot be blank");
+	// 	} else if (getAge() < 18) {
+	// 		tError.age?.push("Minimum age must be 18 years");
+	// 	}
+	// 	setErrors(tError);
 
-		return Object.values(tError).every((e) => e.length === 0);
-	};
+	// 	return Object.values(tError).every((e) => e.length === 0);
+	// };
+
 	//? ----Checking if the input is number-----
 	const checkIfNumber = (event: KeyboardEvent<HTMLInputElement>) => {
 		/**
@@ -116,26 +126,25 @@ const Register = () => {
 
 	const register = async () => {
 		try {
-			if (errorHandler()) {
-				const res = await api.post<IResponse>("/api/users/register/", {
-					phone,
-					full_name: name,
-					email,
-					age: getAge(dob),
-					terms_conditions_agreed: true,
-				});
+			const res = await api.post<IResponse>("/api/users/register/", {
+				phone,
+				full_name: name,
+				email,
+				age: getAge(dob) ?? "",
+				age_above_18: ageRequirement,
+				terms_conditions_agreed: termsAndConditions,
+			});
 
-				if (res.status === 200) {
-					console.log("Registered");
-					addMessage("success", "Success", res?.data?.message);
-					setTimeout(() => {
-						navigate("/login", {
-							state: {
-								phone: phone,
-							},
-						});
-					}, 2000);
-				}
+			if (res.status === 200) {
+				console.log("Registered");
+				addMessage("success", "Success", res?.data?.message);
+				setTimeout(() => {
+					navigate("/login", {
+						state: {
+							phone: phone,
+						},
+					});
+				}, 2000);
 			}
 		} catch (error) {
 			const err = error as AxiosError<IResponse>;
@@ -163,13 +172,10 @@ const Register = () => {
 					<div className='input-container'>
 						<>
 							<label>Fill your details to register</label>
-							<input
+							<CustomInput
 								type='text'
 								id='full-name'
 								name='full-name'
-								className={`${
-									errors?.name?.length > 0 ? "error" : ""
-								}`}
 								placeholder='Enter Your Full Name'
 								value={name}
 								onChangeCapture={(
@@ -177,20 +183,12 @@ const Register = () => {
 								) => {
 									setName(e.target.value);
 								}}
+								errors={errors?.full_name}
 							/>
-							{errors?.name?.length > 0 &&
-								errors?.name?.map((v) => (
-									<span className='error' key={v}>
-										{v}
-									</span>
-								))}
-							<input
+							<CustomInput
 								type='email'
 								id='email-address'
 								name='email-address'
-								className={`${
-									errors?.email?.length > 0 ? "error" : ""
-								}`}
 								placeholder='Enter your Email Address'
 								value={email}
 								onChangeCapture={(
@@ -198,20 +196,12 @@ const Register = () => {
 								) => {
 									setEmail(e.target.value);
 								}}
+								errors={errors?.email}
 							/>
-							{errors?.email?.length > 0 &&
-								errors?.email?.map((v) => (
-									<span className='error' key={v}>
-										{v}
-									</span>
-								))}
-							<input
+							<CustomInput
 								type='number'
 								id='phone'
 								name='phone'
-								className={`${
-									errors?.phone?.length > 0 ? "error" : ""
-								}`}
 								placeholder='Enter your Phone Number'
 								value={phone}
 								onChangeCapture={(
@@ -225,15 +215,9 @@ const Register = () => {
 										setPhone(phoneNum);
 									}
 								}}
-								onKeyDownCapture={(e) => checkIfNumber(e)}
+								errors={errors?.phone}
 							/>
-							{errors?.phone?.length > 0 &&
-								errors?.phone?.map((v) => (
-									<span className='error' key={v}>
-										{v}
-									</span>
-								))}
-							<input
+							<CustomInput
 								type='text'
 								id='dob'
 								name='dob'
@@ -249,13 +233,46 @@ const Register = () => {
 								onBlurCapture={(e) => {
 									e.target.type = "text";
 								}}
+								errors={errors?.age}
 							/>
-							{errors?.dob?.length > 0 &&
-								errors?.dob?.map((v) => (
-									<span className='error' key={v}>
-										{v}
-									</span>
-								))}
+							<div className='custom-label'>
+								<FormControlLabel
+									control={
+										<Checkbox
+											checked={ageRequirement}
+											onChangeCapture={(e) => {
+												setAgeRequirement(
+													(val) => !val
+												);
+											}}
+										/>
+									}
+									label='Your age is above 18 years'
+								/>
+								<FormControlLabel
+									control={
+										<Checkbox
+											checked={termsAndConditions}
+											onChangeCapture={(e) => {
+												setTermsAndConditions(
+													(val) => !val
+												);
+											}}
+										/>
+									}
+									label={
+										<span>
+											You agree to the{" "}
+											<Link
+												to='/terms-and-conditions'
+												target='_blank'
+											>
+												Terms & Conditions
+											</Link>
+										</span>
+									}
+								/>
+							</div>
 						</>
 					</div>
 					<div className='btn-container'>
@@ -301,20 +318,7 @@ const Register = () => {
 				{message?.severity && (
 					<Alert severity={message?.severity}>
 						<AlertTitle>{message?.title}</AlertTitle>
-						<div
-							dangerouslySetInnerHTML={{
-								__html:
-									message?.description !== undefined
-										? Array.isArray(message?.description)
-											? message?.description
-													?.map(
-														(v) => `<div>${v}</div>`
-													)
-													?.join("")
-											: message?.description
-										: "",
-							}}
-						/>
+						{message?.description}
 					</Alert>
 				)}
 			</div>

@@ -8,14 +8,14 @@ export type ISuccess = {
 export type IMessage = {
 	severity: AlertColor;
 	title: string;
-	description?: string | string[];
+	description?: string;
 };
 
 export type IError = {
-	name: string[];
+	full_name: string[];
 	email: string[];
 	phone: string[];
-	dob: string[];
+	age: string[];
 };
 
 export type IResponse = ISuccess & IError;

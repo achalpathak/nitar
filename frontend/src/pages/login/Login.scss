@@ -12,8 +12,8 @@
 }
 
 .login-container {
-	width: 60vw;
-	height: 70vh;
+	min-width: 60vw;
+	min-height: 70vh;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -43,13 +43,14 @@
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
+
 	label {
 		color: white;
 		font-weight: bold;
 		font-size: medium;
 		text-align: center;
 		word-wrap: break-word;
-		width: 65vw;
+		// width: 65vw;
 	}
 	input {
 		height: 2rem;
@@ -60,18 +61,18 @@
 		margin-top: 15px;
 		padding: 0 10px;
 		background: url("../../assets/common/input-bg.png");
-        &.error{
-            border-color: #ff0c0c;
-        }
+		&.error {
+			border-color: #ff0c0c;
+		}
 	}
 }
 
-span{
-    &.error{
-        color: #ff0c0c;
-        width: 20rem;
-        font-size: 0.8rem;
-    }
+span {
+	&.error {
+		color: #ff0c0c;
+		width: 20rem;
+		font-size: 0.8rem;
+	}
 }
 
 .btn-container {
@@ -118,17 +119,34 @@ span{
 	}
 }
 
+.custom-label {
+	width: 20rem;
+	margin: 1rem 0 0 0 !important;
+
+	label {
+		margin-bottom: 1rem;
+	}
+}
+
 //TODO Media Query
 
 @media only screen and (max-width: 600px) {
 	.login-container {
-		width: 70vw;
-		height: 80vh;
+		min-width: 70vw;
+		min-height: 80vh;
 	}
 	.input-container {
 		input {
 			width: 13rem;
 		}
+		span {
+			&.error {
+				width: 13rem;
+			}
+		}
+	}
+	.custom-label {
+		width: 13rem;
 	}
 	.logo-container {
 		// display: flex;
