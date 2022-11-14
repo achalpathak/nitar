@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "corsheaders",
     # apps
     "users",
+    "settings",
+    "library"
 ]
 
 MIDDLEWARE = [

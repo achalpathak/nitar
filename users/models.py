@@ -52,7 +52,7 @@ class User(AbstractUser,TimeStampedModel):
     password = models.EmailField(_("password"), blank=True, null=True)
     email = models.EmailField(_("email address"), unique=True, blank=True, null=True)
     phone = models.CharField(max_length=10, validators=[MinLengthValidator(10)], unique=True, blank=True, null=True)
-    age = models.PositiveIntegerField(validators=[MinValueValidator(18)])
+    age_above_18 = models.BooleanField(default=False)
     terms_conditions_agreed = models.BooleanField(default=False)
     email_verified = models.BooleanField(default=False)
     phone_verified = models.BooleanField(default=False)

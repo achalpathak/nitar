@@ -13,7 +13,7 @@ class RegisterUserSerializer(serializers.Serializer):
     phone = serializers.CharField(required=True)
     full_name = serializers.CharField(max_length=30, required=True)
     email = serializers.EmailField(required=False)
-    age = serializers.IntegerField(required=True)
+    age_above_18 =serializers.BooleanField(required=True)
     terms_conditions_agreed = serializers.BooleanField(required=True)
 
     def validate_phone(self, phone):
@@ -33,10 +33,10 @@ class RegisterUserSerializer(serializers.Serializer):
                 raise serializers.ValidationError("Email is already registered.")
         return email
 
-    def validate_age(self, age):
-        if age <= 17:
-            raise serializers.ValidationError("Minimum age required is 18.")
-        return age
+    # def validate_(self, age):
+    #     if age <= 17:
+    #         raise serageializers.ValidationError("Minimum age required is 18.")
+    #     return age
 
     def validate_terms_conditions_agreed(self, terms_conditions_agreed):
         if not terms_conditions_agreed:
