@@ -33,10 +33,12 @@ class RegisterUserSerializer(serializers.Serializer):
                 raise serializers.ValidationError("Email is already registered.")
         return email
 
-    # def validate_(self, age):
-    #     if age <= 17:
-    #         raise serageializers.ValidationError("Minimum age required is 18.")
-    #     return age
+    def validate_age_above_18(self, age_above_18):
+        if not age_above_18:
+            raise serializers.ValidationError(
+                "Please agree to age 18 or above to proceed."
+            )
+        return age_above_18
 
     def validate_terms_conditions_agreed(self, terms_conditions_agreed):
         if not terms_conditions_agreed:
