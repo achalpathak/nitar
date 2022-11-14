@@ -60,7 +60,18 @@
 		margin-top: 15px;
 		padding: 0 10px;
 		background: url("../../assets/common/input-bg.png");
+        &.error{
+            border-color: #ff0c0c;
+        }
 	}
+}
+
+span{
+    &.error{
+        color: #ff0c0c;
+        width: 20rem;
+        font-size: 0.8rem;
+    }
 }
 
 .btn-container {

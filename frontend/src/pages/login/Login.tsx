@@ -2,7 +2,7 @@
 import "./Login.scss";
 import logo from "@assets/common/logo.png";
 import { Button } from "@components";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
 import OtpInput from "react-otp-input";
 import { AxiosError } from "axios";
 import api from "@api";
@@ -16,26 +16,37 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useNavigate } from "react-router-dom";
+import { IMessage, IResponse, IError } from "@types";
+import { useLocation } from "react-router-dom";
 
-type IResponse = {
-	message: string;
-	phone: string[];
-};
-
-type IMessage = {
-	severity: AlertColor;
-	title: string;
-	description?: string | string[];
+type ILocationProps = {
+	pathname: string;
+	state: {
+		phone: string;
+	};
 };
 
 const Login = () => {
 	const navigate = useNavigate();
+	const location: ILocationProps = useLocation();
 
-	const [process, setProcess] = useState<"login" | "otp">("login");
+	// * --- states start here ----------////
+
+	const [process, setProcess] = useState<"login" | "otp">(
+		location?.state?.phone ? "otp" : "login"
+	);
 	const [otp, setOtp] = useState<string>("");
 	const [phone, setPhone] = useState<string>("");
 
 	const [message, setMessage] = useState<IMessage | null>(null);
+	const [errors, setErrors] = useState<IError>({
+		name: [],
+		email: [],
+		phone: [],
+		dob: [],
+	});
+
+	// * --- states ends here ----------////
 
 	const addMessage = (
 		severity: AlertColor,
@@ -52,11 +63,44 @@ const Login = () => {
 		}, 4000);
 	};
 
-	const sendOtp = async () => {
+	const errorHandler = () => {
+		const tError: IError = {
+			name: [],
+			email: [],
+			phone: [],
+			dob: [],
+		};
+
+		if (!phone) {
+			tError.phone?.push("Phone cannot be blank");
+		} else if (phone.length !== 10 || isNaN(parseInt(phone))) {
+			tError.phone?.push("Phone number should be 10 digits");
+		}
+
+		setErrors(tError);
+
+		return Object.values(tError).every((e) => e.length === 0);
+	};
+	//? ----Checking if the input is number-----
+	const checkIfNumber = (event: KeyboardEvent<HTMLInputElement>) => {
+		/**
+		 * Allowing: Integers | Backspace | Tab | Delete | Left & Right arrow keys
+		 **/
+
+		const regex = new RegExp(
+			/(^\d*$)|(Backspace|Tab|Delete|ArrowLeft|ArrowRight)/
+		);
+
+		return !event.key.match(regex) && event.preventDefault();
+	};
+
+	const sendOtp = async (phoneNum: string = phone) => {
 		try {
-			if (phone) {
+			if (location?.state?.phone || errorHandler()) {
+				location.state.phone = "";
+
 				const res = await api.post<IResponse>("/api/users/send-otp/", {
-					phone,
+					phone: phoneNum,
 				});
 
 				if (res.status === 200) {
@@ -64,19 +108,14 @@ const Login = () => {
 					setProcess("otp");
 					addMessage("success", "Success", res?.data?.message);
 				}
-			} else {
-				addMessage(
-					"warning",
-					"Field Required",
-					"Phone Number cannot be blank"
-				);
 			}
 		} catch (error) {
 			const err = error as AxiosError<IResponse>;
 			const data = err?.response?.data;
-			if (data) {
-				const values = Object.values(data).flat(3);
-				addMessage("error", "Error", values);
+			if (data?.message) {
+				addMessage("error", "Error", data?.message);
+			} else if (data) {
+				setErrors(data);
 			}
 		}
 	};
@@ -97,10 +136,23 @@ const Login = () => {
 			}
 		} catch (error) {
 			const err = error as AxiosError<IResponse>;
-			console.error(err);
-			addMessage("error", "Error", err?.response?.data?.message);
+			const data = err?.response?.data;
+			if (data?.message) {
+				addMessage("error", "Error", data?.message);
+			} else if (data) {
+				setErrors(data);
+			}
 		}
 	};
+
+	//? If login is redirected from register -> Send OTP
+	useEffect(() => {
+		if (location?.state?.phone) {
+			console.log(location);
+			setPhone(location?.state?.phone);
+			sendOtp(location?.state?.phone);
+		}
+	}, []);
 
 	return (
 		<>
@@ -124,6 +176,9 @@ const Login = () => {
 									type='number'
 									id='phone-number'
 									name='phone-number'
+									className={`${
+										errors?.phone?.length > 0 ? "error" : ""
+									}`}
 									placeholder='Enter your phone number'
 									value={phone}
 									onChangeCapture={(
@@ -134,7 +189,14 @@ const Login = () => {
 											setPhone(e.target.value);
 										}
 									}}
+									onKeyDownCapture={(e) => checkIfNumber(e)}
 								/>
+								{errors?.phone?.length > 0 &&
+									errors?.phone?.map((v) => (
+										<span className='error' key={v}>
+											{v}
+										</span>
+									))}
 							</>
 						)}
 						{process === "otp" && (

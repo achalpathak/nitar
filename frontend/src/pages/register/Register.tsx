@@ -2,7 +2,7 @@
 import "../login/Login.scss";
 import logo from "@assets/common/logo.png";
 import { Button } from "@components";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, KeyboardEvent, MouseEvent, useState } from "react";
 import { AxiosError } from "axios";
 import api from "@api";
 import {
@@ -14,23 +14,15 @@ import {
 	Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
-type IResponse = {
-	message: string;
-	phone: string[];
-};
-
-type IMessage = {
-	severity: AlertColor;
-	title: string;
-	description?: string | string[];
-};
+import { IMessage, IResponse, IError } from "@types";
 
 const EMAIL_REGEX =
 	/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const Register = () => {
 	const navigate = useNavigate();
+
+	// * --- states start here ----------////
 
 	const [otp, setOtp] = useState<string>("");
 	const [phone, setPhone] = useState<string>("");
@@ -41,6 +33,15 @@ const Register = () => {
 	const [dob, setDob] = useState<string>("");
 
 	const [message, setMessage] = useState<IMessage | null>(null);
+
+	const [errors, setErrors] = useState<IError>({
+		name: [],
+		email: [],
+		phone: [],
+		dob: [],
+	});
+
+	// * --- states ends here ----------////
 
 	const addMessage = (
 		severity: AlertColor,
@@ -57,7 +58,7 @@ const Register = () => {
 		}, 4000);
 	};
 
-	const getAge = (dateString: string) => {
+	const getAge = (dateString: string = dob) => {
 		var today = new Date();
 		var birthDate = new Date(dateString);
 		var age = today.getFullYear() - birthDate.getFullYear();
@@ -68,27 +69,54 @@ const Register = () => {
 		return age;
 	};
 
+	const errorHandler = () => {
+		const tError: IError = {
+			name: [],
+			email: [],
+			phone: [],
+			dob: [],
+		};
+		if (!name) {
+			tError.name?.push("Name cannot be blank");
+		}
+
+		if (!email) {
+			tError.email?.push("Email cannot be blank");
+		} else if (!EMAIL_REGEX.test(email)) {
+			tError.email?.push("Email Id is not valid");
+		}
+
+		if (!phone) {
+			tError.phone?.push("Phone cannot be blank");
+		} else if (phone.length !== 10 || isNaN(parseInt(phone))) {
+			tError.phone?.push("Phone number should be 10 digits");
+		}
+
+		if (!dob) {
+			tError.dob?.push("DOB cannot be blank");
+		} else if (getAge() < 18) {
+			tError.dob?.push("Minimum age must be 18 years");
+		}
+		setErrors(tError);
+
+		return Object.values(tError).every((e) => e.length === 0);
+	};
+	//? ----Checking if the input is number-----
+	const checkIfNumber = (event: KeyboardEvent<HTMLInputElement>) => {
+		/**
+		 * Allowing: Integers | Backspace | Tab | Delete | Left & Right arrow keys
+		 **/
+
+		const regex = new RegExp(
+			/(^\d*$)|(Backspace|Tab|Delete|ArrowLeft|ArrowRight)/
+		);
+
+		return !event.key.match(regex) && event.preventDefault();
+	};
+
 	const register = async () => {
 		try {
-			if (!phone || !name || !dob || !email) {
-				addMessage(
-					"warning",
-					"Field Required",
-					"Please fill all the fields"
-				);
-			} else if (!EMAIL_REGEX.test(email)) {
-				addMessage(
-					"warning",
-					"Email Invalid",
-					"Please enter correct email"
-				);
-			} else if (phone.length !== 10) {
-				addMessage(
-					"warning",
-					"Phone Invalid",
-					"Please enter 10 digit phone number"
-				);
-			} else {
+			if (errorHandler()) {
 				const res = await api.post<IResponse>("/api/users/register/", {
 					phone,
 					full_name: name,
@@ -101,16 +129,21 @@ const Register = () => {
 					console.log("Registered");
 					addMessage("success", "Success", res?.data?.message);
 					setTimeout(() => {
-						navigate("/home");
-					}, 3000);
+						navigate("/login", {
+							state: {
+								phone: phone,
+							},
+						});
+					}, 2000);
 				}
 			}
 		} catch (error) {
 			const err = error as AxiosError<IResponse>;
 			const data = err?.response?.data;
-			if (data) {
-				const values = Object.values(data).flat(3);
-				addMessage("error", "Error", values);
+			if (data?.message) {
+				addMessage("error", "Error", data?.message);
+			} else if (data) {
+				setErrors(data);
 			}
 		}
 	};
@@ -134,6 +167,9 @@ const Register = () => {
 								type='text'
 								id='full-name'
 								name='full-name'
+								className={`${
+									errors?.name?.length > 0 ? "error" : ""
+								}`}
 								placeholder='Enter Your Full Name'
 								value={name}
 								onChangeCapture={(
@@ -142,10 +178,19 @@ const Register = () => {
 									setName(e.target.value);
 								}}
 							/>
+							{errors?.name?.length > 0 &&
+								errors?.name?.map((v) => (
+									<span className='error' key={v}>
+										{v}
+									</span>
+								))}
 							<input
 								type='email'
 								id='email-address'
 								name='email-address'
+								className={`${
+									errors?.email?.length > 0 ? "error" : ""
+								}`}
 								placeholder='Enter your Email Address'
 								value={email}
 								onChangeCapture={(
@@ -154,39 +199,71 @@ const Register = () => {
 									setEmail(e.target.value);
 								}}
 							/>
+							{errors?.email?.length > 0 &&
+								errors?.email?.map((v) => (
+									<span className='error' key={v}>
+										{v}
+									</span>
+								))}
 							<input
 								type='number'
 								id='phone'
 								name='phone'
+								className={`${
+									errors?.phone?.length > 0 ? "error" : ""
+								}`}
 								placeholder='Enter your Phone Number'
 								value={phone}
 								onChangeCapture={(
 									e: ChangeEvent<HTMLInputElement>
 								) => {
 									const phoneNum = e.target.value;
-									console.log("Phone", phoneNum);
-									if (phoneNum.length <= 10) {
-										setPhone(e.target.value);
+									if (
+										phoneNum.length <= 10 &&
+										!isNaN(parseInt(phoneNum))
+									) {
+										setPhone(phoneNum);
 									}
 								}}
+								onKeyDownCapture={(e) => checkIfNumber(e)}
 							/>
+							{errors?.phone?.length > 0 &&
+								errors?.phone?.map((v) => (
+									<span className='error' key={v}>
+										{v}
+									</span>
+								))}
 							<input
-								type='date'
+								type='text'
 								id='dob'
 								name='dob'
-								placeholder='Enter Date Of Birth (DD/MM/YYYY)'
+								placeholder='Your Date Of Birth (DD/MM/YYYY)'
 								onChangeCapture={(
 									e: ChangeEvent<HTMLInputElement>
 								) => {
 									setDob(e.target.value);
 								}}
+								onFocusCapture={(e) => {
+									e.target.type = "date";
+								}}
+								onBlurCapture={(e) => {
+									e.target.type = "text";
+								}}
 							/>
+							{errors?.dob?.length > 0 &&
+								errors?.dob?.map((v) => (
+									<span className='error' key={v}>
+										{v}
+									</span>
+								))}
 						</>
 					</div>
 					<div className='btn-container'>
 						<Button
 							title={"REGISTER"}
-							onClickCapture={async (e) => {
+							onClickCapture={async (
+								e: MouseEvent<HTMLButtonElement>
+							) => {
 								e.preventDefault();
 								register();
 							}}
