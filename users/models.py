@@ -70,3 +70,6 @@ class LoginPhoneOtp(TimeStampedModel):
     otp = models.CharField(max_length=6, validators=[MinLengthValidator(6)])
     attempts_remaining = models.PositiveIntegerField(default=3)
     valid_till = models.DateTimeField()
+    
+    def __str__(self):
+        return self.user.phone

@@ -13,7 +13,7 @@ class UserAdmin(DjangoUserAdmin):
 
     fieldsets = (
         (_("Login info"), {"fields": ("email", "password")}),
-        (_("Personal info"), {"fields": ("first_name", "last_name")}),
+        (_("Personal info"), {"fields": ("full_name", "phone")}),
         (
             _("Permissions"),
             {
@@ -37,9 +37,18 @@ class UserAdmin(DjangoUserAdmin):
             },
         ),
     )
-    list_display = ("email", "first_name", "last_name", "is_staff")
-    search_fields = ("email", "first_name", "last_name")
+    list_display = ("full_name", "email", "phone", "is_staff", "is_superuser")
+    search_fields = ("email", "full_name")
     ordering = ("email",)
 
 
-admin.site.register(user_models.LoginPhoneOtp)
+class LoginPhoneOtpAdmin(admin.ModelAdmin):
+    list_display = ["get_phone", "otp"]
+
+    def get_phone(self, obj):
+        return obj.user.phone
+
+    get_phone.short_description = "Phone Number"
+
+
+admin.site.register(user_models.LoginPhoneOtp, LoginPhoneOtpAdmin)
