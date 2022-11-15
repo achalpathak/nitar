@@ -248,6 +248,7 @@ const Register = () => {
 													style={{
 														textDecoration:
 															"underline",
+														color: "#1b0b26",
 													}}
 												>
 													Terms & Conditions

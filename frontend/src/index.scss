@@ -21,6 +21,11 @@
 	-webkit-text-size-adjust: 100%;
 }
 
+#root {
+	background-image: url("../../assets/common/background.png");
+	background-size: cover;
+}
+
 a {
 	font-weight: 500;
 	color: #646cff;
@@ -55,9 +60,14 @@ button {
 	width: 15rem;
 	color: #ffa800;
 }
-button:hover {
-	border-color: #ffa800;
-	box-shadow: 1px 1px 10px 1px #ffa800;
+button {
+	&:hover:not(:disabled) {
+		border-color: #ffa800;
+		box-shadow: 1px 1px 10px 1px #ffa800;
+	}
+	&:disabled {
+		color: gray;
+	}
 }
 button:focus,
 button:focus-visible {

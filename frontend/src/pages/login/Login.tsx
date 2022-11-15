@@ -2,10 +2,10 @@
 import "./Login.scss";
 import logo from "@assets/common/logo.png";
 import { Button, CustomInput } from "@components";
-import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import OtpInput from "react-otp-input";
 import { AxiosError } from "axios";
-import api from "@api";
+import api, { Routes } from "@api";
 import {
 	Alert,
 	AlertColor,
@@ -46,6 +46,9 @@ const Login = () => {
 		age: [],
 	});
 
+	const interval = useRef<NodeJS.Timer>();
+	const [timer, setTimer] = useState<number>(60);
+
 	// * --- states ends here ----------////
 
 	const addMessage = (
@@ -62,6 +65,29 @@ const Login = () => {
 			setMessage(null);
 		}, 4000);
 	};
+
+	const startTimer = () => {
+		setTimer(60);
+		const id = setInterval(() => {
+			setTimer((t) => t - 1);
+		}, 1000);
+
+		interval.current = id;
+	};
+
+	const stopTimer = () => {
+		clearInterval(interval.current);
+	};
+
+	useEffect(() => {
+		return () => stopTimer();
+	}, []);
+
+	useEffect(() => {
+		if (timer <= 0) {
+			stopTimer();
+		}
+	}, [timer]);
 
 	// const errorHandler = () => {
 	// 	const tError: IError = {
@@ -82,26 +108,13 @@ const Login = () => {
 	// 	return Object.values(tError).every((e) => e.length === 0);
 	// };
 
-	//? ----Checking if the input is number-----
-	const checkIfNumber = (event: KeyboardEvent<HTMLInputElement>) => {
-		/**
-		 * Allowing: Integers | Backspace | Tab | Delete | Left & Right arrow keys
-		 **/
-
-		const regex = new RegExp(
-			/(^\d*$)|(Backspace|Tab|Delete|ArrowLeft|ArrowRight)/
-		);
-
-		return !event.key.match(regex) && event.preventDefault();
-	};
-
 	const sendOtp = async (phoneNum: string = phone) => {
 		try {
 			if (location?.state?.phone) {
 				location.state.phone = "";
 			}
 
-			const res = await api.post<IResponse>("/api/users/send-otp/", {
+			const res = await api.post<IResponse>(Routes.SEND_OTP, {
 				phone: phoneNum,
 			});
 
@@ -109,6 +122,8 @@ const Login = () => {
 				console.log("OTP Sent");
 				setProcess("otp");
 				addMessage("success", "Success", res?.data?.message);
+
+				startTimer();
 			}
 		} catch (error) {
 			const err = error as AxiosError<IResponse>;
@@ -123,7 +138,7 @@ const Login = () => {
 
 	const verifyOtp = async () => {
 		try {
-			const res = await api.post<IResponse>("/api/users/verify-otp/", {
+			const res = await api.post<IResponse>(Routes.VERIFY_OTP, {
 				phone,
 				otp: parseInt(otp),
 			});
@@ -204,11 +219,13 @@ const Login = () => {
 									// isInputSecure={true}
 									inputStyle={{
 										width: "2rem",
-										background:
+										height: "2rem",
+										// background: "transparent",
+										padding: 5,
+										backgroundImage:
 											'url("src/assets/common/otp.png")',
 										backgroundSize: "cover",
 									}}
-									// containerStyle={{ margin: "5px" }}
 									isInputNum
 								/>
 							</>
@@ -230,6 +247,25 @@ const Login = () => {
 								}
 							}}
 						/>
+						{process === "otp" && (
+							<>
+								<Button
+									title={"Resend OTP"}
+									onClickCapture={async (e) => {
+										e.preventDefault();
+										sendOtp();
+									}}
+									disabled={timer > 0}
+									style={{ margin: "1rem 0" }}
+								/>
+								<Typography
+									component='label'
+									textAlign='center'
+								>
+									You can resend the OTP in {timer} seconds
+								</Typography>
+							</>
+						)}
 						<button
 							className='cancel-btn'
 							onClickCapture={(e) => {

@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Home, Login, Policy, Register } from "@pages";
+import { Footer, Home, Login, Policy, Register,_404 } from "@pages";
 
 const router = createBrowserRouter([
 	{
@@ -25,6 +25,14 @@ const router = createBrowserRouter([
 	{
 		path: "/privacy-policy",
 		element: <Policy />,
+	},
+	{
+		path: "/footer",
+		element: <Footer />,
+	},
+	{
+		path: "/404",
+		element: <_404 />,
 	},
 ]);
 
