@@ -19,3 +19,10 @@ export type IError = {
 };
 
 export type IResponse = ISuccess & IError;
+
+export type IAPI = {
+	[s: string]: {
+		name: string;
+		api: string;
+	};
+};

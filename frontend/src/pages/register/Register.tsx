@@ -2,12 +2,7 @@
 import "../login/Login.scss";
 import logo from "@assets/common/logo.png";
 import { Button, CustomInput } from "@components";
-import {
-	ChangeEvent,
-	KeyboardEvent,
-	MouseEvent,
-	useState,
-} from "react";
+import { ChangeEvent, KeyboardEvent, MouseEvent, useState } from "react";
 import { AxiosError } from "axios";
 import api from "@api";
 import {
@@ -15,7 +10,9 @@ import {
 	AlertColor,
 	AlertTitle,
 	Checkbox,
+	FormControl,
 	FormControlLabel,
+	FormHelperText,
 	Grid,
 	Paper,
 	Typography,
@@ -38,8 +35,9 @@ const Register = () => {
 	const [name, setName] = useState<string>("");
 	const [email, setEmail] = useState<string>("");
 	const [dob, setDob] = useState<string>("");
-	const [ageRequirement, setAgeRequirement] = useState<boolean>(true);
-	const [termsAndConditions, setTermsAndConditions] = useState<boolean>(true);
+	const [ageRequirement, setAgeRequirement] = useState<boolean>(false);
+	const [termsAndConditions, setTermsAndConditions] =
+		useState<boolean>(false);
 
 	const [message, setMessage] = useState<IMessage | null>(null);
 
@@ -49,6 +47,9 @@ const Register = () => {
 		phone: [],
 		age: [],
 	});
+
+	const [ageError, setAgeError] = useState<boolean>(false);
+	const [termsError, setTermsError] = useState<boolean>(false);
 
 	// * --- states ends here ----------////
 
@@ -67,49 +68,16 @@ const Register = () => {
 		}, 4000);
 	};
 
-	const getAge = (dateString: string = dob) => {
-		var today = new Date();
-		var birthDate = new Date(dateString);
-		var age = today.getFullYear() - birthDate.getFullYear();
-		var m = today.getMonth() - birthDate.getMonth();
-		if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-			age--;
+	const errorHandler = () => {
+		if (!ageRequirement) {
+			setAgeError(true);
 		}
-		return age;
+		if (!termsAndConditions) {
+			setTermsError(true);
+		}
+
+		return ageRequirement && termsAndConditions;
 	};
-
-	// const errorHandler = () => {
-	// 	const tError: IError = {
-	// 		full_name: [],
-	// 		email: [],
-	// 		phone: [],
-	// 		age: [],
-	// 	};
-	// 	if (!name) {
-	// 		tError.full_name?.push("Name cannot be blank");
-	// 	}
-
-	// 	if (!email) {
-	// 		tError.email?.push("Email cannot be blank");
-	// 	} else if (!EMAIL_REGEX.test(email)) {
-	// 		tError.email?.push("Email Id is not valid");
-	// 	}
-
-	// 	if (!phone) {
-	// 		tError.phone?.push("Phone cannot be blank");
-	// 	} else if (phone.length !== 10 || isNaN(parseInt(phone))) {
-	// 		tError.phone?.push("Phone number should be 10 digits");
-	// 	}
-
-	// 	if (!dob) {
-	// 		tError.age?.push("Date of Birth cannot be blank");
-	// 	} else if (getAge() < 18) {
-	// 		tError.age?.push("Minimum age must be 18 years");
-	// 	}
-	// 	setErrors(tError);
-
-	// 	return Object.values(tError).every((e) => e.length === 0);
-	// };
 
 	//? ----Checking if the input is number-----
 	const checkIfNumber = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -126,11 +94,13 @@ const Register = () => {
 
 	const register = async () => {
 		try {
+			if (!errorHandler()) {
+				return;
+			}
 			const res = await api.post<IResponse>("/api/users/register/", {
 				phone,
 				full_name: name,
 				email,
-				age: getAge(dob) ?? "",
 				age_above_18: ageRequirement,
 				terms_conditions_agreed: termsAndConditions,
 			});
@@ -217,61 +187,80 @@ const Register = () => {
 								}}
 								errors={errors?.phone}
 							/>
-							<CustomInput
-								type='text'
-								id='dob'
-								name='dob'
-								placeholder='Your Date Of Birth (DD/MM/YYYY)'
-								onChangeCapture={(
-									e: ChangeEvent<HTMLInputElement>
-								) => {
-									setDob(e.target.value);
-								}}
-								onFocusCapture={(e) => {
-									e.target.type = "date";
-								}}
-								onBlurCapture={(e) => {
-									e.target.type = "text";
-								}}
-								errors={errors?.age}
-							/>
 							<div className='custom-label'>
-								<FormControlLabel
-									control={
-										<Checkbox
-											checked={ageRequirement}
-											onChangeCapture={(e) => {
-												setAgeRequirement(
-													(val) => !val
-												);
-											}}
-										/>
-									}
-									label='Your age is above 18 years'
-								/>
-								<FormControlLabel
-									control={
-										<Checkbox
-											checked={termsAndConditions}
-											onChangeCapture={(e) => {
-												setTermsAndConditions(
-													(val) => !val
-												);
-											}}
-										/>
-									}
-									label={
-										<span>
-											You agree to the{" "}
-											<Link
-												to='/terms-and-conditions'
-												target='_blank'
-											>
-												Terms & Conditions
-											</Link>
-										</span>
-									}
-								/>
+								<FormControl error={ageError} margin='none'>
+									<FormControlLabel
+										control={
+											<Checkbox
+												sx={{
+													color: "white",
+													"&.Mui-checked": {
+														color: "#ffa800",
+													},
+												}}
+												checked={ageRequirement}
+												onChangeCapture={(e) => {
+													setAgeRequirement(
+														(val) => !val
+													);
+													if (ageError) {
+														setAgeError(false);
+													}
+												}}
+											/>
+										}
+										label='Your age is above 18 years'
+									/>
+									{ageError && (
+										<FormHelperText>
+											Are you above 18?
+										</FormHelperText>
+									)}
+								</FormControl>
+								<FormControl error={termsError}>
+									<FormControlLabel
+										control={
+											<Checkbox
+												sx={{
+													color: "white",
+													"&.Mui-checked": {
+														color: "#ffa800",
+													},
+												}}
+												checked={termsAndConditions}
+												onChangeCapture={(e) => {
+													setTermsAndConditions(
+														(val) => !val
+													);
+
+													if (termsError) {
+														setTermsError(false);
+													}
+												}}
+											/>
+										}
+										label={
+											<span>
+												You agree to the{" "}
+												<Link
+													to='/terms-and-conditions'
+													target='_blank'
+													style={{
+														textDecoration:
+															"underline",
+													}}
+												>
+													Terms & Conditions
+												</Link>
+											</span>
+										}
+									/>
+									{termsError && (
+										<FormHelperText>
+											Please accept terms and conditions
+										</FormHelperText>
+									)}
+								</FormControl>
 							</div>
 						</>
 					</div>

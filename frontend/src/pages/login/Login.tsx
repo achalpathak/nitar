@@ -214,7 +214,10 @@ const Login = () => {
 							</>
 						)}
 					</div>
-					<div className='btn-container'>
+					<div
+						className='btn-container'
+						style={{ marginTop: "15px" }}
+					>
 						<Button
 							title={process === "login" ? "CONTINUE" : "VERIFY"}
 							onClickCapture={async (e) => {

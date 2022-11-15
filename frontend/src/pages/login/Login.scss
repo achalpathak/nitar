@@ -1,9 +1,26 @@
 #root {
-	background-image: url("../../assets/common/background.png");
-	background-size: cover;
+	background-color: hsla(220, 100%, 50%, 1);
+	background-image: radial-gradient(
+			at 80% 0%,
+			hsla(189, 100%, 56%, 1) 0px,
+			transparent 50%
+		),
+		radial-gradient(at 0% 50%, hsla(355, 100%, 93%, 1) 0px, transparent 50%),
+		radial-gradient(
+			at 80% 50%,
+			hsla(340, 100%, 76%, 1) 0px,
+			transparent 50%
+		),
+		radial-gradient(
+			at 80% 100%,
+			hsla(242, 100%, 70%, 1) 0px,
+			transparent 50%
+		),
+		radial-gradient(at 0% 0%, hsla(343, 100%, 76%, 1) 0px, transparent 50%);
 }
 
 .main-container {
+	padding-top: 35px;
 	height: 100vh;
 	width: 100vw;
 	display: flex;
@@ -60,7 +77,8 @@
 		border: 0.5px solid white;
 		margin-top: 15px;
 		padding: 0 10px;
-		background: url("../../assets/common/input-bg.png");
+		background-color: transparent;
+		// background: url("../../assets/common/input-bg.png");
 		&.error {
 			border-color: #ff0c0c;
 		}
@@ -124,7 +142,22 @@ span {
 	margin: 1rem 0 0 0 !important;
 
 	label {
-		margin-bottom: 1rem;
+		span {
+			&:nth-child(2) {
+				font-size: 0.8rem;
+			}
+		}
+		pointer-events: none;
+	}
+	svg {
+		pointer-events: visible;
+		font-size: 1.2rem;
+	}
+	a {
+		pointer-events: visible;
+	}
+	p {
+		margin: 0 !important;
 	}
 }
 
@@ -149,8 +182,23 @@ span {
 		width: 13rem;
 	}
 	.logo-container {
-		// display: flex;
 		width: 9rem;
 		height: auto;
+	}
+}
+
+@media only screen and (max-width: 500px) {
+	.login-container {
+		width: 100vw;
+		height: 100vh;
+		padding: 20vw 0 0 0;
+	}
+	.input-container {
+		input {
+			width: 18rem;
+		}
+	}
+	.custom-label {
+		width: 18rem;
 	}
 }

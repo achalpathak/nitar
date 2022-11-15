@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Home, Login, Register } from "@pages";
+import { Home, Login, Policy, Register } from "@pages";
 
 const router = createBrowserRouter([
 	{
@@ -13,6 +13,18 @@ const router = createBrowserRouter([
 	{
 		path: "/register",
 		element: <Register />,
+	},
+	{
+		path: "/terms-and-conditions",
+		element: <Policy />,
+	},
+	{
+		path: "/contact-us",
+		element: <Policy />,
+	},
+	{
+		path: "/privacy-policy",
+		element: <Policy />,
 	},
 ]);
 

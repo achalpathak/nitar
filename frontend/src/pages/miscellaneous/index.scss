@@ -1,0 +1,133 @@
+#root {
+	background-color: hsla(220, 100%, 50%, 1);
+	background-image: radial-gradient(
+			at 80% 0%,
+			hsla(189, 100%, 56%, 1) 0px,
+			transparent 50%
+		),
+		radial-gradient(at 0% 50%, hsla(355, 100%, 93%, 1) 0px, transparent 50%),
+		radial-gradient(
+			at 80% 50%,
+			hsla(340, 100%, 76%, 1) 0px,
+			transparent 50%
+		),
+		radial-gradient(
+			at 80% 100%,
+			hsla(242, 100%, 70%, 1) 0px,
+			transparent 50%
+		),
+		radial-gradient(at 0% 0%, hsla(343, 100%, 76%, 1) 0px, transparent 50%);
+}
+.main-container {
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.privacy-container {
+	min-width: 60vw;
+	min-height: 80vh;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	flex-direction: column;
+
+	div {
+		&.dynamic {
+			display: flex;
+			flex-direction: column;
+
+			* {
+				width: 80vw;
+				text-align: center;
+				margin: 15px;
+
+				&:nth-child(1) {
+					font-size: 0.8rem;
+				}
+				&:nth-child(n + 2) {
+					font-size: 1rem;
+				}
+			}
+		}
+	}
+
+	span {
+		width: 80vw;
+		text-align: center;
+		margin: 15px;
+		&:nth-child(2) {
+			font-size: 0.8rem;
+		}
+		&:nth-child(n + 3) {
+			font-size: 1rem;
+		}
+	}
+}
+.flex-row {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: row;
+}
+.line {
+	width: 0;
+	height: 0;
+	border-top: 1px solid white;
+	border-left: 5vw solid white;
+	border-bottom: 1px solid white;
+	// margin-right: 15px;
+}
+.line-left {
+	width: 0;
+	height: 0;
+	border-top: 1px solid transparent;
+	border-right: 30vw solid #ffa800;
+	border-bottom: 1px solid transparent;
+	margin-right: 15px;
+}
+.line-right {
+	width: 0;
+	height: 0;
+	border-top: 1px solid transparent;
+	border-left: 30vw solid #ffa800;
+	border-bottom: 1px solid transparent;
+	margin-left: 15px;
+}
+
+.btn-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+.btn {
+	width: 20rem;
+	background-color: transparent;
+	color: white;
+	border: 1px solid white;
+}
+.logo-container {
+	// display: flex;
+	padding: 10px;
+}
+.about-us {
+	width: 60vw;
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+@media only screen and (max-width: 500px) {
+	.about-us {
+		width: 80vw;
+		display: flex;
+	}
+	.flex-row {
+		flex-direction: column;
+	}
+	.line {
+		border-left: 35vw solid white;
+		margin: 10px;
+	}
+}
