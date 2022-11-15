@@ -6,6 +6,7 @@ from django.contrib.auth.models import User, AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
 
+
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
 
@@ -29,11 +30,11 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, password, **extra_fields):
         """Create and save a SuperUser with the given email and password."""
-        extra_fields.setdefault("age", 18)
+        extra_fields.setdefault("age_above_18", True)
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)
-        
+
         if extra_fields.get("is_staff") is not True:
             raise ValueError("Superuser must have is_staff=True.")
         if extra_fields.get("is_superuser") is not True:
@@ -42,27 +43,32 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
-class User(AbstractUser,TimeStampedModel):
+class User(AbstractUser, TimeStampedModel):
     """User model."""
 
     username = None
     first_name = None
     last_name = None
-    full_name = models.CharField(max_length=30,blank=True, null=True)
+    full_name = models.CharField(max_length=30, blank=True, null=True)
     password = models.EmailField(_("password"), blank=True, null=True)
     email = models.EmailField(_("email address"), unique=True, blank=True, null=True)
-    phone = models.CharField(max_length=10, validators=[MinLengthValidator(10)], unique=True, blank=True, null=True)
+    phone = models.CharField(
+        max_length=10,
+        validators=[MinLengthValidator(10)],
+        unique=True,
+        blank=True,
+        null=True,
+    )
     age_above_18 = models.BooleanField(default=False)
     terms_conditions_agreed = models.BooleanField(default=False)
     email_verified = models.BooleanField(default=False)
     phone_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
-    
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
     objects = UserManager()
-
 
 
 class LoginPhoneOtp(TimeStampedModel):
@@ -70,6 +76,6 @@ class LoginPhoneOtp(TimeStampedModel):
     otp = models.CharField(max_length=6, validators=[MinLengthValidator(6)])
     attempts_remaining = models.PositiveIntegerField(default=3)
     valid_till = models.DateTimeField()
-    
+
     def __str__(self):
         return self.user.phone
