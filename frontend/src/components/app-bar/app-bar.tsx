@@ -5,6 +5,7 @@ import { AndroidLogo, AppleLogo, LogoText } from "@assets";
 import { Link, useLocation } from "react-router-dom";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { IRoutes } from "@types";
+import "./app-bar.scss";
 
 const routes: IRoutes[] = [
 	{

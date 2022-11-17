@@ -37,6 +37,10 @@ export type IMovieList = {
 	items: IMovieItem[];
 };
 
+export type IMovieItemProps = {
+	item: IMovieItem;
+};
+
 export type IRoutes = {
 	title: string;
 	path: string;

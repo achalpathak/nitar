@@ -1,12 +1,4 @@
-import {
-	Grid,
-	ImageList,
-	ImageListItem,
-	List,
-	ListItem,
-	Paper,
-	Typography,
-} from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import MovieItem from "./movie-item";
 import { ChevronLeftOutlined, ChevronRightOutlined } from "@mui/icons-material";
@@ -15,6 +7,7 @@ import HorizontalScroll from "react-horizontal-scrolling";
 import { FC } from "react";
 import { IMovieList } from "@types";
 import LeftRightButton from "@components/left-right-button";
+import "./movies.scss";
 
 const MovieList: FC<IMovieList> = ({ title, items }) => {
 	if (items?.length === 0) {
@@ -59,19 +52,7 @@ const MovieList: FC<IMovieList> = ({ title, items }) => {
 					<Grid item xs={11} className='movies' mt={3}>
 						<HorizontalScroll className='horizontal-scroll'>
 							{items?.map((item) => (
-								<div key={item.title} className='movie-item'>
-									<img
-										src={item.image}
-										alt={item.title}
-										loading='lazy'
-										style={{
-											width: "100%",
-											height: "100%",
-											objectFit: "cover",
-											borderRadius: 10,
-										}}
-									/>
-								</div>
+								<MovieItem key={item.title} item={item} />
 							))}
 						</HorizontalScroll>
 					</Grid>

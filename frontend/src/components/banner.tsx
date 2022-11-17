@@ -149,10 +149,7 @@ const Banner = () => {
 													01
 												</span>
 											</Grid>
-											<Grid item>
-												<span className='divider'>
-													{" "}
-												</span>
+											<Grid item className='divider'>
 											</Grid>
 											<Grid item>
 												<span className='total'>

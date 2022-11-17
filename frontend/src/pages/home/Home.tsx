@@ -1,8 +1,5 @@
-import { AppBar, Banner, SubscribeButton } from "@components";
-import { Box, Grid, Typography } from "@mui/material";
-import { Container } from "@mui/system";
+import { Banner, DownloadApp, SubscribeButton } from "@components";
 import MovieList from "@components/movies";
-import downloadApp from "@assets/home/downloadApp.png";
 
 const movies = [
 	{
@@ -56,18 +53,11 @@ const Home = () => {
 				flexDirection: "column",
 			}}
 		>
-                <Banner />
-            <div className='download-app-container'>
-						<img
-							alt='Download App'
-							src={downloadApp}
-							width='50%'
-							// height='100%'
-						></img>
-					</div>
+			<Banner />
+			<DownloadApp />
 			<MovieList title='Popular Originals' items={movies} />
 			<MovieList title='Trending Now' items={movies} />
-            <SubscribeButton/>
+			<SubscribeButton />
 			<MovieList title='Most Watched' items={movies} />
 			<MovieList title='Web Series' items={movies} />
 		</div>

@@ -1,0 +1,14 @@
+.download-app-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 3rem 0 0 0;
+}
+
+@media only screen and (max-width: 500px) {
+	.download-app-container {
+		img {
+			width: 80%;
+		}
+	}
+}
