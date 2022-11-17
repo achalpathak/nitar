@@ -50,11 +50,14 @@ const MovieList: FC<IMovieList> = ({ title, items }) => {
 			<Grid item xs={12}>
 				<Grid container display='flex' justifyContent='flex-end'>
 					<Grid item xs={11} className='movies' mt={3}>
-						<HorizontalScroll className='horizontal-scroll'>
-							{items?.map((item) => (
-								<MovieItem key={item.title} item={item} />
-							))}
-						</HorizontalScroll>
+						{
+							// @ts-ignore
+							<HorizontalScroll className='horizontal-scroll'>
+								{items?.map((item) => (
+									<MovieItem key={item.title} item={item} />
+								))}
+							</HorizontalScroll>
+						}
 					</Grid>
 				</Grid>
 			</Grid>

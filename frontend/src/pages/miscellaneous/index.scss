@@ -17,7 +17,7 @@
 	// 		transparent 50%
 	// 	),
 	// 	radial-gradient(at 0% 0%, hsla(343, 100%, 76%, 1) 0px, transparent 50%);
-	background-image: url(src/assets/common/background.png);
+	// background-image: url(src/assets/common/background.png);
 	height: fit-content;
 }
 .main-container {
@@ -40,8 +40,8 @@
 	height: fit-content;
 	border-top: solid 1px #ffa800;
 	border-radius: 20px;
-    margin-bottom: 25px;
-    width: 99vw;
+	margin-bottom: 25px;
+	width: 99vw;
 }
 .privacy-container {
 	min-width: 60vw;
@@ -176,9 +176,9 @@
 	.about-us {
 		width: 70vw;
 		display: flex;
-        span{
-            font-size: 0.8rem;
-        }
+		span {
+			font-size: 0.8rem;
+		}
 	}
 	.flex-row {
 		flex-direction: column;
