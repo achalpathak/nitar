@@ -1,10 +1,11 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Footer, Home, Login, Policy, Register,_404 } from "@pages";
+import { Login, Register, Footer, _404 } from "@pages";
+import { Layout } from "@container";
 
 const router = createBrowserRouter([
 	{
-		path: "/",
-		element: <Home />,
+		path: "/*",
+		element: <Layout />,
 	},
 	{
 		path: "/login",
@@ -13,18 +14,6 @@ const router = createBrowserRouter([
 	{
 		path: "/register",
 		element: <Register />,
-	},
-	{
-		path: "/terms-and-conditions",
-		element: <Policy />,
-	},
-	{
-		path: "/contact-us",
-		element: <Policy />,
-	},
-	{
-		path: "/privacy-policy",
-		element: <Policy />,
 	},
 	{
 		path: "/footer",

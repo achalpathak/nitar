@@ -3,6 +3,7 @@
 // @tailwind utilities;
 
 @import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
 
 :root {
 	font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
@@ -22,8 +23,10 @@
 }
 
 #root {
-	background-image: url("../../assets/common/background.png");
+	background-image: url("src/assets/common/background.png");
 	background-size: cover;
+	display: flex;
+	flex: 1;
 }
 
 a {
@@ -113,4 +116,213 @@ input[type="number"] {
 ::-ms-input-placeholder {
 	/* Microsoft Edge */
 	color: white;
+}
+
+.login-btn {
+	padding: 10px 20px;
+	border: 1px solid #ffa800;
+	color: #ffa800;
+	text-transform: uppercase;
+	background-color: rgba($color: #ffa800, $alpha: 0.15);
+	font-family: "Barlow Condensed";
+}
+
+.app-bar-container {
+	margin: 1rem 0;
+	height: 50px;
+
+	a {
+		color: white;
+		font-family: "Barlow Condensed";
+		text-align: center;
+	}
+
+	.routes {
+		align-items: center;
+		justify-content: center;
+	}
+
+	.MuiGrid-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		transition: all 2s ease;
+
+		&.nav-item {
+			position: relative;
+			padding-bottom: 3px;
+
+			&::before {
+				align-self: flex-start;
+				content: "";
+				width: 80%;
+				height: 1px;
+				background-color: #ffa800;
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				opacity: 0;
+			}
+
+			&::after {
+				align-self: flex-start;
+				content: "";
+				width: 60%;
+				height: 1px;
+				background-color: #ffa800;
+				position: absolute;
+				bottom: -5px;
+				left: 0;
+				opacity: 0;
+			}
+
+			&.active {
+				&::before,
+				&::after {
+					opacity: 1;
+				}
+
+				a {
+					color: #ffa800;
+				}
+			}
+		}
+	}
+}
+
+.movie-banner {
+	.movie-tags {
+		div {
+			background-color: rgba($color: #000000, $alpha: 0.14);
+			padding: 10px;
+			margin-right: 10px;
+
+			p {
+				font-size: 12px;
+				color: #8c8c8c;
+			}
+		}
+	}
+}
+
+.movie-list {
+	.movies {
+		display: flex;
+		// width: 100vw;
+		// align-items: center;
+		// justify-content: center;
+		// flex-wrap: nowrap;
+		// overflow: scroll;
+
+		.horizontal-scroll {
+			.HorizontalScrollInnerChildren {
+				// margin-right: 1rem;
+				padding: 1rem;
+				width: fit-content;
+				height: fit-content;
+
+				.movie-item {
+					display: flex;
+					height: 200px;
+					width: 150px;
+					-webkit-box-shadow: 0px 3px 5px 2px rgb(0 0 0 / 50%);
+					-moz-box-shadow: 0px 3px 5px 2px rgb(0 0 0 / 50%);
+					box-shadow: 0px 3px 5px 2px rgb(0 0 0 / 50%);
+					border-radius: 10px;
+					margin-right: 1rem;
+
+					img {
+						border-radius: 10;
+					}
+				}
+			}
+		}
+	}
+}
+
+.left-right {
+	> div {
+		div {
+			border: 0.5px solid rgba($color: #ffffff, $alpha: 0.5);
+			margin-right: 10px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			a {
+				color: rgba($color: #ffffff, $alpha: 0.5);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				p {
+					font-size: 12px;
+					color: #8c8c8c;
+				}
+			}
+		}
+	}
+}
+
+.d-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+body {
+	overflow-x: hidden;
+}
+
+.HorizontalScroll .HorizontalScrollOuter {
+	width: 89vw;
+}
+
+.banner-position {
+	span {
+		font-family: "inter";
+		font-size: 0.8rem;
+
+		&.total {
+			color: #afafaf;
+		}
+	}
+	.divider {
+		&::before {
+			content: "-";
+			width: 30px;
+			height: 2px;
+		}
+	}
+}
+
+.download-app-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 3rem 0 0 0;
+}
+
+@media only screen and (max-width: 500px) {
+	.horizontal-scroll {
+		.HorizontalScrollInnerChildren {
+			padding: 5px !important;
+		}
+	}
+	.download-app-container {
+		img {
+			width: 80%;
+		}
+	}
+	.movie-list
+		.movies
+		.horizontal-scroll
+		.HorizontalScrollInnerChildren
+		.movie-item {
+		width: 5rem;
+		height: auto;
+		margin: 0;
+		box-shadow: 0px 3px 5px 2px rgb(0 0 0 / 50%);
+	}
 }

@@ -17,6 +17,8 @@
 	// 		transparent 50%
 	// 	),
 	// 	radial-gradient(at 0% 0%, hsla(343, 100%, 76%, 1) 0px, transparent 50%);
+	background-image: url(src/assets/common/background.png);
+	height: fit-content;
 }
 .main-container {
 	height: 100vh;
@@ -24,6 +26,22 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	padding: 0;
+}
+.footer-main-container {
+	height: fit-content;
+	margin-top: 2rem;
+}
+.about-us-container {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	flex-direction: column;
+	height: fit-content;
+	border-top: solid 1px #ffa800;
+	border-radius: 20px;
+    margin-bottom: 25px;
+    width: 99vw;
 }
 .privacy-container {
 	min-width: 60vw;
@@ -118,16 +136,61 @@
 	margin-bottom: 30px;
 }
 
+.social-icons {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 10px;
+	border-bottom: #ffa800 solid 1px;
+	width: 100vw;
+	svg:hover {
+		color: #ffa800;
+		margin: 15px;
+	}
+	svg {
+		margin: 15px;
+	}
+}
+.footer-links {
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	width: 80vw;
+	margin-top: 20px;
+	a {
+		color: white;
+	}
+	a:hover {
+		color: #ffa800;
+	}
+}
+.reserved-rights::after {
+	content: "GULLAR";
+	color: #ffa800;
+}
+
 @media only screen and (max-width: 500px) {
+	.footer-main-container {
+		// padding: 8rem 0 0 0;
+	}
 	.about-us {
 		width: 80vw;
 		display: flex;
 	}
 	.flex-row {
 		flex-direction: column;
+		svg {
+			margin: 10px;
+		}
 	}
 	.line {
 		border-left: 35vw solid white;
 		margin: 10px;
+	}
+	.footer-links {
+		font-size: 0.7rem;
+		text-align: center;
+		line-height: 1rem;
+		margin-bottom: 10px;
 	}
 }

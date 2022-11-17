@@ -1,0 +1,76 @@
+.subscribe-button-container {
+	min-height: 15rem;
+	justify-content: center;
+	div {
+		justify-content: center;
+		align-items: center;
+		display: flex;
+	}
+	input {
+		font-family: "inter";
+		font-size: "1.6rem";
+		background: transparent;
+		border: none;
+		width: 100%;
+		padding-left: 1rem;
+	}
+}
+.no-outline:focus {
+	outline: none;
+}
+
+.subscribe-bg {
+	background: url("src/assets/common/subscribe-bg.png");
+	background-size: cover;
+	display: flex;
+	// align-items: flex-start !important;
+	padding: 10px 5px;
+	border-radius: 15px;
+	height: 20rem;
+}
+.subscribe-button {
+	// border: 2px solid transparent;
+	background: rgba(0, 0, 0, 0.5);
+	border-radius: 30px;
+	border-width: 0.8rem;
+	justify-content: space-between !important;
+	padding: 0 0 0 10px;
+	&:hover {
+		box-shadow: 1px 1px 10px 1px #ffa800;
+	}
+	a {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		color: white;
+		cursor: pointer;
+		&:hover {
+			color: white;
+		}
+	}
+	p {
+		font-size: 0.8rem;
+	}
+	svg {
+		color: #ffa800;
+		background-color: white;
+		border-radius: 50%;
+	}
+
+	.MuiGrid-container {
+		display: flex;
+		justify-content: space-between;
+		padding: 4px;
+
+		.MuiGrid-item {
+			justify-content: flex-start;
+			&:nth-child(2) {
+				background-color: #ffa800;
+				border-radius: 30px;
+				// padding: 4px 2px 4px 10px;
+				padding: 3px 0;
+			}
+		}
+	}
+}

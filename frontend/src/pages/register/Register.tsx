@@ -209,11 +209,11 @@ const Register = () => {
 												}}
 											/>
 										}
-										label='Your age is above 18 years'
+										label='Your age is 18 years or above'
 									/>
 									{ageError && (
 										<FormHelperText>
-											Are you above 18?
+											Please click checkbox to continue
 										</FormHelperText>
 									)}
 								</FormControl>
@@ -248,7 +248,7 @@ const Register = () => {
 													style={{
 														textDecoration:
 															"underline",
-														color: "#1b0b26",
+														color: "#ffa800",
 													}}
 												>
 													Terms & Conditions

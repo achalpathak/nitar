@@ -26,3 +26,18 @@ export type IAPI = {
 		api: string;
 	};
 };
+
+export type IMovieItem = {
+	title: string;
+	image: string;
+};
+
+export type IMovieList = {
+	title: string;
+	items: IMovieItem[];
+};
+
+export type IRoutes = {
+	title: string;
+	path: string;
+};

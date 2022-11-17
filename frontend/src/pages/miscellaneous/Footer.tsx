@@ -27,6 +27,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { IMessage, IResponse, IError, ISuccess } from "@types";
 import data from "../../local-json/data.json";
 import { AppStore, GooglePlay } from "@assets";
+import FacebookIcon from '@mui/icons-material/Facebook';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import YouTubeIcon from '@mui/icons-material/YouTube';
+import InstagramIcon from '@mui/icons-material/Instagram';
 
 const Footer = () => {
 	const [html, setHtml] = useState<string>("");
@@ -48,8 +52,8 @@ const Footer = () => {
 
 	return (
 		<>
-			<div className='main-container'>
-				<div className='privacy-container'>
+			<div className='footer-main-container'>
+				<div className='about-us-container'>
 					<div className='logo-container flex-row'>
 						<img
 							alt='logo'
@@ -63,9 +67,9 @@ const Footer = () => {
 					</div>
 					<div
 						className='about-us'
-						dangerouslySetInnerHTML={{ __html: html }}
+						// dangerouslySetInnerHTML={{ __html: html }}
 					>
-						{/* <span>
+						<span>
 							Lorem ipsum dolor sit amet, consectetur adipiscing
 							elit. Dictum orci gravida arcu nec eu imperdiet in
 							ac. Morbi id convallis mauris nisl viverra
@@ -74,19 +78,30 @@ const Footer = () => {
 							pellentesque in lobortis. Vulputate ornare turpis
 							diam interdum sagittis in tortor sapien. Mauris duis
 							turpis erat nunc in sagittis.
-						</span> */}
+						</span>
 					</div>
-					<div
+					<div>
+                    <div
 						className='flex-row'
-						style={{ width: "50vw", marginRight: "10px" }}
 					>
 						<div className='line'></div>
 						<div style={{ marginLeft: "10px" }}>Download App</div>
 						<GooglePlay height={40} />
 						<AppStore height={40} />
 					</div>
-					<div>Test</div>
+					<div className='social-icons'>
+                        <FacebookIcon fontSize='large'/>
+                        <TwitterIcon fontSize='large'/>
+                        <YouTubeIcon fontSize='large'/>
+                        <InstagramIcon fontSize='large'/>
+                    </div>
 				</div>
+                <div className='footer-links'>
+                    <a>Privacy Policy</a>
+                    <a className='reserved-rights'>© 2022 All Rights Reserved to </a>
+                    <a>Refund Policy</a>
+                </div>
+                    </div>
 			</div>
 		</>
 	);
