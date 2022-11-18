@@ -45,7 +45,7 @@
 	box-shadow: 10px 10px 90px 12px rgba(0, 0, 0, 0.6);
 	filter: drop-shadow(0px 0px 120px rgba(0, 0, 0, 0.5));
 	border-radius: 5px;
-	background: url("../../assets/common/input-container-bg.png");
+	// background: url("../../assets/common/input-container-bg.png");
 	div {
 		margin: 5px;
 	}
@@ -75,13 +75,14 @@
 		width: 20rem;
 		color: white;
 		border-radius: 5px;
-		border: 0.5px solid white;
+		border: 0.5px solid #ffa800;
 		margin-top: 15px;
 		padding: 0 10px;
 		background-color: transparent;
 		font-size: 1rem;
 
-		background: url("../../assets/common/input-bg.png");
+		// background: url("../../assets/common/input-bg.png");
+
 		&.error {
 			border-color: #ff0c0c;
 		}

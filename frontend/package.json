@@ -21,6 +21,7 @@
 		"react-horizontal-scrolling": "^0.1.13",
 		"react-otp-input": "^2.4.0",
 		"react-router-dom": "^6.4.3",
+		"react-select": "^5.6.1",
 		"sass": "^1.56.1",
 		"vite-plugin-svgr": "^2.2.2"
 	},

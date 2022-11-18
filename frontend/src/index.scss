@@ -23,10 +23,11 @@
 }
 
 #root {
-	background-image: url("/src/assets/common/background.png");
-	background-size: cover;
+	// background-image: url("/src/assets/common/background.png");
+	// background-size: cover;
 	display: flex;
 	flex: 1;
+	background-color: rgba($color: #000000, $alpha: 0.3);
 }
 
 a {
@@ -50,7 +51,7 @@ h1 {
 	line-height: 1.1;
 }
 
-button {
+button:not(.custom-btn) {
 	border-radius: 25px;
 	border: 1px solid transparent;
 	padding: 0.6em 1.2em;
@@ -59,11 +60,10 @@ button {
 	font-family: inherit;
 	background-color: white;
 	cursor: pointer;
-	transition: border-color 0.1ss;
+	transition: all 0.1s ease;
 	width: 15rem;
 	color: #ffa800;
-}
-button {
+
 	&:hover:not(:disabled) {
 		border-color: #ffa800;
 		box-shadow: 1px 1px 10px 1px #ffa800;
@@ -71,10 +71,17 @@ button {
 	&:disabled {
 		color: gray;
 	}
+
+	&:focus,
+	&:focus-visible {
+		outline: 4px auto -webkit-focus-ring-color;
+	}
 }
-button:focus,
-button:focus-visible {
-	outline: 4px auto -webkit-focus-ring-color;
+
+button {
+	&.custom-btn {
+		transition: all 0.5s ease;
+	}
 }
 
 @media (prefers-color-scheme: light) {
@@ -125,6 +132,11 @@ input[type="number"] {
 	text-transform: uppercase;
 	background-color: rgba($color: #ffa800, $alpha: 0.15);
 	font-family: "Barlow Condensed";
+
+	&:hover {
+		color: white;
+		box-shadow: 0px 0px 5px 1px #ffa800;
+	}
 }
 
 .left-right {

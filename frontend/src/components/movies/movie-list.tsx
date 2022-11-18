@@ -22,6 +22,7 @@ const MovieList: FC<IMovieList> = ({ title, items }) => {
 			// justifyContent='flex-end'
 			mt={5}
 			className='movie-list'
+			maxWidth='100vw'
 		>
 			<Grid item xs={12}>
 				<Grid container display='flex' justifyContent='center'>
@@ -49,10 +50,19 @@ const MovieList: FC<IMovieList> = ({ title, items }) => {
 			</Grid>
 			<Grid item xs={12}>
 				<Grid container display='flex' justifyContent='flex-end'>
-					<Grid item xs={11} className='movies' mt={3}>
+					<Grid
+						item
+						xs={11}
+						className='movies'
+						mt={3}
+						overflow='hidden'
+					>
 						{
 							// @ts-ignore
-							<HorizontalScroll className='horizontal-scroll'>
+							<HorizontalScroll
+								className='horizontal-scroll'
+								disabled
+							>
 								{items?.map((item) => (
 									<MovieItem key={item.title} item={item} />
 								))}

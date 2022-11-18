@@ -77,6 +77,7 @@ const Login = () => {
 
 	const stopTimer = () => {
 		clearInterval(interval.current);
+		interval.current = undefined;
 	};
 
 	useEffect(() => {
@@ -270,7 +271,12 @@ const Login = () => {
 							className='cancel-btn'
 							onClickCapture={(e) => {
 								e.preventDefault();
-								// alert("alert");
+								stopTimer();
+								if (process === "login") {
+									navigate(-1);
+								} else {
+									setProcess("login");
+								}
 							}}
 						>
 							<svg

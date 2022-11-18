@@ -10,7 +10,7 @@
 
 	.routes {
 		align-items: center;
-		justify-content: center;
+		justify-content: flex-end;
 	}
 
 	.MuiGrid-item {
@@ -58,6 +58,33 @@
 					color: #ffa800;
 				}
 			}
+		}
+	}
+}
+
+.w-200 {
+	width: 200px;
+}
+
+.MuiGrid-item {
+	&.search-select {
+		transition: all 0.5s ease;
+		opacity: 0;
+		display: none;
+
+		&.searching {
+			opacity: 1;
+			display: flex;
+		}
+	}
+	&.search-icon {
+		transition: all 0.5s ease;
+		opacity: 1;
+		display: flex;
+
+		&.searching {
+			opacity: 0;
+			display: none;
 		}
 	}
 }

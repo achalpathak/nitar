@@ -45,3 +45,9 @@ export type IRoutes = {
 	title: string;
 	path: string;
 };
+
+export type ICustomSelectOption<T = string> = {
+	value: T;
+	label: string;
+	disabled?: boolean;
+};

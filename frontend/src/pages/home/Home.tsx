@@ -1,46 +1,47 @@
 import { Banner, DownloadApp, SubscribeButton } from "@components";
 import MovieList from "@components/movies";
+import MovieTile from "@assets/home/movie-tile.png";
 
 const movies = [
 	{
 		title: "Undone",
-		image: "src/assets/home/movie-tile.png",
+		image: MovieTile,
 	},
 	{
 		title: "Undone",
-		image: "src/assets/home/movie-tile.png",
+		image: MovieTile,
 	},
 	{
 		title: "Undone",
-		image: "src/assets/home/movie-tile.png",
+		image: MovieTile,
 	},
 	{
 		title: "Undone",
-		image: "src/assets/home/movie-tile.png",
+		image: MovieTile,
 	},
 	{
 		title: "Undone",
-		image: "src/assets/home/movie-tile.png",
+		image: MovieTile,
 	},
 	{
 		title: "Undone",
-		image: "src/assets/home/movie-tile.png",
+		image: MovieTile,
 	},
 	{
 		title: "Undone",
-		image: "src/assets/home/movie-tile.png",
+		image: MovieTile,
 	},
 	{
 		title: "Undone",
-		image: "src/assets/home/movie-tile.png",
+		image: MovieTile,
 	},
 	{
 		title: "Undone",
-		image: "src/assets/home/movie-tile.png",
+		image: MovieTile,
 	},
 	{
 		title: "Undone",
-		image: "src/assets/home/movie-tile.png",
+		image: MovieTile,
 	},
 ];
 

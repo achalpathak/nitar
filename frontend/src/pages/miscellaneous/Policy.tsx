@@ -1,33 +1,11 @@
 //*All imports go here!
 import "../miscellaneous/index.scss";
-import logo from "@assets/common/logo.png";
-import { Button, CustomInput } from "@components";
-import {
-	ChangeEvent,
-	KeyboardEvent,
-	MouseEvent,
-	useEffect,
-	useMemo,
-	useState,
-} from "react";
+import { Button } from "@components";
+import { MouseEvent, useEffect, useMemo, useState } from "react";
 import { AxiosError } from "axios";
 import api, { Routes } from "@api";
-import {
-	Alert,
-	AlertColor,
-	AlertTitle,
-	Checkbox,
-	FormControl,
-	FormControlLabel,
-	FormHelperText,
-	Grid,
-	Paper,
-	Typography,
-} from "@mui/material";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { IMessage, IResponse, IError, IAPI, ISuccess } from "@types";
-import data from "../../local-json/data.json";
-import AboutUs from "@pages/miscellaneous/Footer";
+import { useLocation } from "react-router-dom";
+import { IError, IAPI, ISuccess } from "@types";
 
 const APIS: IAPI = {
 	"privacy-policy": {
@@ -37,6 +15,10 @@ const APIS: IAPI = {
 	"terms-and-conditions": {
 		name: "Terms and Conditions",
 		api: Routes.TERMS_AND_CONDITIONS,
+	},
+	"refund-policy": {
+		name: "Refund Policy",
+		api: Routes.REFUND_POLICY,
 	},
 };
 
@@ -62,6 +44,7 @@ const Policy = () => {
 			} catch (error) {
 				const err = error as AxiosError<IError>;
 				console.log(err.response?.data);
+				setHtml(`<h1>Unable to get ${currentPath?.name}</h1>`);
 			}
 		})();
 	}, []);

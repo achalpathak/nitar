@@ -23,28 +23,30 @@
 		// overflow: scroll;
 
 		.horizontal-scroll {
+			display: flex;
 			.HorizontalScrollInnerChildren {
 				// margin-right: 1rem;
 				padding: 1rem;
 				width: fit-content;
 				height: fit-content;
-
-				.movie-item {
-					display: flex;
-					height: 200px;
-					width: 150px;
-					-webkit-box-shadow: 0px 3px 5px 2px rgb(0 0 0 / 50%);
-					-moz-box-shadow: 0px 3px 5px 2px rgb(0 0 0 / 50%);
-					box-shadow: 0px 3px 5px 2px rgb(0 0 0 / 50%);
-					border-radius: 10px;
-					margin-right: 1rem;
-
-					img {
-						border-radius: 10;
-					}
-				}
+				overflow: scroll;
 			}
 		}
+	}
+}
+
+.movie-item {
+	display: flex;
+	height: 200px;
+	width: 150px;
+	-webkit-box-shadow: 0px 3px 5px 2px rgb(0 0 0 / 50%);
+	-moz-box-shadow: 0px 3px 5px 2px rgb(0 0 0 / 50%);
+	box-shadow: 0px 3px 5px 2px rgb(0 0 0 / 50%);
+	border-radius: 10px;
+	margin-right: 1rem;
+
+	img {
+		border-radius: 10;
 	}
 }
 

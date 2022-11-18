@@ -27,10 +27,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { IMessage, IResponse, IError, ISuccess } from "@types";
 import data from "../../local-json/data.json";
 import { AppStore, GooglePlay } from "@assets";
-import FacebookIcon from '@mui/icons-material/Facebook';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import YouTubeIcon from '@mui/icons-material/YouTube';
-import InstagramIcon from '@mui/icons-material/Instagram';
+import FacebookIcon from "@mui/icons-material/Facebook";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import YouTubeIcon from "@mui/icons-material/YouTube";
+import InstagramIcon from "@mui/icons-material/Instagram";
 
 const Footer = () => {
 	const [html, setHtml] = useState<string>("");
@@ -81,27 +81,29 @@ const Footer = () => {
 						</span>
 					</div>
 					<div>
-                    <div
-						className='flex-row'
-					>
-						<div className='line'></div>
-						<div style={{ marginLeft: "10px" }}>Download App</div>
-						<GooglePlay height={40} />
-						<AppStore height={40} />
+						<div className='flex-row'>
+							<div className='line'></div>
+							<div style={{ marginLeft: "10px" }}>
+								Download App
+							</div>
+							<GooglePlay height={40} />
+							<AppStore height={40} />
+						</div>
+						<div className='social-icons'>
+							<FacebookIcon fontSize='large' />
+							<TwitterIcon fontSize='large' />
+							<YouTubeIcon fontSize='large' />
+							<InstagramIcon fontSize='large' />
+						</div>
 					</div>
-					<div className='social-icons'>
-                        <FacebookIcon fontSize='large'/>
-                        <TwitterIcon fontSize='large'/>
-                        <YouTubeIcon fontSize='large'/>
-                        <InstagramIcon fontSize='large'/>
-                    </div>
+					<div className='footer-links'>
+						<Link to='/privacy-policy'>Privacy Policy</Link>
+						<a className='reserved-rights'>
+							© 2022 All Rights Reserved to{" "}
+						</a>
+						<Link to='/refund-policy'>Refund Policy</Link>
+					</div>
 				</div>
-                <div className='footer-links'>
-                    <a>Privacy Policy</a>
-                    <a className='reserved-rights'>© 2022 All Rights Reserved to </a>
-                    <a>Refund Policy</a>
-                </div>
-                    </div>
 			</div>
 		</>
 	);

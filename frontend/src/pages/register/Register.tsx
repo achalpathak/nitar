@@ -279,7 +279,7 @@ const Register = () => {
 							className='cancel-btn'
 							onClickCapture={(e) => {
 								e.preventDefault();
-								// alert("alert");
+								navigate(-1);
 							}}
 						>
 							<svg

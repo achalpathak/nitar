@@ -30,6 +30,7 @@ const TheContent = () => {
 					<Route path='/terms-and-conditions' element={<Policy />} />
 					<Route path='/contact-us' element={<Policy />} />
 					<Route path='/privacy-policy' element={<Policy />} />
+					<Route path='/refund-policy' element={<Policy />} />
 				</Routes>
 			</main>
 			<footer>
