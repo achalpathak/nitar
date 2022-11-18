@@ -5,6 +5,13 @@ from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import gettext_lazy as _
 
 from . import models as user_models
+from settings.models import Settings
+
+DASHBOARD_TITLE = "Dashboard"
+
+admin.site.site_title = DASHBOARD_TITLE
+admin.site.site_header = DASHBOARD_TITLE
+admin.site.index_title = DASHBOARD_TITLE
 
 
 @admin.register(user_models.User)

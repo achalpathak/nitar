@@ -14,5 +14,5 @@ class AboutUs(APIView):
     
 class PrivacyPolicy(APIView):
     def get(self, request):
-        about_us = settings_models.Settings.objects.get(field="privacy_policy")
-        return Response({"message": about_us.value})
+        privacy_obj = settings_models.Settings.objects.get(field="privacy_policy")
+        return Response({"message": privacy_obj.value})

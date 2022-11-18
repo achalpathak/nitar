@@ -10,30 +10,31 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = []
-    
+
     def insertData(apps, schema_editor):
-        Settings = apps.get_model('settings', 'Settings')
+        Settings = apps.get_model("settings", "Settings")
         data = {
-                "terms_and_conditions": "Sample Terms and Conditions",
-                "about_us": "Sample About Us",
-                "privacy_policy": "Sample Privacy Policy"}
-        
-        for _,val in enumerate(data):
-            obj = Settings(field = val, value=data[val])
+            "terms_and_conditions": "Sample Terms and Conditions",
+            "about_us": "Sample About Us",
+            "privacy_policy": "Sample Privacy Policy",
+        }
+
+        for _, val in enumerate(data):
+            obj = Settings(field=val, value=data[val])
             obj.save()
-            
-        LanguageChoices = apps.get_model('settings', 'LanguageChoices')
+
+        LanguageChoices = apps.get_model("settings", "LanguageChoices")
         language_choices = "Hindi,English,Telugu,Assamese,Konkani,Gujarati,kannada,Malayalam,Marathi,Nepali,Tamil,Sikkimese,Urdu,Sanskrit,Punjabi,Haryanvi,Odia"
         for lang in language_choices.split(","):
             obj = LanguageChoices(name=lang)
             obj.save()
-            
-        AgeChoices = apps.get_model('settings', 'AgeChoices')
+
+        AgeChoices = apps.get_model("settings", "AgeChoices")
         age_choices = "All Ages,13+,16+,18+,U,U/A,A,unspecified"
         for age in age_choices.split(","):
             obj = AgeChoices(name=age)
             obj.save()
-            
+
     operations = [
         migrations.CreateModel(
             name="AgeChoices",

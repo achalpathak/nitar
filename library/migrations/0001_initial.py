@@ -85,22 +85,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("name", models.CharField(blank=True, max_length=255, null=True)),
-                (
-                    "poster_small_vertical_link",
-                    models.CharField(blank=True, max_length=255, null=True),
-                ),
-                (
-                    "poster_large_vertical_link",
-                    models.CharField(blank=True, max_length=255, null=True),
-                ),
-                (
-                    "poster_small_horizontal_link",
-                    models.CharField(blank=True, max_length=255, null=True),
-                ),
-                (
-                    "poster_large_horizontal_link",
-                    models.CharField(blank=True, max_length=255, null=True),
-                ),
                 ("published", models.BooleanField(default=False)),
             ],
             options={
@@ -171,22 +155,6 @@ class Migration(migrations.Migration):
                 ),
                 ("name", models.CharField(blank=True, max_length=255, null=True)),
                 ("description", models.TextField(blank=True, null=True)),
-                (
-                    "poster_small_vertical_link",
-                    models.CharField(blank=True, max_length=255, null=True),
-                ),
-                (
-                    "poster_large_vertical_link",
-                    models.CharField(blank=True, max_length=255, null=True),
-                ),
-                (
-                    "poster_small_horizontal_link",
-                    models.CharField(blank=True, max_length=255, null=True),
-                ),
-                (
-                    "poster_large_horizontal_link",
-                    models.CharField(blank=True, max_length=255, null=True),
-                ),
                 ("duration", models.CharField(blank=True, max_length=15, null=True)),
                 ("video_link", models.CharField(blank=True, max_length=255, null=True)),
                 (
