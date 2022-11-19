@@ -61,7 +61,12 @@ class HomePageAPI(APIView):
             )
             # TODO: optimize later if possible
             for obj in category_objs:
-                dto = obj.movies if obj.movies else obj.series
+                if obj.movies:
+                    dto = obj.movies
+                    dto.content_type = "movies"
+                else:
+                    dto = obj.series
+                    dto.content_type = "series"
                 dto.rankings = obj.rankings
                 category_dto_obj["category_items"].append(self.serializer(dto).data)
             data["categories"].append(category_dto_obj)

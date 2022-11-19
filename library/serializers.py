@@ -29,3 +29,4 @@ class HomePageListSerializer(serializers.Serializer):
     age_rating = serializers.ReadOnlyField(source="age_rating.name")
     language = serializers.ReadOnlyField(source="language.name")
     rankings = serializers.IntegerField()
+    content_type = serializers.CharField()
