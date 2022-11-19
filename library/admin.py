@@ -11,11 +11,13 @@ from .models import (
     Series,
     Extras,
     Episodes,
+    CategoryMovieSeriesMapping,
 )
 
 admin.site.register(Category)
 admin.site.register(Geners)
 admin.site.register(Movies)
+admin.site.register(CategoryMovieSeriesMapping)
 admin.site.register(ExtrasCategory)
 admin.site.register(Upcoming)
 admin.site.register(Banner)

@@ -43,34 +43,6 @@ def validate_poster_large_horizontal_image(fieldfile_obj):
 
 class Category(TimeStampedModel):
     name = models.CharField(max_length=255, null=True, blank=True)
-    poster_small_vertical_image = models.ImageField(
-        upload_to=utils.image_path,
-        null=True,
-        blank=True,
-        validators=[validate_poster_small_vertical_image],
-        help_text=ERROR_MSG,
-    )
-    poster_large_vertical_image = models.ImageField(
-        upload_to=utils.image_path,
-        null=True,
-        blank=True,
-        validators=[validate_poster_large_vertical_image],
-        help_text=ERROR_MSG,
-    )
-    poster_small_horizontal_image = models.ImageField(
-        upload_to=utils.image_path,
-        null=True,
-        blank=True,
-        validators=[validate_poster_small_horizontal_image],
-        help_text=ERROR_MSG,
-    )
-    poster_large_horizontal_image = models.ImageField(
-        upload_to=utils.image_path,
-        null=True,
-        blank=True,
-        validators=[validate_poster_large_horizontal_image],
-        help_text=ERROR_MSG,
-    )
     rankings = models.PositiveIntegerField(default=1)
     published = models.BooleanField(default=False)
 
@@ -80,6 +52,7 @@ class Category(TimeStampedModel):
 
 class ExtrasCategory(TimeStampedModel):
     name = models.CharField(max_length=255, null=True, blank=True)
+    published = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -146,7 +119,6 @@ class Movies(TimeStampedModel):
     genres = models.ManyToManyField(Geners)
     published = models.BooleanField(default=False)
     membership_requried = models.BooleanField(default=True)
-    category = models.ManyToManyField(Category, blank=True)
     show_banner = GenericRelation(Banner)
 
     def __str__(self):
@@ -191,7 +163,6 @@ class Series(TimeStampedModel):
     trailer_link = models.CharField(max_length=255, null=True, blank=True)
     genres = models.ManyToManyField(Geners)
     published = models.BooleanField(default=False)
-    category = models.ManyToManyField(Category, blank=True)
     show_banner = GenericRelation(Banner)
 
     def __str__(self):
@@ -238,6 +209,25 @@ class Episodes(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+
+class CategoryMovieSeriesMapping(TimeStampedModel):
+    movies = models.ForeignKey(Movies, null=True, blank=True, on_delete=models.CASCADE)
+    series = models.ForeignKey(Series, null=True, blank=True, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    rankings = models.PositiveIntegerField(default=1)
+
+    def clean(self):
+        if self.movies and self.series:
+            raise ValidationError("Either choose Movies or Series. Cannot select both.")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(CategoryMovieSeriesMapping, self).save(*args, **kwargs)
+
+    def __str__(self):
+        obj = self.movies if self.movies else self.series
+        return f"{self.category.name}|{obj.name}|{self.rankings}"
 
 
 class Extras(TimeStampedModel):
@@ -332,3 +322,11 @@ class Upcoming(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+
+class NewsLetterSubscription(TimeStampedModel):
+    email = models.EmailField(max_length=255, null=True, blank=True)
+    disabled = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.email
