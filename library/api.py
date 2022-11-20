@@ -71,3 +71,14 @@ class HomePageAPI(APIView):
                 category_dto_obj["category_items"].append(self.serializer(dto).data)
             data["categories"].append(category_dto_obj)
         return Response({"result": data})
+
+
+class UpcomingAPI(APIView):
+    serializer = serializers.UpcomingListSerializer
+
+    def get(self, request):
+        upcoming_objs = library_models.Upcoming.objects.filter(published=True).order_by(
+            "created"
+        )
+        data = self.serializer(upcoming_objs, many=True).data
+        return Response({"result": data})

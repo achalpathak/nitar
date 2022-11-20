@@ -15,6 +15,16 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class UpcomingListSerializer(serializers.ModelSerializer):
+    genres = GenersSerializer(many=True)
+    age_rating = serializers.ReadOnlyField(source="age_rating.name")
+    language = serializers.ReadOnlyField(source="language.name")
+
+    class Meta:
+        model = library_models.Upcoming
+        fields = "__all__"
+
+
 class HomePageListSerializer(serializers.Serializer):
     name = serializers.CharField()
     description = serializers.CharField()

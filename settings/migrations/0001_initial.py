@@ -17,6 +17,13 @@ class Migration(migrations.Migration):
             "terms_and_conditions": "Sample Terms and Conditions",
             "about_us": "Sample About Us",
             "privacy_policy": "Sample Privacy Policy",
+            "refund_policy": "Sample Refund Policy",
+            "name_of_the_app": "Taak",
+            "color_primary": "#ffa800",  # yellow
+            "color_secondary": "#fff",  # white
+            "color_alternate": "#000000",  # black
+            "play_store_link": "https://play.google.com/store/apps/details?id=com.netflix.mediaclient",
+            "apple_store_link": "https://apps.apple.com/in/app/netflix/id363590051",
         }
 
         for _, val in enumerate(data):

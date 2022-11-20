@@ -48,13 +48,13 @@ class Migration(migrations.Migration):
         for val in geners_data:
             obj = Geners(name=val)
             obj.save()
-            
-        category_data = ["Popular Originals", "Trending Now", "Most Watched", "Trending Now"]
+
+        category_data = ["Popular Originals", "Trending Now", "Most Watched"]
         Category = apps.get_model("library", "Category")
         for val in category_data:
             obj = Category(name=val, published=True)
             obj.save()
-            
+
     operations = [
         migrations.CreateModel(
             name="Category",

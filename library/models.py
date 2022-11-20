@@ -208,7 +208,7 @@ class Episodes(TimeStampedModel):
     published = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.name
+        return f"{self.series.name} | {self.name} | Episode No={self.episode_number}"
 
 
 class CategoryMovieSeriesMapping(TimeStampedModel):
@@ -224,6 +224,12 @@ class CategoryMovieSeriesMapping(TimeStampedModel):
     def save(self, *args, **kwargs):
         self.full_clean()
         super(CategoryMovieSeriesMapping, self).save(*args, **kwargs)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['movies', 'category'], name='movie category unique'),
+            models.UniqueConstraint(fields=['series', 'category'], name='series category unique')
+        ]
 
     def __str__(self):
         obj = self.movies if self.movies else self.series

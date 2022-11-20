@@ -1,7 +1,12 @@
 from rest_framework import serializers
 from . import models
 
-
+class WebsiteConfigSettingsAPI(serializers.Serializer):
+    field = serializers.CharField()
+    value = serializers.CharField()
+    toggle_value = serializers.BooleanField()
+    image = serializers.ImageField()
+    field_description = serializers.CharField()
 class AgeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.AgeChoices
