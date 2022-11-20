@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "users",
     "settings",
     "library",
+    "django_cleanup.apps.CleanupConfig",  # should be placed as the last app
 ]
 
 MIDDLEWARE = [
