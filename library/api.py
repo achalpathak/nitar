@@ -174,13 +174,14 @@ class EpisodesAPI(APIView):
 
     def get(self, request, slug):
         episodes_results = library_models.Episodes.objects.filter(slug=slug).first()
-        all_episodes_results = library_models.Episodes.objects.filter(
-            series=episodes_results.series
-        )
         data = self.serializer(episodes_results).data
-        data["other_episodes"] = self.serializer_other_episodes(
-            all_episodes_results, many=True
-        ).data
+        if episodes_results:
+            all_episodes_results = library_models.Episodes.objects.filter(
+                series=episodes_results.series
+            )
+            data["other_episodes"] = self.serializer_other_episodes(
+                all_episodes_results, many=True
+            ).data
         return Response({"result": data})
 
 
