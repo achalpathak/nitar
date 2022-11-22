@@ -66,6 +66,9 @@ class Geners(TimeStampedModel):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name_plural = "Geners"
+
 
 class Banner(TimeStampedModel):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -127,6 +130,9 @@ class Movies(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name_plural = "Movies"
 
 
 class Series(TimeStampedModel):
@@ -216,6 +222,9 @@ class Episodes(TimeStampedModel):
     def __str__(self):
         return f"{self.series.name} | {self.name} | Episode No={self.episode_number}"
 
+    class Meta:
+        verbose_name_plural = "Episodes"
+
 
 class CategoryMovieSeriesMapping(TimeStampedModel):
     movies = models.ForeignKey(Movies, null=True, blank=True, on_delete=models.CASCADE)
@@ -292,6 +301,9 @@ class Extras(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name_plural = "Extras"
 
 
 class Upcoming(TimeStampedModel):

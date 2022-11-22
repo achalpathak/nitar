@@ -12,7 +12,8 @@ def validate_poster_small_vertical_image(fieldfile_obj):
     filesize = fieldfile_obj.file.size
     if filesize > 512 * 1024:
         raise ValidationError(f"{ERROR_MSG}. Current Size={(filesize//1024)} kB")
-    
+
+
 class Settings(TimeStampedModel):
     field = models.CharField(max_length=255, null=True, blank=True)
     value = models.TextField(null=True, blank=True)
@@ -25,17 +26,29 @@ class Settings(TimeStampedModel):
         help_text=ERROR_MSG,
     )
     field_description = models.CharField(max_length=255, null=True, blank=True)
+
     def __str__(self):
         return self.field
-    
+
+    class Meta:
+        verbose_name_plural = "Website Settings"
+
+
 class AgeChoices(TimeStampedModel):
     name = models.CharField(max_length=255, null=True, blank=True)
-    
+
     def __str__(self):
         return self.name
-    
+
+    class Meta:
+        verbose_name_plural = "Age Choices"
+
+
 class LanguageChoices(TimeStampedModel):
     name = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name_plural = "Language Choices"

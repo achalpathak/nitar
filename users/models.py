@@ -79,7 +79,11 @@ class LoginPhoneOtp(TimeStampedModel):
 
     def __str__(self):
         return self.user.phone
-    
+
+    class Meta:
+        verbose_name_plural = "OTPs"
+
+
 class ContactUs(TimeStampedModel):
     full_name = models.CharField(max_length=30, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
@@ -94,3 +98,6 @@ class ContactUs(TimeStampedModel):
 
     def __str__(self):
         return f"{self.full_name} | {self.subject}"
+
+    class Meta:
+        verbose_name_plural = "Contact Us Queries"

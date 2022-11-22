@@ -59,3 +59,4 @@ class LoginPhoneOtpAdmin(admin.ModelAdmin):
 
 
 admin.site.register(user_models.LoginPhoneOtp, LoginPhoneOtpAdmin)
+admin.site.register(user_models.ContactUs)
