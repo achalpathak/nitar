@@ -13,7 +13,7 @@ class RegisterUserSerializer(serializers.Serializer):
     phone = serializers.CharField(required=True)
     full_name = serializers.CharField(max_length=30, required=True)
     email = serializers.EmailField(required=False)
-    age_above_18 =serializers.BooleanField(required=True)
+    age_above_18 = serializers.BooleanField(required=True)
     terms_conditions_agreed = serializers.BooleanField(required=True)
 
     def validate_phone(self, phone):
@@ -68,6 +68,19 @@ class UserSerializer(serializers.ModelSerializer):
         return user_obj
 
 
+class ContactUsSerializer(serializers.ModelSerializer):
+    def validate(self, data):
+        if data.get("email") is None and data.get("phone") is None:
+            raise serializers.ValidationError(
+                {"message": "Fill email or phone number."}
+            )
+        return data
+
+    class Meta:
+        model = user_models.ContactUs
+        fields = "__all__"
+
+
 class PhoneOtpSerializer(serializers.Serializer):
     phone = serializers.CharField(required=True)
 
@@ -88,7 +101,7 @@ class PhoneOtpSerializer(serializers.Serializer):
                 data = {
                     "otp": randint(100000, 999999),
                     "valid_till": datetime.now() + timedelta(minutes=15),
-                    "attempts_remaining": 3
+                    "attempts_remaining": 3,
                 }
                 otp_obj, created = user_models.LoginPhoneOtp.objects.update_or_create(
                     user=user_obj, defaults=data

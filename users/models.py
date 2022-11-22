@@ -79,3 +79,18 @@ class LoginPhoneOtp(TimeStampedModel):
 
     def __str__(self):
         return self.user.phone
+    
+class ContactUs(TimeStampedModel):
+    full_name = models.CharField(max_length=30, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    phone = models.CharField(
+        max_length=10,
+        validators=[MinLengthValidator(10)],
+        blank=True,
+        null=True,
+    )
+    subject = models.CharField(max_length=100, blank=True, null=True)
+    message = models.TextField()
+
+    def __str__(self):
+        return f"{self.full_name} | {self.subject}"

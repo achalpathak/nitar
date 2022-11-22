@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from . import models as library_models
 from . import serializers
 from rest_framework import status
+from django.db.models import Q
 
 
 # class BannerInfo(APIView):
@@ -28,6 +29,11 @@ class NewsLetterSubscriptionAPI(APIView):
     def post(self, request):
         try:
             email = request.data["email"]
+            if email is None:
+                return Response(
+                    {"message": f"email field cannot be empty."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             library_models.NewsLetterSubscription.objects.update_or_create(
                 email=email,
                 defaults={"email": email},
@@ -82,3 +88,58 @@ class UpcomingAPI(APIView):
         )
         data = self.serializer(upcoming_objs, many=True).data
         return Response({"result": data})
+
+
+class SearchAPI(APIView):
+    def get(self, request):
+        try:
+            query = request.GET["q"]
+            if len(query) <= 4:
+                return Response(
+                    {"message": f"Enter atleast 4 characters."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            lookups = Q(name__icontains=query)
+            movies_results = (
+                library_models.Movies.objects.filter(lookups)
+                .values("name", "description", "poster_small_vertical_image")
+                .distinct()
+            )
+            series_results = (
+                library_models.Series.objects.filter(lookups)
+                .values(
+                    "name",
+                    "description",
+                    "poster_small_vertical_image",
+                )
+                .distinct()
+            )
+            episodes_results = (
+                library_models.Episodes.objects.filter(lookups)
+                .values("name", "description", "poster_small_vertical_image")
+                .distinct()
+            )
+            extras_results = (
+                library_models.Extras.objects.filter(lookups)
+                .values("name", "description", "poster_small_vertical_image")
+                .distinct()
+            )
+            upcoming_results = (
+                library_models.Upcoming.objects.filter(lookups)
+                .values("name", "description", "poster_small_vertical_image")
+                .distinct()
+            )
+            data = {
+                "movies_results": movies_results,
+                "series_results": series_results,
+                "episodes_results": episodes_results,
+                "extras_results": extras_results,
+                "upcoming_results": upcoming_results,
+            }
+            return Response({"result": data})
+
+        except KeyError as e:
+            return Response(
+                {"message": f"{e} field is required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )

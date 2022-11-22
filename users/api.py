@@ -37,4 +37,14 @@ class VerifyOTP(APIView):
             login(
                 request, user_obj, backend="django.contrib.auth.backends.ModelBackend"
             )
-        return Response({"message": "Phone number is verified and logged in."})
+            return Response({"message": "Phone number is verified and logged in."})
+        return Response({"message": "Error"},status=status.HTTP_400_BAD_REQUEST)
+    
+    
+class ContactUsAPI(APIView):
+    serializer_class = user_serializers.ContactUsSerializer
+    def post(self, request):
+        serialized_data = self.serializer_class(data=self.request.data)
+        if serialized_data.is_valid(raise_exception=True):
+            serialized_data.save()
+            return Response({"message": "Thank you for contacting us."})
