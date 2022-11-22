@@ -5,6 +5,8 @@ from django.contrib.contenttypes.fields import GenericRelation, GenericForeignKe
 from settings.models import AgeChoices, LanguageChoices
 from django.core.exceptions import ValidationError
 from . import utils
+from django.dispatch import receiver
+from django.db.models import signals
 
 BANNER_DEFAULT = "Banner Default"
 BANNER_WELCOME = "Banner Welcome"
@@ -109,6 +111,7 @@ class Movies(TimeStampedModel):
         validators=[validate_poster_large_horizontal_image],
         help_text=ERROR_MSG,
     )
+
     duration = models.CharField(max_length=15, null=True, blank=True)
     language = models.ForeignKey(LanguageChoices, null=True, on_delete=models.SET_NULL)
     age_rating = models.ForeignKey(AgeChoices, null=True, on_delete=models.SET_NULL)
@@ -120,6 +123,7 @@ class Movies(TimeStampedModel):
     published = models.BooleanField(default=False)
     membership_requried = models.BooleanField(default=True)
     show_banner = GenericRelation(Banner)
+    slug = models.SlugField(null=True, unique=True)
 
     def __str__(self):
         return self.name
@@ -163,6 +167,7 @@ class Series(TimeStampedModel):
     trailer_link = models.CharField(max_length=255, null=True, blank=True)
     genres = models.ManyToManyField(Geners)
     published = models.BooleanField(default=False)
+    slug = models.SlugField(null=True, unique=True)
     show_banner = GenericRelation(Banner)
 
     def __str__(self):
@@ -205,6 +210,7 @@ class Episodes(TimeStampedModel):
     duration = models.CharField(max_length=15, null=True, blank=True)
     membership_requried = models.BooleanField(default=True)
     video_link = models.CharField(max_length=255, null=True, blank=True)
+    slug = models.SlugField(null=True, unique=True)
     published = models.BooleanField(default=False)
 
     def __str__(self):
@@ -227,8 +233,12 @@ class CategoryMovieSeriesMapping(TimeStampedModel):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['movies', 'category'], name='movie category unique'),
-            models.UniqueConstraint(fields=['series', 'category'], name='series category unique')
+            models.UniqueConstraint(
+                fields=["movies", "category"], name="movie category unique"
+            ),
+            models.UniqueConstraint(
+                fields=["series", "category"], name="series category unique"
+            ),
         ]
 
     def __str__(self):
@@ -275,6 +285,7 @@ class Extras(TimeStampedModel):
     genres = models.ManyToManyField(Geners)
     published = models.BooleanField(default=False)
     membership_requried = models.BooleanField(default=True)
+    slug = models.SlugField(null=True, unique=True)
     extras_category = models.ForeignKey(
         ExtrasCategory, null=True, on_delete=models.SET_NULL
     )
@@ -324,6 +335,7 @@ class Upcoming(TimeStampedModel):
     star_cast = models.CharField(max_length=255, null=True, blank=True)
     trailer_link = models.CharField(max_length=255, null=True, blank=True)
     genres = models.ManyToManyField(Geners)
+    slug = models.SlugField(null=True, unique=True)
     published = models.BooleanField(default=False)
 
     def __str__(self):
@@ -336,3 +348,33 @@ class NewsLetterSubscription(TimeStampedModel):
 
     def __str__(self):
         return self.email
+
+
+@receiver(signals.pre_save, sender=Movies)
+def populate_slug(sender, instance, **kwargs):
+    if not instance.slug:
+        instance.slug = utils.unique_slug_generator(instance)
+
+
+@receiver(signals.pre_save, sender=Series)
+def populate_slug(sender, instance, **kwargs):
+    if not instance.slug:
+        instance.slug = utils.unique_slug_generator(instance)
+
+
+@receiver(signals.pre_save, sender=Extras)
+def populate_slug(sender, instance, **kwargs):
+    if not instance.slug:
+        instance.slug = utils.unique_slug_generator(instance)
+
+
+@receiver(signals.pre_save, sender=Episodes)
+def populate_slug(sender, instance, **kwargs):
+    if not instance.slug:
+        instance.slug = utils.unique_slug_generator(instance, episodes=True)
+
+
+@receiver(signals.pre_save, sender=Upcoming)
+def populate_slug(sender, instance, **kwargs):
+    if not instance.slug:
+        instance.slug = utils.unique_slug_generator(instance)

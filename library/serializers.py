@@ -40,3 +40,64 @@ class HomePageListSerializer(serializers.Serializer):
     language = serializers.ReadOnlyField(source="language.name")
     rankings = serializers.IntegerField()
     content_type = serializers.CharField()
+    slug = serializers.CharField()
+
+
+class MovieDetailSerializer(serializers.ModelSerializer):
+    age_rating = serializers.ReadOnlyField(source="age_rating.name")
+    language = serializers.ReadOnlyField(source="language.name")
+    genres = GenersSerializer(many=True)
+
+    class Meta:
+        model = library_models.Movies
+        fields = "__all__"
+
+
+class SeriesBasicDetailSerializer(serializers.ModelSerializer):
+    age_rating = serializers.ReadOnlyField(source="age_rating.name")
+    language = serializers.ReadOnlyField(source="language.name")
+    genres = GenersSerializer(many=True)
+
+    class Meta:
+        model = library_models.Series
+        fields = "__all__"
+
+
+class EpisodesDetailWithoutSeriesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = library_models.Episodes
+        fields = "__all__"
+
+
+class EpisodesDetailSerializer(EpisodesDetailWithoutSeriesSerializer):
+    series = SeriesBasicDetailSerializer()
+
+
+class SeriesDetailSerializer(serializers.ModelSerializer):
+    age_rating = serializers.ReadOnlyField(source="age_rating.name")
+    language = serializers.ReadOnlyField(source="language.name")
+    genres = GenersSerializer(many=True)
+    episodes_set = EpisodesDetailWithoutSeriesSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = library_models.Series
+        fields = "__all__"
+
+
+class UpcomingDetailSerializer(serializers.ModelSerializer):
+    age_rating = serializers.ReadOnlyField(source="age_rating.name")
+    language = serializers.ReadOnlyField(source="language.name")
+    genres = GenersSerializer(many=True)
+
+    class Meta:
+        model = library_models.Upcoming
+        fields = "__all__"
+
+
+class ExtrasDetailSerializer(serializers.ModelSerializer):
+    language = serializers.ReadOnlyField(source="language.name")
+    genres = GenersSerializer(many=True)
+
+    class Meta:
+        model = library_models.Extras
+        fields = "__all__"

@@ -1,6 +1,9 @@
 import datetime
 import os
+import random
 import uuid
+import string
+from django.utils.text import slugify
 
 
 def image_path(instance, filename):
@@ -15,3 +18,25 @@ def image_path(instance, filename):
         image_type, today_date + uuid.uuid4().hex + "." + extension
     )
     return final_path
+
+
+def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits):
+    return "".join(random.choice(chars) for _ in range(size))
+
+
+def unique_slug_generator(instance, new_slug=None, episodes=True):
+    if new_slug is not None:
+        slug = new_slug
+    else:
+        name = instance.name
+        if episodes:
+            name = f"{instance.series.slug}-{instance.name}"
+        slug = slugify(name)
+    Klass = instance.__class__
+    qs_exists = Klass.objects.filter(slug=slug).exists()
+    if qs_exists:
+        new_slug = "{slug}-{randstr}".format(
+            slug=slug, randstr=random_string_generator(size=4)
+        )
+        return unique_slug_generator(instance, new_slug=new_slug)
+    return slug

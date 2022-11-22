@@ -14,13 +14,18 @@ from .models import (
     CategoryMovieSeriesMapping,
 )
 
+
+class ReadOnlySlug(admin.ModelAdmin):
+    readonly_fields = ("slug",)
+
+
 admin.site.register(Category)
 admin.site.register(Geners)
-admin.site.register(Movies)
+admin.site.register(Movies, ReadOnlySlug)
 admin.site.register(CategoryMovieSeriesMapping)
 admin.site.register(ExtrasCategory)
-admin.site.register(Upcoming)
+admin.site.register(Upcoming,ReadOnlySlug)
 admin.site.register(Banner)
-admin.site.register(Series)
-admin.site.register(Extras)
-admin.site.register(Episodes)
+admin.site.register(Series,ReadOnlySlug)
+admin.site.register(Extras,ReadOnlySlug)
+admin.site.register(Episodes,ReadOnlySlug)

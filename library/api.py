@@ -74,6 +74,7 @@ class HomePageAPI(APIView):
                     dto = obj.series
                     dto.content_type = "series"
                 dto.rankings = obj.rankings
+                print(dto.slug)
                 category_dto_obj["category_items"].append(self.serializer(dto).data)
             data["categories"].append(category_dto_obj)
         return Response({"result": data})
@@ -143,3 +144,59 @@ class SearchAPI(APIView):
                 {"message": f"{e} field is required."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+class MoviesAPI(APIView):
+    serializer = serializers.MovieDetailSerializer
+
+    def get(self, request, slug):
+        movies_results = library_models.Movies.objects.filter(slug=slug).first()
+        data = self.serializer(movies_results).data
+        return Response({"result": data})
+
+
+class SeriesAPI(APIView):
+    serializer = serializers.SeriesDetailSerializer
+
+    def get(self, request, slug):
+        series_results = (
+            library_models.Series.objects.prefetch_related("episodes_set")
+            .filter(slug=slug)
+            .first()
+        )
+        data = self.serializer(series_results).data
+        return Response({"result": data})
+
+
+class EpisodesAPI(APIView):
+    serializer = serializers.EpisodesDetailSerializer
+    serializer_other_episodes = serializers.EpisodesDetailWithoutSeriesSerializer
+
+    def get(self, request, slug):
+        episodes_results = library_models.Episodes.objects.filter(slug=slug).first()
+        all_episodes_results = library_models.Episodes.objects.filter(
+            series=episodes_results.series
+        )
+        data = self.serializer(episodes_results).data
+        data["other_episodes"] = self.serializer_other_episodes(
+            all_episodes_results, many=True
+        ).data
+        return Response({"result": data})
+
+
+class UpcomingAPI(APIView):
+    serializer = serializers.UpcomingDetailSerializer
+
+    def get(self, request, slug):
+        upcoming_results = library_models.Upcoming.objects.filter(slug=slug).first()
+        data = self.serializer(upcoming_results).data
+        return Response({"result": data})
+
+
+class ExtrasAPI(APIView):
+    serializer = serializers.ExtrasDetailSerializer
+
+    def get(self, request, slug):
+        extras_results = library_models.Extras.objects.filter(slug=slug).first()
+        data = self.serializer(extras_results).data
+        return Response({"result": data})
