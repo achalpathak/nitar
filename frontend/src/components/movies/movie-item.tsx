@@ -10,7 +10,9 @@ const MovieItem: FC<IMovieItemProps> = ({ item }) => {
 				<figure>
 					<img
 						key={item?.id}
-						src={`${BASE_URL}${item.poster_small_vertical_image}`}
+						src={`${
+							BASE_URL?.includes("localhost") ? BASE_URL : ""
+						}${item.poster_small_vertical_image}`}
 						alt={item?.name}
 						loading='lazy'
 					/>

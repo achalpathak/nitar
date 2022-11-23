@@ -156,7 +156,13 @@ const Upcoming = () => {
 									<figure>
 										<img
 											key={image?.id}
-											src={`${BASE_URL}${image.poster_large_vertical_image}`}
+											src={`${
+												BASE_URL?.includes("localhost")
+													? BASE_URL
+													: ""
+											}${
+												image.poster_large_vertical_image
+											}`}
 											alt={image?.name}
 											loading='lazy'
 											style={{
