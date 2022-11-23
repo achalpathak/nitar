@@ -105,17 +105,17 @@ span {
 }
 
 .cancel-btn {
-	width: 4rem;
-	height: 4rem;
-	border: 3px solid #ffa800;
-	border-radius: 100%;
+	width: 4rem !important;
+	height: 4rem !important;
+	border: 3px solid #ffa800 !important;
+	border-radius: 100% !important;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background-color: transparent;
-	margin: 25px;
+	background-color: transparent !important;
+	margin: 25px !important;
 	svg {
-		width: 50px;
+		width: 50px !important;
 	}
 }
 
@@ -123,21 +123,6 @@ span {
 	box-shadow: 1px 1px 10px 1px #ffa800;
 	svg {
 		color: white;
-	}
-}
-.alert-container {
-	position: absolute;
-	top: 0;
-	right: 0;
-	margin-top: 2rem;
-	margin-right: 2rem;
-	transition: all 1s ease-in-out;
-
-	&.hide {
-		visibility: hidden;
-	}
-	&.show {
-		visibility: visible;
 	}
 }
 

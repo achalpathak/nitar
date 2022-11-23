@@ -20,9 +20,6 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { IMessage, IResponse, IError } from "@types";
 
-const EMAIL_REGEX =
-	/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
 const Register = () => {
 	const navigate = useNavigate();
 
@@ -299,18 +296,6 @@ const Register = () => {
 						</button>
 					</div>
 				</div>
-			</div>
-			<div
-				className={`alert-container ${
-					message !== null ? "show" : "hide"
-				}`}
-			>
-				{message?.severity && (
-					<Alert severity={message?.severity}>
-						<AlertTitle>{message?.title}</AlertTitle>
-						{message?.description}
-					</Alert>
-				)}
 			</div>
 		</>
 	);

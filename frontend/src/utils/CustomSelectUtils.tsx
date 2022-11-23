@@ -1,7 +1,9 @@
 import { ICustomSelectOption } from "@types";
 import { StylesConfig } from "react-select";
 
-const customStyles = <T extends unknown>(): StylesConfig<T> => ({
+const customStyles = <
+	T extends unknown = ICustomSelectOption
+>(): StylesConfig<T> => ({
 	menu: (provided) => ({
 		...provided,
 		backgroundColor: "#2a2b36",

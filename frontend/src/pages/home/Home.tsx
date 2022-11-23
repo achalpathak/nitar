@@ -1,51 +1,80 @@
 import { Banner, DownloadApp, SubscribeButton } from "@components";
 import MovieList from "@components/movies";
 import MovieTile from "@assets/home/movie-tile.png";
+import { useEffect, useState } from "react";
+import { ICategories, ICategory, IError, IResponse, ISuccess } from "@types";
+import { AxiosError } from "axios";
+import { useAlert } from "@hooks";
+import api, { Routes } from "@api";
 
-const movies = [
-	{
-		title: "Undone",
-		image: MovieTile,
-	},
-	{
-		title: "Undone",
-		image: MovieTile,
-	},
-	{
-		title: "Undone",
-		image: MovieTile,
-	},
-	{
-		title: "Undone",
-		image: MovieTile,
-	},
-	{
-		title: "Undone",
-		image: MovieTile,
-	},
-	{
-		title: "Undone",
-		image: MovieTile,
-	},
-	{
-		title: "Undone",
-		image: MovieTile,
-	},
-	{
-		title: "Undone",
-		image: MovieTile,
-	},
-	{
-		title: "Undone",
-		image: MovieTile,
-	},
-	{
-		title: "Undone",
-		image: MovieTile,
-	},
-];
+// const movies = [
+// 	{
+// 		title: "Undone",
+// 		image: MovieTile,
+// 	},
+// 	{
+// 		title: "Undone",
+// 		image: MovieTile,
+// 	},
+// 	{
+// 		title: "Undone",
+// 		image: MovieTile,
+// 	},
+// 	{
+// 		title: "Undone",
+// 		image: MovieTile,
+// 	},
+// 	{
+// 		title: "Undone",
+// 		image: MovieTile,
+// 	},
+// 	{
+// 		title: "Undone",
+// 		image: MovieTile,
+// 	},
+// 	{
+// 		title: "Undone",
+// 		image: MovieTile,
+// 	},
+// 	{
+// 		title: "Undone",
+// 		image: MovieTile,
+// 	},
+// 	{
+// 		title: "Undone",
+// 		image: MovieTile,
+// 	},
+// 	{
+// 		title: "Undone",
+// 		image: MovieTile,
+// 	},
+// ];
 
 const Home = () => {
+	//Hooks
+	const showAlert = useAlert();
+
+	const [movies, setMovies] = useState<ICategory[]>([]);
+
+	useEffect(() => {
+		(async () => {
+			try {
+				const res = await api.get<ISuccess<ICategories>>(
+					Routes.HOME_PAGE_LISTINGS
+				);
+
+				if (res.status === 200) {
+					setMovies(res.data?.result?.categories);
+					console.log("Movies", res.data?.result);
+				}
+			} catch (error) {
+				const err = error as AxiosError<ISuccess>;
+				console.error(err?.response);
+				showAlert("error", "Error", err?.response?.data?.message);
+			}
+		})();
+	}, []);
+
 	return (
 		<div
 			style={{
@@ -56,11 +85,18 @@ const Home = () => {
 		>
 			<Banner />
 			<DownloadApp />
-			<MovieList title='Popular Originals' items={movies} />
+			{movies?.slice(0, 2)?.map((m) => (
+				<MovieList name={m?.name} category_items={m?.category_items} />
+			))}
+			{/* <MovieList title='Popular Originals' items={movies} />
 			<MovieList title='Trending Now' items={movies} />
 			<SubscribeButton />
 			<MovieList title='Most Watched' items={movies} />
-			<MovieList title='Web Series' items={movies} />
+			<MovieList title='Web Series' items={movies} /> */}
+			<SubscribeButton />
+			{movies?.slice(2)?.map((m) => (
+				<MovieList name={m?.name} category_items={m?.category_items} />
+			))}
 		</div>
 	);
 };

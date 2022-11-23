@@ -1,26 +1,24 @@
 .app-bar-container {
 	margin: 1rem 0;
 	height: 50px;
+	transition: all 0.5s ease-in;
 
 	a {
+		transition: all 0.2s ease-in;
 		color: white;
 		font-family: "Barlow Condensed";
 		text-align: center;
+
+		&:hover {
+			color: #ffa800;
+		}
 	}
 
 	.routes {
 		align-items: center;
 		justify-content: flex-end;
-	}
 
-	.MuiGrid-item {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		transition: all 2s ease;
-
-		&.nav-item {
+		.nav-item {
 			position: relative;
 			padding-bottom: 3px;
 
@@ -60,6 +58,14 @@
 			}
 		}
 	}
+
+	.MuiGrid-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		transition: all 2s ease;
+	}
 }
 
 .w-200 {
@@ -67,24 +73,48 @@
 }
 
 .MuiGrid-item {
-	&.search-select {
-		transition: all 0.5s ease;
-		opacity: 0;
-		display: none;
-
-		&.searching {
-			opacity: 1;
-			display: flex;
-		}
-	}
 	&.search-icon {
 		transition: all 0.5s ease;
-		opacity: 1;
-		display: flex;
+		width: 0;
 
 		&.searching {
-			opacity: 0;
-			display: none;
+			width: fit-content;
 		}
+	}
+}
+
+.custom-link {
+	transition: all 0.2s ease-in;
+
+	&:hover {
+		color: #ffa800 !important;
+	}
+}
+
+.search-container {
+	overflow-x: hidden;
+	width: 0;
+	transition: all 0.4s ease-in-out;
+	transform-origin: top right;
+
+	&.active {
+		width: 200px;
+	}
+}
+
+.search-icon {
+	overflow-x: hidden;
+	width: 0;
+	transition: all 0.4s ease-in-out;
+	transform-origin: top right;
+
+	&.active {
+		width: 50px;
+	}
+}
+
+.drawer-container {
+	span {
+		color: #ffa800;
 	}
 }

@@ -1,0 +1,124 @@
+.plans-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	padding: 20px;
+
+	h2 {
+		font-family: "Barlow Condensed";
+		font-weight: 600;
+		font-size: 2rem;
+	}
+	p {
+		font-family: "Inter";
+	}
+}
+.plans-card {
+	display: flex;
+	align-items: center;
+	width: 98vw !important;
+	flex-direction: column;
+	justify-content: center;
+	.card {
+		border: #ffa800 1px solid;
+		padding: 25px 15px;
+		border-radius: 20px;
+		box-shadow: 1px 1px 10px 1px #ffa800;
+		// margin-bottom: 20px;
+		> div {
+			flex-direction: column;
+		}
+	}
+	.plans-card-items {
+		h5 {
+			font-family: "Playfair Display";
+		}
+		div {
+			font-size: 2rem;
+			font-weight: bold;
+			font-family: "Inter";
+		}
+		span {
+			font-size: 1rem;
+			font-family: "Inter";
+		}
+		svg {
+			font-size: 2rem;
+			font-weight: bold;
+		}
+	}
+	.plans-card-list {
+		border-top: #ffa800 1px solid;
+		ul {
+			list-style-type: none;
+			padding: 0;
+			li {
+				display: flex;
+				// align-items: center;
+				line-height: 2rem;
+				svg {
+					padding-right: 5px;
+					padding-top: 5px;
+				}
+			}
+		}
+		.cancel-icon {
+			color: #ffa800;
+		}
+	}
+}
+.buy-now {
+	width: 100%;
+	justify-content: center;
+	display: flex;
+	align-items: center;
+}
+button {
+	span {
+		font-family: "Playfair Display";
+		font-weight: bold;
+	}
+}
+
+.description {
+	// border: 2px solid red;
+	border-bottom: 1px solid #ffa800;
+	border-left: 1px solid #ffa800;
+	border-right: 1px solid #ffa800;
+
+	h5 {
+		font-family: sans-serif;
+		margin: 100px auto;
+		// color: #228B22;
+		text-align: center;
+		// font-size: 30px;
+		// max-width: 600px;
+		position: relative;
+		margin: 5px 0;
+	}
+	h5:before {
+		content: "";
+		display: block;
+		width: 40%;
+		height: 1px;
+		background: #ffa800;
+		left: 0;
+		top: 50%;
+		position: absolute;
+	}
+	h5:after {
+		content: "";
+		display: block;
+		width: 40%;
+		height: 1px;
+		background: #ffa800;
+		right: 0;
+		top: 50%;
+		position: absolute;
+	}
+	span {
+		padding: 20px;
+		margin-top: 10px;
+	}
+}

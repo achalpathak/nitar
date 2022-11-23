@@ -67,9 +67,9 @@ const Footer = () => {
 					</div>
 					<div
 						className='about-us'
-						// dangerouslySetInnerHTML={{ __html: html }}
+						dangerouslySetInnerHTML={{ __html: html }}
 					>
-						<span>
+						{/* <span>
 							Lorem ipsum dolor sit amet, consectetur adipiscing
 							elit. Dictum orci gravida arcu nec eu imperdiet in
 							ac. Morbi id convallis mauris nisl viverra
@@ -78,7 +78,7 @@ const Footer = () => {
 							pellentesque in lobortis. Vulputate ornare turpis
 							diam interdum sagittis in tortor sapien. Mauris duis
 							turpis erat nunc in sagittis.
-						</span>
+						</span> */}
 					</div>
 					<div>
 						<div className='flex-row'>

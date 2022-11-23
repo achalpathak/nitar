@@ -1,9 +1,25 @@
-export { default as Login } from "./login";
-export { default as Register } from "./register";
-export { default as Home } from "./home";
-export { default as Policy } from "./miscellaneous/Policy";
-export { default as Footer } from "./miscellaneous/Footer";
-export { default as _404 } from "./miscellaneous/_404";
-export { default as ContactUs } from "./contact-us";
-export { default as Subscribe } from "./subscribe";
-export { default as Upcoming } from "./upcoming";
+import { lazy } from "react";
+
+const Login = lazy(() => import("@pages/login"));
+const Register = lazy(() => import("@pages/register"));
+const Home = lazy(() => import("@pages/home"));
+const Policy = lazy(() => import("@pages/miscellaneous/Policy"));
+const Footer = lazy(() => import("@pages/miscellaneous/Footer"));
+const _404 = lazy(() => import("@pages/miscellaneous/_404"));
+const Plans = lazy(() => import("@pages/plans"));
+const ContactUs = lazy(() => import("@pages/contact-us"));
+const Upcoming = lazy(() => import("@pages/upcoming"));
+const MovieDetails = lazy(() => import("@pages/movie-details"));
+
+export {
+	Login,
+	Register,
+	Home,
+	Policy,
+	Footer,
+	_404,
+	Plans,
+	ContactUs,
+	Upcoming,
+	MovieDetails,
+};

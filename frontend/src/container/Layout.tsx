@@ -1,13 +1,15 @@
-import { AppBar } from "@components";
-import { ContactUs, Home, Subscribe, Upcoming } from "@pages";
-import Footer from "@pages/miscellaneous/Footer";
-import Policy from "@pages/miscellaneous/Policy";
+import { lazy, Suspense } from "react";
+import { AppBar, Loader } from "@components";
+import { Route, Routes } from "react-router-dom";
 import {
-	createBrowserRouter,
-	Route,
-	RouterProvider,
-	Routes,
-} from "react-router-dom";
+	Home,
+	Policy,
+	Footer,
+	Plans,
+	ContactUs,
+	Upcoming,
+	MovieDetails,
+} from "@pages";
 
 const TheContent = () => {
 	return (
@@ -22,16 +24,22 @@ const TheContent = () => {
 				<AppBar />
 			</header>
 			<main>
-				<Routes>
-					<Route path='/' element={<Home />} />
-					<Route path='/upcoming' element={<Upcoming />} />
-					<Route path='/subscribe' element={<Subscribe />} />
-					<Route path='/contact-us' element={<ContactUs />} />
-					<Route path='/terms-and-conditions' element={<Policy />} />
-					<Route path='/contact-us' element={<Policy />} />
-					<Route path='/privacy-policy' element={<Policy />} />
-					<Route path='/refund-policy' element={<Policy />} />
-				</Routes>
+				<Suspense fallback={<Loader />}>
+					<Routes>
+						<Route path='/' element={<Home />} />
+						<Route path='/upcoming' element={<Upcoming />} />
+						<Route path='/movie/:slug' element={<MovieDetails />} />
+						<Route path='/plans' element={<Plans />} />
+						<Route path='/contact-us' element={<ContactUs />} />
+						<Route
+							path='/terms-and-conditions'
+							element={<Policy />}
+						/>
+						<Route path='/contact-us' element={<Policy />} />
+						<Route path='/privacy-policy' element={<Policy />} />
+						<Route path='/refund-policy' element={<Policy />} />
+					</Routes>
+				</Suspense>
 			</main>
 			<footer>
 				<Footer />

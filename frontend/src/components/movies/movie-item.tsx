@@ -1,20 +1,34 @@
+import { BASE_URL } from "@api";
+import { Paper } from "@mui/material";
 import { IMovieItemProps } from "@types";
 import { FC } from "react";
 
 const MovieItem: FC<IMovieItemProps> = ({ item }) => {
 	return (
-		<div key={item.title} className='movie-item'>
-			<img
-				src={item.image}
-				alt={item.title}
-				loading='lazy'
-				style={{
-					width: "100%",
-					height: "100%",
-					objectFit: "cover",
-					borderRadius: 10,
-				}}
-			/>
+		<div className='movie-item'>
+			<a href='#'>
+				<figure>
+					<img
+						key={item?.id}
+						src={`${BASE_URL}${item.poster_small_vertical_image}`}
+						alt={item?.name}
+						loading='lazy'
+					/>
+					<figcaption>
+						<div>{item?.name}</div>
+						<div>
+							{item?.genres?.map((g) => (
+								<span key={g?.id} className='genre'>
+									{g?.name}
+								</span>
+							))}
+						</div>
+						<a href='#' className='view-details'>
+							View Details
+						</a>
+					</figcaption>
+				</figure>
+			</a>
 		</div>
 	);
 };

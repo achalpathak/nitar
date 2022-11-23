@@ -1,8 +1,36 @@
-import { Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import movie1 from "@assets/home/movie1.png";
 import movie2 from "@assets/home/movie2.png";
 import PlayCircleOutlineOutlinedIcon from "@mui/icons-material/PlayCircleOutlineOutlined";
-import { LeftRightButton } from "@components";
+import { BannerCarousel, LeftRightButton } from "@components";
+import { IMovieItem } from "@types";
+
+const items: IMovieItem[] = [
+	{
+		title: "Movie 1",
+		image: movie1,
+	},
+	{
+		title: "Movie 2",
+		image: movie2,
+	},
+	{
+		title: "Movie 1",
+		image: movie1,
+	},
+	{
+		title: "Movie 2",
+		image: movie2,
+	},
+	{
+		title: "Movie 1",
+		image: movie1,
+	},
+	{
+		title: "Movie 2",
+		image: movie2,
+	},
+];
 
 const Banner = () => {
 	return (
@@ -101,66 +129,8 @@ const Banner = () => {
 							</Grid>
 						</Grid>
 					</Grid>
-					<Grid item xs={12} md={8} lg={9}>
-						<Grid
-							container
-							display='flex'
-							flexDirection='row'
-							columnSpacing={2}
-							rowSpacing={2}
-						>
-							<Grid item xs={12}>
-								<Grid container columnSpacing={2}>
-									<Grid
-										item
-										flex={4}
-										display='flex'
-										alignItems='center'
-									>
-										<img
-											src={movie1}
-											alt='movie1'
-											width='100%'
-										/>
-									</Grid>
-									<Grid
-										item
-										flex={3}
-										display='flex'
-										alignItems='center'
-									>
-										<img
-											src={movie2}
-											alt='movie1'
-											width='100%'
-										/>
-									</Grid>
-								</Grid>
-							</Grid>
-							<Grid item xs={9}>
-								<Grid container justifyContent='space-between'>
-									<Grid item>
-										<LeftRightButton />
-									</Grid>
-									<Grid item className='banner-position'>
-										<Grid container columnSpacing={2}>
-											<Grid item>
-												<span className='current'>
-													01
-												</span>
-											</Grid>
-											<Grid item className='divider'>
-											</Grid>
-											<Grid item>
-												<span className='total'>
-													15
-												</span>
-											</Grid>
-										</Grid>
-									</Grid>
-								</Grid>
-							</Grid>
-						</Grid>
+					<Grid item xs={12} md={8} lg={9} paddingLeft={0}>
+						<BannerCarousel items={items} />
 					</Grid>
 				</Grid>
 			</Grid>

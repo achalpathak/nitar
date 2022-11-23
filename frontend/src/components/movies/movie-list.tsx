@@ -1,16 +1,18 @@
-import { Grid, Typography } from "@mui/material";
+import { Grid, Paper, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import MovieItem from "./movie-item";
 import { ChevronLeftOutlined, ChevronRightOutlined } from "@mui/icons-material";
 import MovieTile from "@assets/home/movie-tile.png";
 import HorizontalScroll from "react-horizontal-scrolling";
-import { FC } from "react";
-import { IMovieList } from "@types";
+import { FC, useState } from "react";
+import { ICategory, IMovieList } from "@types";
 import LeftRightButton from "@components/left-right-button";
+import ReactCarousel, { AFTER, CENTER, BEFORE } from "react-carousel-animated";
 import "./movies.scss";
+import { BASE_URL } from "@api";
 
-const MovieList: FC<IMovieList> = ({ title, items }) => {
-	if (items?.length === 0) {
+const MovieList: FC<ICategory> = ({ name, category_items }) => {
+	if ((category_items?.length ?? 0) === 0) {
 		return null;
 	}
 
@@ -40,10 +42,25 @@ const MovieList: FC<IMovieList> = ({ title, items }) => {
 									fontWeight='500'
 									textTransform='uppercase'
 								>
-									{title}
+									{name}
 								</Typography>
 							</Grid>
-							<LeftRightButton />
+							<LeftRightButton
+								onLeftClick={() => {
+									const prevBtn = document.querySelector(
+										`div[data-movie="${name}"] .carousel__prev`
+									) as HTMLDivElement;
+
+									prevBtn.click();
+								}}
+								onRightClick={() => {
+									const nextBtn = document.querySelector(
+										`div[data-movie="${name}"] .carousel__next`
+									) as HTMLDivElement;
+
+									nextBtn.click();
+								}}
+							/>
 						</Grid>
 					</Grid>
 				</Grid>
@@ -56,18 +73,40 @@ const MovieList: FC<IMovieList> = ({ title, items }) => {
 						className='movies'
 						mt={3}
 						overflow='hidden'
+						data-movie={name}
 					>
-						{
-							// @ts-ignore
-							<HorizontalScroll
-								className='horizontal-scroll'
-								disabled
-							>
-								{items?.map((item) => (
-									<MovieItem key={item.title} item={item} />
-								))}
-							</HorizontalScroll>
-						}
+						{/* <Box whiteSpace='nowrap'>
+							{category_items?.map((item, i) => (
+								<MovieItem
+									key={item.rankings}
+									item={item}
+									currentIndex={activeIndex}
+								/>
+							))}
+						</Box> */}
+						<ReactCarousel
+							carouselConfig={{
+								transform: false,
+								top: false,
+								left: false,
+								filter: false,
+							}}
+							itemBackgroundStyle={{
+								// backgroundColor: "#ece4db",
+								borderRadius: "3px",
+								// boxShadow: "8px 12px 14px -6px black",
+							}}
+							containerBackgroundStyle={{
+								filter: "blur(7px)",
+								// backgroundColor: "rgba(62, 212, 214, 0.3)",
+							}}
+							carouselHeight='250px'
+							// itemMaxWidth={50}
+						>
+							{category_items.map((image, index) => (
+								<MovieItem key={image?.id} item={image} />
+							))}
+						</ReactCarousel>
 					</Grid>
 				</Grid>
 			</Grid>

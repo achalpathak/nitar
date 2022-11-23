@@ -1,6 +1,13 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Login, Register, Footer, _404 } from "@pages";
 import { Layout } from "@container";
+import { Alert, Loader } from "@components";
+import { lazy, Suspense } from "react";
+import "react-carousel-animated/dist/style.css";
+
+const Login = lazy(() => import("@pages/login"));
+const Register = lazy(() => import("@pages/register"));
+const Footer = lazy(() => import("@pages/miscellaneous/Footer"));
+const _404 = lazy(() => import("@pages/miscellaneous/_404"));
 
 const router = createBrowserRouter([
 	{
@@ -25,6 +32,24 @@ const router = createBrowserRouter([
 	},
 ]);
 
-const App = () => <RouterProvider router={router} />;
+const App = () => {
+	// useLayoutEffect(() => {
+	//     const loader = document.getElementById("loader")!;
+	//     setTimeout(() => {
+	//       loader.classList.add("loaded");
+	//       setTimeout(() => {
+	//         document.body.removeChild(loader);
+	//       }, 300);
+	//     }, 2000);
+	// },[]);
+
+	return (
+		<Suspense fallback={<Loader />}>
+			<RouterProvider router={router} />
+			{false ? <Loader /> : null}
+			<Alert />
+		</Suspense>
+	);
+};
 
 export default App;
