@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./movie-details.scss";
 
-const MovieDetails = (props) => {
+const MovieDetails = (props: any) => {
 	const { slug } = useParams();
 
 	return (

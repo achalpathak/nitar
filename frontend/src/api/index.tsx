@@ -1,9 +1,12 @@
 import axios from "axios";
 
+const BASE_URL = "backend";
+
 const api = axios.create({
-	baseURL: "backend",
+	baseURL: BASE_URL,
 });
 
 export { Routes } from "./Routes";
+export { BASE_URL };
 
 export default api;

@@ -7,9 +7,9 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import appReducer from "@redux/reducers";
 import Actions from "@redux/actions";
-import { IMessage } from "@types";
+import { IMessage, IReducer } from "@types";
 
-const rootReducer = (state, action: IReducer) => {
+const rootReducer = (state: any, action: IReducer) => {
 	if (action.type === Actions.LOGOUT) {
 		// for all keys defined in your persistConfig(s)
 		storage.removeItem("persist:root");
