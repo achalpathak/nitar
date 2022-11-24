@@ -185,7 +185,7 @@ class EpisodesAPI(APIView):
         return Response({"result": data})
 
 
-class UpcomingAPI(APIView):
+class UpcomingDetailsAPI(APIView):
     serializer = serializers.UpcomingDetailSerializer
 
     def get(self, request, slug):

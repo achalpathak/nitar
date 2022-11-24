@@ -12,6 +12,6 @@ urlpatterns = [
     path("movies/<slug:slug>/", api.MoviesAPI.as_view()),
     path("series/<slug:slug>/", api.SeriesAPI.as_view()),
     path("episodes/<slug:slug>/", api.EpisodesAPI.as_view()),
-    path("upcoming/<slug:slug>/", api.UpcomingAPI.as_view()),
+    # path("upcoming/<slug:slug>/", api.UpcomingDetailsAPI.as_view()),
     path("extras/<slug:slug>/", api.ExtrasAPI.as_view()),
 ]
