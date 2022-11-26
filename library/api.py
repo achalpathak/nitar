@@ -4,6 +4,7 @@ from . import models as library_models
 from . import serializers
 from rest_framework import status
 from django.db.models import Q
+from itertools import chain
 
 
 # class BannerInfo(APIView):
@@ -50,19 +51,21 @@ class HomePageAPI(APIView):
     serializer = serializers.HomePageListSerializer
 
     def get(self, request):
-        data = {"categories": []}
+        data = {"categories": None, "categories_data": []}
         categories = (
             library_models.Category.objects.filter(published=True)
-            .values_list("name", flat=True)
+            .values("name", "poster_type")
             .order_by("rankings")
         )
+        data["categories"] = categories
+
         for category in categories:
-            category_dto_obj = {"name": category, "category_items": []}
+            category_dto_obj = {category.get("name"): []}
             category_objs = (
                 library_models.CategoryMovieSeriesMapping.objects.select_related(
                     "movies", "series"
                 )
-                .filter(category__name=category)
+                .filter(category__name=category.get("name"))
                 .order_by("rankings")
             )
             # TODO: optimize later if possible
@@ -74,9 +77,8 @@ class HomePageAPI(APIView):
                     dto = obj.series
                     dto.content_type = "series"
                 dto.rankings = obj.rankings
-                print(dto.slug)
-                category_dto_obj["category_items"].append(self.serializer(dto).data)
-            data["categories"].append(category_dto_obj)
+                category_dto_obj[category.get("name")].append(self.serializer(dto).data)
+            data["categories_data"].append(category_dto_obj)
         return Response({"result": data})
 
 
@@ -95,9 +97,9 @@ class SearchAPI(APIView):
     def get(self, request):
         try:
             query = request.GET["q"]
-            if len(query) <= 4:
+            if len(query) <= 1:
                 return Response(
-                    {"message": f"Enter atleast 4 characters."},
+                    {"message": f"Enter atleast 2 characters."},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             lookups = Q(name__icontains=query)
@@ -130,13 +132,16 @@ class SearchAPI(APIView):
                 .values("name", "description", "poster_small_vertical_image")
                 .distinct()
             )
-            data = {
-                "movies_results": movies_results,
-                "series_results": series_results,
-                "episodes_results": episodes_results,
-                "extras_results": extras_results,
-                "upcoming_results": upcoming_results,
-            }
+
+            data = list(
+                chain(
+                    movies_results,
+                    series_results,
+                    episodes_results,
+                    extras_results,
+                    upcoming_results,
+                )
+            )
             return Response({"result": data})
 
         except KeyError as e:

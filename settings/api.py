@@ -20,6 +20,8 @@ class WebsiteConfigSettingsAPI(APIView):
             "favicon_url",
             "play_store_link",
             "apple_store_link",
+            "email",
+            "phone",
         ]
         q_objects = Q()
         for t in fields:

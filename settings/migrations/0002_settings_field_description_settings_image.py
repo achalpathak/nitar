@@ -18,12 +18,6 @@ class Migration(migrations.Migration):
         logo_url = urllib.request.urlretrieve(
             "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png"
         )
-        qr_code_image_url = urllib.request.urlretrieve(
-            "https://media.istockphoto.com/id/1095468748/vector/qr-code-abstract-vector-modern-bar-code-sample-for-smartphone-scanning-isolated-on-white.jpg?s=612x612&w=0&k=20&c=Jnh2TAkAFm7QpaBgCyCuGbCA6nomDfk4-XiTsBhbHFk="
-        )
-        app_banner_image = urllib.request.urlretrieve(
-            "https://i.stack.imgur.com/Ysz0e.png"
-        )
         favicon_url = urllib.request.urlretrieve(
             "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png"
         )
@@ -31,8 +25,6 @@ class Migration(migrations.Migration):
         Settings = apps.get_model("settings", "Settings")
         data = {
             "logo_url": File(open(logo_url[0], "rb")),
-            "qr_code_image_url": File(open(qr_code_image_url[0], "rb")),
-            "app_banner_image": File(open(app_banner_image[0], "rb")),
             "favicon_url": File(open(favicon_url[0], "rb")),
         }
 

@@ -19,6 +19,8 @@ class Migration(migrations.Migration):
             "privacy_policy": "Sample Privacy Policy",
             "refund_policy": "Sample Refund Policy",
             "name_of_the_app": "Taak",
+            "phone": "+91-123456789",
+            "email": "info@taak.com",
             "color_primary": "#ffa800",  # yellow
             "color_secondary": "#fff",  # white
             "color_alternate": "#000000",  # black

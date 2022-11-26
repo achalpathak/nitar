@@ -9,6 +9,13 @@ from django.dispatch import receiver
 from django.db.models import signals
 
 BANNER_DEFAULT = "Banner Default"
+POSTER_DEFAULT = "poster_small_vertical_image"
+POSTER_CHOICES = [
+    (POSTER_DEFAULT, "poster_small_vertical_image"),
+    ("poster_large_vertical_image", "poster_large_vertical_image"),
+    ("poster_small_horizontal_image", "poster_small_horizontal_image"),
+    ("poster_large_horizontal_image", "poster_large_horizontal_image"),
+]
 BANNER_WELCOME = "Banner Welcome"
 BANNER_CHOICES = [
     (BANNER_DEFAULT, "Banner Default"),
@@ -45,6 +52,11 @@ def validate_poster_large_horizontal_image(fieldfile_obj):
 
 class Category(TimeStampedModel):
     name = models.CharField(max_length=255, null=True, blank=True)
+    poster_type = models.CharField(
+        max_length=50,
+        choices=POSTER_CHOICES,
+        default=POSTER_DEFAULT,
+    )
     rankings = models.PositiveIntegerField(default=1)
     published = models.BooleanField(default=False)
 
