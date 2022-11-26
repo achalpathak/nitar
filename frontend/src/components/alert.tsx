@@ -7,19 +7,6 @@ const CustomAlert = () => {
 	const dispatch = useAppDispatch();
 	const alert = useAppSelector((state) => state.alert);
 
-	useEffect(() => {
-		// if (alert?.title !== "") {
-		// 	const id = setTimeout(() => {
-		// 		dispatch({
-		// 			type: Actions.HIDE_ALERT,
-		// 		});
-		// 	}, 4000);
-
-		// 	return () => clearTimeout(id);
-		// }
-		console.log("Alert Component", alert);
-	}, [alert]);
-
 	return (
 		<div
 			className={`alert-container ${

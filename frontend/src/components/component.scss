@@ -27,8 +27,6 @@
 	padding: 10px 5px;
 	border-radius: 15px;
 	height: 20rem;
-	border: 2px solid #ffa800;
-	box-shadow: 1px 1px 10px 1px #ffa800;
 }
 .subscribe-button {
 	border: 1px solid #ffa800;
@@ -74,4 +72,8 @@
 			}
 		}
 	}
+}
+
+.carousel__container {
+	height: 25rem;
 }

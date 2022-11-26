@@ -3,6 +3,8 @@ enum Actions {
 	HIDE_ALERT = "HIDE_ALERT",
 	LOGIN = "LOGIN",
 	LOGOUT = "LOGOUT",
+	SAVE_PREFERENCES = "SAVE_PREFERENCES",
+	REMOVE_PREFERENCES = "REMOVE_PREFERENCES",
 }
 
 export type ReducerAction<T> = {

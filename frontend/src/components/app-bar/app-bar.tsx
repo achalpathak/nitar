@@ -19,8 +19,18 @@ import makeAnimated from "react-select/animated";
 import { AndroidLogo, AppleLogo, LogoText } from "@assets";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { SearchOutlined, Close, Menu } from "@mui/icons-material";
-import { ICustomSelectOption, IRoutes } from "@types";
+import {
+	ICategoryItem,
+	ICustomSelectOption,
+	IRoutes,
+	ISearch,
+	ISearchResult,
+} from "@types";
 import { CustomSelectUtils } from "@utils";
+import { useAppSelector } from "@redux/hooks";
+import { components } from "react-select";
+import axios, { AxiosError } from "axios";
+import api, { BASE_URL, Routes } from "@api";
 
 const routes: IRoutes[] = [
 	{
@@ -41,13 +51,25 @@ const routes: IRoutes[] = [
 	},
 ];
 
+const routesMobile = routes?.concat([
+	{
+		title: "Login",
+		path: "/login",
+	},
+	{
+		title: "Register",
+		path: "/register",
+	},
+]);
+
 const animatedComponents = makeAnimated();
 
 const AppBar = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
 
-	const [search, setSearch] = useState<string>("");
+	const prefs = useAppSelector((state) => state.preferences);
+
 	const [isSearching, setSearching] = useState<boolean>(false);
 	const [isDrawerOpen, setDrawerOpen] = useState<boolean>(false);
 
@@ -55,12 +77,23 @@ const AppBar = () => {
 	const drawerWidth = 240;
 
 	const loadSuggestions = async (searchKey: string) => {
-		const list = CustomSelectUtils.convertToSelectOption(
-			data?.filter((v) => v?.toLowerCase()?.includes(searchKey ?? ""))
-		);
-		console.log("Searching", searchKey, list);
+		try {
+			if (searchKey?.length > 1) {
+				const res = await api.get<ISearch>(Routes.SEARCH, {
+					params: {
+						q: searchKey,
+					},
+				});
 
-		return list;
+				if (res.status === 200) {
+					return Object.values(res.data).flat(1);
+				}
+			}
+		} catch (error) {
+			const err = error as AxiosError;
+			console.log(err.response);
+		}
+		return [];
 	};
 
 	const handleDrawerToggle = () => {
@@ -73,31 +106,87 @@ const AppBar = () => {
 			sx={{ textAlign: "center" }}
 			className='drawer-container'
 		>
-			<Box
-				sx={{
-					my: 2,
-				}}
-			>
-				<LogoText height={30} />
-			</Box>
+			<Link to='/'>
+				<Box
+					sx={{
+						my: 2,
+					}}
+				>
+					<LogoText height={30} />
+				</Box>
+			</Link>
 			<Divider />
-			<List>
-				{routes.map((item) => (
-					<ListItem key={item.title} disablePadding>
-						<ListItemButton
-							sx={{ textAlign: "center" }}
-							onClickCapture={(e) => {
-								e.preventDefault;
-								navigate(item?.path);
+			<Box className='d-center'>
+				<List>
+					{routesMobile.map((item) => (
+						<ListItem
+							key={item.title}
+							disablePadding
+							sx={{
+								textAlign: "flex-start",
 							}}
 						>
-							<ListItemText primary={item.title} />
-						</ListItemButton>
-					</ListItem>
-				))}
-			</List>
+							<ListItemButton
+								sx={{ textAlign: "center" }}
+								onClickCapture={(e) => {
+									e.preventDefault;
+									navigate(item?.path);
+								}}
+							>
+								<ListItemText primary={item.title} />
+							</ListItemButton>
+						</ListItem>
+					))}
+				</List>
+			</Box>
 		</Box>
 	);
+
+	const formatOptionLabel = (props: any) => {
+		console.log("Option Label", props);
+		return Object.entries(props as ISearch)
+			?.map(([key, value], i) => {
+				return value?.map((v) => (
+					<Box display='flex'>
+						<Box>
+							<picture>
+								<img
+									src={`${
+										BASE_URL?.includes("localhost")
+											? BASE_URL
+											: ""
+									}/media/${v?.poster_small_vertical_image}`}
+									style={{
+										height: "100%",
+										width: "100%",
+										objectFit: "cover",
+									}}
+									alt={v?.name}
+								/>
+							</picture>
+						</Box>
+						<Box
+							display='flex'
+							flexDirection='column'
+							alignItems='flex-start'
+							justifyContent='space-between'
+							p={1}
+						>
+							<Box
+								fontFamily='Barlow Condensed'
+								fontSize='1.2rem'
+							>
+								{v?.name}
+							</Box>
+							<Box fontFamily='Barlow Condensed'>
+								{v?.description}
+							</Box>
+						</Box>
+					</Box>
+				));
+			})
+			.flat(1);
+	};
 
 	return (
 		<>
@@ -171,7 +260,13 @@ const AppBar = () => {
 							>
 								<Box mr={2} className='d-center'>
 									<a
-										href='https://play.google.com/store/apps/details?id=com.netflix.mediaclient'
+										href={
+											prefs?.find(
+												(v) =>
+													v.field ===
+													"play_store_link"
+											)?.value
+										}
 										target='_blank'
 									>
 										<AndroidLogo height={20} />
@@ -179,7 +274,13 @@ const AppBar = () => {
 								</Box>
 								<Box className='d-center'>
 									<a
-										href='https://apps.apple.com/in/app/netflix/id363590051'
+										href={
+											prefs?.find(
+												(v) =>
+													v.field ===
+													"apple_store_link"
+											)?.value
+										}
 										target='_blank'
 									>
 										<AppleLogo height={20} />
@@ -191,25 +292,16 @@ const AppBar = () => {
 									isSearching ? "active" : ""
 								}`}
 							>
-								<AsyncSelect<ICustomSelectOption, false>
+								<AsyncSelect<ISearchResult, false>
 									name='search'
 									className='w-200'
 									closeMenuOnSelect
 									components={animatedComponents}
 									isSearchable
-									value={
-										search
-											? CustomSelectUtils.getDefaultValue(
-													search
-											  )
-											: undefined
-									}
-									onChange={(e) => {
-										setSearch(e?.value ?? "");
-									}}
 									loadOptions={loadSuggestions}
 									defaultOptions
 									styles={CustomSelectUtils.customStyles()}
+									formatOptionLabel={formatOptionLabel}
 									placeholder='Search...'
 								/>
 								<Tooltip title='Close Search'>
@@ -243,17 +335,32 @@ const AppBar = () => {
 									<SearchOutlined />
 								</IconButton>
 							</Box>
-							<Box mr={2}>
+							<Box
+								mr={2}
+								sx={{
+									display: {
+										xs: "none",
+										sm: "flex",
+									},
+								}}
+							>
 								<Link to='/login' className='login-btn'>
 									Login
 								</Link>
 							</Box>
 
-							<Box>
+							{/* <Box
+								sx={{
+									display: {
+										xs: "none",
+										sm: "flex",
+									},
+								}}
+							>
 								<Link to='/register' className='login-btn'>
 									Register
 								</Link>
-							</Box>
+							</Box> */}
 						</Box>
 					</Toolbar>
 				</MuiAppBar>

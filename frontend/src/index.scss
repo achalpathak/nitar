@@ -20,6 +20,8 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-text-size-adjust: 100%;
+
+	scroll-behavior: smooth;
 }
 
 #root {
@@ -207,11 +209,15 @@ body {
 }
 
 .carousel {
+	.carousel__container--item {
+		height: 100%;
+	}
 	.carousel__prev {
 		display: flex;
 		align-items: center;
 		justify-content: flex-start;
 		opacity: 1;
+		padding-left: 1rem;
 	}
 
 	.carousel__next {
@@ -219,5 +225,20 @@ body {
 		align-items: center;
 		justify-content: flex-end;
 		opacity: 1;
+		padding-right: 1rem;
+	}
+}
+
+input {
+	&.error {
+		border-color: #ff0c0c;
+	}
+}
+
+span {
+	&.error {
+		color: #ff0c0c;
+		width: 20rem;
+		font-size: 0.8rem;
 	}
 }

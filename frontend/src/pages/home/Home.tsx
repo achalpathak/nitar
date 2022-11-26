@@ -84,15 +84,10 @@ const Home = () => {
 			}}
 		>
 			<Banner />
-			<DownloadApp />
+			{/* <DownloadApp /> */}
 			{movies?.slice(0, 2)?.map((m) => (
 				<MovieList name={m?.name} category_items={m?.category_items} />
 			))}
-			{/* <MovieList title='Popular Originals' items={movies} />
-			<MovieList title='Trending Now' items={movies} />
-			<SubscribeButton />
-			<MovieList title='Most Watched' items={movies} />
-			<MovieList title='Web Series' items={movies} /> */}
 			<SubscribeButton />
 			{movies?.slice(2)?.map((m) => (
 				<MovieList name={m?.name} category_items={m?.category_items} />

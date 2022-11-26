@@ -16,7 +16,7 @@ const UseAlert = () => {
 			type: Actions.SHOW_ALERT,
 			payload: {
 				title,
-				icon,
+				severity: icon,
 				description,
 			},
 		});

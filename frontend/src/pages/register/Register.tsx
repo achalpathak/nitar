@@ -206,7 +206,11 @@ const Register = () => {
 												}}
 											/>
 										}
-										label='Your age is 18 years or above'
+										label={
+                                            <span className='age'>
+                                                Your age is 
+                                            </span>
+                                        }
 									/>
 									{ageError && (
 										<FormHelperText>

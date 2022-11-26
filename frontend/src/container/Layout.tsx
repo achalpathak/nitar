@@ -1,6 +1,6 @@
-import { lazy, Suspense } from "react";
+import { FC, lazy, Suspense, useLayoutEffect } from "react";
 import { AppBar, Loader } from "@components";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import {
 	Home,
 	Policy,
@@ -10,6 +10,15 @@ import {
 	Upcoming,
 	MovieDetails,
 } from "@pages";
+
+const Wrapper = ({ children }:any) => {
+    const location = useLocation()
+    useLayoutEffect(() => {
+      document.documentElement.scrollTo(0, 0)
+    }, [location.pathname])
+    return children
+  }
+
 
 const TheContent = () => {
 	return (
@@ -25,7 +34,8 @@ const TheContent = () => {
 			</header>
 			<main>
 				<Suspense fallback={<Loader />}>
-					<Routes>
+					<Wrapper>
+                    <Routes>
 						<Route path='/' element={<Home />} />
 						<Route path='/upcoming' element={<Upcoming />} />
 						<Route path='/movie/:slug' element={<MovieDetails />} />
@@ -39,6 +49,7 @@ const TheContent = () => {
 						<Route path='/privacy-policy' element={<Policy />} />
 						<Route path='/refund-policy' element={<Policy />} />
 					</Routes>
+                    </Wrapper>
 				</Suspense>
 			</main>
 			<footer>

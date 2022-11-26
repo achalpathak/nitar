@@ -1,36 +1,16 @@
 //*All imports go here!
-import "../miscellaneous/index.scss";
-import logo from "@assets/common/logo.png";
-import { Button, CustomInput } from "@components";
-import {
-	ChangeEvent,
-	KeyboardEvent,
-	MouseEvent,
-	useEffect,
-	useState,
-} from "react";
-import { AxiosError } from "axios";
 import api, { Routes } from "@api";
-import {
-	Alert,
-	AlertColor,
-	AlertTitle,
-	Checkbox,
-	FormControl,
-	FormControlLabel,
-	FormHelperText,
-	Grid,
-	Paper,
-	Typography,
-} from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-import { IMessage, IResponse, IError, ISuccess } from "@types";
-import data from "../../local-json/data.json";
 import { AppStore, GooglePlay } from "@assets";
+import logo from "@assets/common/logo.png";
 import FacebookIcon from "@mui/icons-material/Facebook";
+import InstagramIcon from "@mui/icons-material/Instagram";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import YouTubeIcon from "@mui/icons-material/YouTube";
-import InstagramIcon from "@mui/icons-material/Instagram";
+import { IError, ISuccess } from "@types";
+import { AxiosError } from "axios";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import "../miscellaneous/index.scss";
 
 const Footer = () => {
 	const [html, setHtml] = useState<string>("");
@@ -66,7 +46,7 @@ const Footer = () => {
 						<h2>ABOUT US</h2>
 					</div>
 					<div
-						className='about-us'
+						className='d-center about-us'
 						dangerouslySetInnerHTML={{ __html: html }}
 					>
 						{/* <span>

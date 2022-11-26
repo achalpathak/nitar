@@ -18,14 +18,15 @@
 	display: flex;
 	align-items: center;
 	width: 98vw !important;
-	flex-direction: column;
+	// flex-direction: column;
 	justify-content: center;
 	.card {
 		border: #ffa800 1px solid;
 		padding: 25px 15px;
 		border-radius: 20px;
 		box-shadow: 1px 1px 10px 1px #ffa800;
-		// margin-bottom: 20px;
+		margin-bottom: 20px;
+        max-width: 19rem;
 		> div {
 			flex-direction: column;
 		}
@@ -82,43 +83,33 @@ button {
 }
 
 .description {
-	// border: 2px solid red;
-	border-bottom: 1px solid #ffa800;
-	border-left: 1px solid #ffa800;
-	border-right: 1px solid #ffa800;
+    border:  1px solid #ffa800;
+    padding: 1rem;
+    text-align: center;
+    position: relative;
 
 	h5 {
 		font-family: sans-serif;
-		margin: 100px auto;
-		// color: #228B22;
 		text-align: center;
-		// font-size: 30px;
-		// max-width: 600px;
-		position: relative;
-		margin: 5px 0;
+        transform: translateY(-100%);
+        background-color: black;
+        display: inline-block;
+        padding: 0px 15px;
 	}
-	h5:before {
-		content: "";
-		display: block;
-		width: 40%;
-		height: 1px;
-		background: #ffa800;
-		left: 0;
-		top: 50%;
-		position: absolute;
-	}
-	h5:after {
-		content: "";
-		display: block;
-		width: 40%;
-		height: 1px;
-		background: #ffa800;
-		right: 0;
-		top: 50%;
-		position: absolute;
+	button {
+		font-family: sans-serif;
+		text-align: center;
+        transform: translateY(85%);
+        background-color: #ffa800;
+        display: inline-block;
+        color: white;
 	}
 	span {
 		padding: 20px;
 		margin-top: 10px;
 	}
+}
+
+.contact-us-btn{
+
 }

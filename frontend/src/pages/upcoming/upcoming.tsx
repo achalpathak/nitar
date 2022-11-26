@@ -92,65 +92,61 @@ const Upcoming = () => {
 
 	return (
 		<>
-			<Grid
-				container
-				justifyContent='center'
-				// sx={{
-				// 	backgroundImage: `url(${BASE_URL}${
-				// 		upcomingMovies?.at(currentIndex)
-				// 			?.poster_large_horizontal_image
-				// 	})`,
-				// 	// filter: "brightness(0.2)",
-				//     background: {
-
-				//     }
-				// }}
-			>
-				<Grid item xs={12} md={8} xl={6}>
-					<ReactCarousel
-						carouselConfig={{
-							transform: {
-								rotateY: {
-									[BEFORE]: () => "rotateY(25deg)",
-									[CENTER]: () => "rotateY(0deg)",
-									[AFTER]: () => "rotateY(-25deg)",
-								},
-								translateX: {
-									[BEFORE]: () => "translateX(75%)",
-									[CENTER]: () => "translateX(-50%)",
-									[AFTER]: () => "translateX(-75%)",
-								},
-							},
-						}}
-						itemBackgroundStyle={{
-							// backgroundColor: "#ece4db",
-							borderRadius: "3px",
-							// boxShadow: "8px 12px 14px -6px black",
-						}}
-						containerBackgroundStyle={{
-							filter: "blur(7px)",
-							// backgroundColor: "rgba(62, 212, 214, 0.3)",
-						}}
-						prevButtonText={
-							<ChevronLeftOutlined
-								style={{
-									width: 40,
-									height: 40,
-								}}
-							/>
-						}
-						nextButtonText={
-							<ChevronRightOutlined
-								style={{
-									width: 40,
-									height: 40,
-								}}
-							/>
-						}
-						carouselHeight='400px'
-						showIndices={true}
-					>
-						{upcomingMovies.map((image, index) => (
+			<Grid container justifyContent='center'>
+				<Grid item xs={12} mt={3}>
+					<Grid container>
+						{upcomingMovies?.map((image, index) => (
+							<Grid item xs={12} sm={4} mb={2}>
+								<div className='movie-item-upcoming'>
+									<a href='#'>
+										<figure>
+											<picture>
+												<img
+													key={image?.id}
+													src={`${
+														BASE_URL?.includes(
+															"localhost"
+														)
+															? BASE_URL
+															: ""
+													}${
+														image.poster_large_horizontal_image
+													}`}
+													alt={image?.name}
+													loading='lazy'
+													className='poster'
+												/>
+											</picture>
+											<figcaption>
+												<div className='title'>
+													{image?.name}
+												</div>
+												<div>
+													{image?.genres?.map((g) => (
+														<span
+															key={g?.id}
+															className='genre'
+														>
+															{g?.name}
+														</span>
+													))}
+												</div>
+												<div>
+													<a
+														href='#'
+														className='view-details'
+													>
+														View Details
+													</a>
+												</div>
+											</figcaption>
+										</figure>
+									</a>
+								</div>
+							</Grid>
+						))}
+					</Grid>
+					{/* {upcomingMovies.map((image, index) => (
 							<div className='movie-item-upcoming'>
 								<a href='#'>
 									<figure>
@@ -194,13 +190,11 @@ const Upcoming = () => {
 									</figure>
 								</a>
 							</div>
-						))}
-					</ReactCarousel>
+						))} */}
 				</Grid>
 			</Grid>
-			<SubscribeButton />
 			{trendingMovies ? <MovieList {...trendingMovies} /> : null}
-			<DownloadApp />
+			{/* <DownloadApp /> */}
 		</>
 	);
 };

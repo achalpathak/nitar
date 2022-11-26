@@ -35,12 +35,8 @@ const Plans = () => {
 	return (
 		<Grid container>
 			<Grid container className='plans-container'>
-				<Grid item xs={12} sm={12} md={6}>
-					<Typography variant='h2'>Our Subscription Plan</Typography>
-					<Typography>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-						Est et sollicitudin velit laoree
-					</Typography>
+				<Grid item xs={12} sm={12} md={6} mb={2}>
+					<Typography variant='h2'>Our Subscription Plans</Typography>
 				</Grid>
 			</Grid>
 			<Grid container className='plans-card'>
@@ -55,7 +51,7 @@ const Plans = () => {
 						className='card'
 						sx={{
 							margin: {
-								sm: "0 5px",
+								sm: "0 15px",
 							},
 							marginBottom: {
 								sm: 5,
@@ -96,18 +92,26 @@ const Plans = () => {
 								</ul>
 							</Grid>
 							<Grid item className='buy-now'>
-								<Button title='BUY NOW' />
+								<Button title='Subscribe' />
 							</Grid>
 						</Grid>
 					</Grid>
 				))}
-				{/* <Grid item xs={12} sm={12} md={3}>r</Grid>
-                <Grid item xs={12} sm={12} md={3}>a</Grid>
-                <Grid item xs={12} sm={12} md={3}>f</Grid> */}
 			</Grid>
-			<Grid container xs={12} sm={12} md={12} className='d-center'>
+			<Grid
+				container
+				xs={12}
+				sm={11}
+				md={12}
+				className='d-center'
+				my={10}
+			>
 				<Grid item xs={12} sm={12} md={10} className='description'>
-					<Typography variant='h5'>Something Description</Typography>
+					<div>
+						<Typography variant='h5'>
+							Something Description
+						</Typography>
+					</div>
 					<span>
 						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 						Maecenas dignissim turpis nulla urna. Ornare aliquam
@@ -118,9 +122,9 @@ const Plans = () => {
 						tristique. Commodo massa, etiam id lacus. Pharetra
 						semper vitae sapien risus curabitur ut.
 					</span>
-				</Grid>
-				<Grid item xs={12} sm={12} md={12}>
-					<SubscribeButton />
+					<Grid item className='contact-us-btn'>
+						<Button title='Contact us' />
+					</Grid>
 				</Grid>
 			</Grid>
 		</Grid>

@@ -4,17 +4,50 @@ import MovieItem from "./movie-item";
 import { ChevronLeftOutlined, ChevronRightOutlined } from "@mui/icons-material";
 import MovieTile from "@assets/home/movie-tile.png";
 import HorizontalScroll from "react-horizontal-scrolling";
-import { FC, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { ICategory, IMovieList } from "@types";
 import LeftRightButton from "@components/left-right-button";
 import ReactCarousel, { AFTER, CENTER, BEFORE } from "react-carousel-animated";
 import "./movies.scss";
 import { BASE_URL } from "@api";
+import { useScroll, useWheel } from "@use-gesture/react";
+import { animated, useSpring } from "react-spring";
 
 const MovieList: FC<ICategory> = ({ name, category_items }) => {
 	if ((category_items?.length ?? 0) === 0) {
 		return null;
 	}
+	const moviesRef = useRef<HTMLDivElement>(null);
+
+	const [style, set] = useSpring(() => ({
+		transform: "perspective(500px) rotateY(0deg)",
+	}));
+
+	const bind = useScroll((event) => {
+		console.log("Scrolling", event);
+		set({
+			transform: `perspective(500px) rotateY(${
+				event.scrolling ? clamp(event.delta[0]) : 0
+			}deg)`,
+		});
+	});
+
+	const wheel = useWheel((event) => {
+		console.log("Wheeling", event);
+		set({
+			transform: `perspective(500px) rotateY(${
+				event.scrolling ? clamp(event.delta[0]) : 0
+			}deg)`,
+		});
+	});
+
+	const clamp = (value: number, clampAt: number = 30) => {
+		if (value > 0) {
+			return value > clampAt ? clampAt : value;
+		} else {
+			return value < -clampAt ? -clampAt : value;
+		}
+	};
 
 	return (
 		<Grid
@@ -41,24 +74,23 @@ const MovieList: FC<ICategory> = ({ name, category_items }) => {
 									fontFamily='Barlow Condensed'
 									fontWeight='500'
 									textTransform='uppercase'
+									ml={1}
 								>
 									{name}
 								</Typography>
 							</Grid>
 							<LeftRightButton
 								onLeftClick={() => {
-									const prevBtn = document.querySelector(
-										`div[data-movie="${name}"] .carousel__prev`
-									) as HTMLDivElement;
-
-									prevBtn.click();
+									moviesRef.current?.scroll({
+										left: -200,
+										behavior: "smooth",
+									});
 								}}
 								onRightClick={() => {
-									const nextBtn = document.querySelector(
-										`div[data-movie="${name}"] .carousel__next`
-									) as HTMLDivElement;
-
-									nextBtn.click();
+									moviesRef.current?.scroll({
+										left: 200,
+										behavior: "smooth",
+									});
 								}}
 							/>
 						</Grid>
@@ -68,45 +100,55 @@ const MovieList: FC<ICategory> = ({ name, category_items }) => {
 			<Grid item xs={12}>
 				<Grid container display='flex' justifyContent='flex-end'>
 					<Grid
+						ref={moviesRef}
 						item
 						xs={11}
 						className='movies'
 						mt={3}
-						overflow='hidden'
 						data-movie={name}
+						{...bind()}
+						{...wheel()}
 					>
-						{/* <Box whiteSpace='nowrap'>
-							{category_items?.map((item, i) => (
-								<MovieItem
-									key={item.rankings}
-									item={item}
-									currentIndex={activeIndex}
-								/>
-							))}
-						</Box> */}
-						<ReactCarousel
-							carouselConfig={{
-								transform: false,
-								top: false,
-								left: false,
-								filter: false,
-							}}
-							itemBackgroundStyle={{
-								// backgroundColor: "#ece4db",
-								borderRadius: "3px",
-								// boxShadow: "8px 12px 14px -6px black",
-							}}
-							containerBackgroundStyle={{
-								filter: "blur(7px)",
-								// backgroundColor: "rgba(62, 212, 214, 0.3)",
-							}}
-							carouselHeight='250px'
-							// itemMaxWidth={50}
-						>
-							{category_items.map((image, index) => (
-								<MovieItem key={image?.id} item={image} />
-							))}
-						</ReactCarousel>
+						{category_items?.map((img) => (
+							<animated.div
+								key={img.id}
+								className='movie-card'
+								style={{
+									...style,
+									backgroundImage: `url(${
+										BASE_URL?.includes("localhost")
+											? BASE_URL
+											: ""
+									}${img.poster_small_vertical_image})`,
+								}}
+							>
+								<a href='#'>
+									<figure>
+										<figcaption>
+											<div>{img?.name}</div>
+											<div>
+												{img?.genres?.map((g) => (
+													<span
+														key={g?.id}
+														className='genre'
+													>
+														{g?.name}
+													</span>
+												))}
+											</div>
+											<div className='details-btn'>
+												<a
+													href='#'
+													className='view-details'
+												>
+													View Details
+												</a>
+											</div>
+										</figcaption>
+									</figure>
+								</a>
+							</animated.div>
+						))}
 					</Grid>
 				</Grid>
 			</Grid>

@@ -14,10 +14,7 @@ export type IMessage = {
 };
 
 export type IError = {
-	full_name: string[];
-	email: string[];
-	phone: string[];
-	age: string[];
+	[s: string]: string[];
 };
 
 export type IResponse = ISuccess & IError;
@@ -97,4 +94,27 @@ export type IGenre = {
 	created: Date;
 	modified: Date;
 	name: string;
+};
+
+export type IPreferences = {
+	field: string;
+	value: string;
+	toggle_value: boolean;
+	image: string;
+	field_description: string;
+};
+
+export type ISearch = {
+	movies_results: ISearchResult[];
+	series_results: ISearchResult[];
+	episodes_results: ISearchResult[];
+	extras_results: ISearchResult[];
+	upcoming_results: ISearchResult[];
+};
+
+export type ISearchResult = {
+	name: string;
+	description: string;
+	poster_small_vertical_image: string;
+	type: string;
 };

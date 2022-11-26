@@ -7,7 +7,7 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import appReducer from "@redux/reducers";
 import Actions from "@redux/actions";
-import { IMessage, IReducer } from "@types";
+import { IMessage, IPreferences, IReducer } from "@types";
 
 const rootReducer = (state: any, action: IReducer) => {
 	if (action.type === Actions.LOGOUT) {
@@ -54,6 +54,7 @@ const persistor = persistStore(store);
 
 export type RootState = {
 	alert: IMessage;
+	preferences: IPreferences[];
 };
 
 export type AppDispatch = typeof store.dispatch;
