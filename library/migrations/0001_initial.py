@@ -883,7 +883,7 @@ class Migration(migrations.Migration):
                         max_length=25,
                     ),
                 ),
-                ("url", models.CharField(blank=True, max_length=255, null=True)),
+                ("url", models.CharField(max_length=255)),
                 ("published", models.BooleanField(default=False)),
                 (
                     "content_type",

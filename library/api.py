@@ -7,23 +7,23 @@ from django.db.models import Q
 from itertools import chain
 
 
-# class BannerInfo(APIView):
-#     def post(self, request):
-#         if request.data.get("banner_type") == library_models.BANNER_WELCOME:
-#             objs = library_models.Banner.objects.filter(
-#                 banner_type=library_models.BANNER_WELCOME, published=True
-#             )
-#             print(objs[0].content_object.__dict__)
-#         elif request.data.get("banner_type") == library_models.BANNER_DEFAULT:
-#             objs = library_models.Banner.objects.filter(
-#                 banner_type=library_models.BANNER_DEFAULT, published=True
-#             )
-#         else:
-#             return Response(
-#                 {"message": "banner_type value invalid."},
-#                 status=status.HTTP_400_BAD_REQUEST,
-#             )
-#         return Response({"result": "hello"})
+class BannerInfo(APIView):
+    serializer = serializers.BannerInfoSerializer
+
+    def get(self, request):
+        welcome_banner_objs = library_models.Banner.objects.filter(
+            banner_type=library_models.BANNER_WELCOME, published=True
+        )
+        poster_banner_objs = library_models.Banner.objects.filter(
+            banner_type=library_models.BANNER_DEFAULT, published=True
+        )
+
+        data = {
+            "welcome_banner": self.serializer(welcome_banner_objs, many=True).data,
+            "poster_banner": self.serializer(poster_banner_objs, many=True).data,
+        }
+
+        return Response({"result": data})
 
 
 class NewsLetterSubscriptionAPI(APIView):

@@ -5,6 +5,10 @@ from django.contrib.auth.models import User, AbstractUser, BaseUserManager
 
 from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
+from django.dispatch import receiver
+from django.db.models import signals
+from django.utils import timezone
+from datetime import timedelta
 
 
 class UserManager(BaseUserManager):
@@ -101,3 +105,53 @@ class ContactUs(TimeStampedModel):
 
     class Meta:
         verbose_name_plural = "Contact Us Queries"
+
+
+class MembershipFeatures(TimeStampedModel):
+    name = models.CharField(max_length=250)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Membership Features"
+
+
+class Memberships(TimeStampedModel):
+    name = models.CharField(max_length=250)
+    validity_in_days = models.PositiveIntegerField(default=1)
+    price_in_inr = models.DecimalField(
+        max_digits=5, decimal_places=2, blank=True, null=True
+    )
+    membership_features = models.ManyToManyField(MembershipFeatures)
+    published = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Memberships"
+
+
+class UserMemberships(TimeStampedModel):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    membership = models.OneToOneField(Memberships, on_delete=models.CASCADE)
+    expiry_at = models.DateTimeField(
+        blank=True, help_text="NOTE: Field will autofill when saved."
+    )
+    published = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.user.full_name} | {self.membership.name}"
+
+    class Meta:
+        verbose_name_plural = "User Memberships"
+
+
+@receiver(signals.pre_save, sender=UserMemberships)
+def populate_slug(sender, instance, **kwargs):
+    if not instance.expiry_at:
+        plan_expiry = timezone.now() + timedelta(
+            days=instance.membership.validity_in_days
+        )
+        instance.expiry_at = plan_expiry

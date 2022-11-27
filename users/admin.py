@@ -58,5 +58,38 @@ class LoginPhoneOtpAdmin(admin.ModelAdmin):
     get_phone.short_description = "Phone Number"
 
 
+class MembershipAdmin(admin.ModelAdmin):
+    list_display = ("name", "validity_in_days", "price_in_inr", "created", "published")
+
+
+class UserMembershipAdmin(admin.ModelAdmin):
+    list_display = (
+        "user",
+        "get_name",
+        "get_phone",
+        "get_email",
+        "membership",
+        "created",
+        "expiry_at",
+    )
+    search_fields = ["user__full_name", "user__phone", "user__email"]
+
+    def get_name(self, obj):
+        return obj.user.full_name
+
+    def get_phone(self, obj):
+        return obj.user.phone
+
+    def get_email(self, obj):
+        return obj.user.email
+
+    get_phone.short_description = "Phone Number"
+    get_email.short_description = "Email"
+    get_name.short_description = "Full Name"
+
+
 admin.site.register(user_models.LoginPhoneOtp, LoginPhoneOtpAdmin)
 admin.site.register(user_models.ContactUs)
+admin.site.register(user_models.MembershipFeatures)
+admin.site.register(user_models.Memberships, MembershipAdmin)
+admin.site.register(user_models.UserMemberships, UserMembershipAdmin)

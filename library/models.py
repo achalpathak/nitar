@@ -21,6 +21,11 @@ BANNER_CHOICES = [
     (BANNER_DEFAULT, "Banner Default"),
     (BANNER_WELCOME, "Banner Welcome"),
 ]
+URL_DEFAULT = "EXTERNAL"
+URL_CHOICES = [
+    ("INTERNAL", "INTERNAL"),
+    (URL_DEFAULT, "EXTERNAL"),
+]
 
 IMAGE_FILE_SIZE = 512  # size in kb
 ERROR_MSG = f"Max image size should be {IMAGE_FILE_SIZE} kB"
@@ -83,16 +88,35 @@ class Geners(TimeStampedModel):
 
 
 class Banner(TimeStampedModel):
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey()
+    website_banner = models.ImageField(
+        upload_to=utils.image_path,
+        null=True,
+        blank=True,
+        validators=[validate_poster_small_vertical_image],
+        help_text=ERROR_MSG,
+    )
+    mobile_banner = models.ImageField(
+        upload_to=utils.image_path,
+        null=True,
+        blank=True,
+        validators=[validate_poster_small_vertical_image],
+        help_text=ERROR_MSG,
+    )
     banner_type = models.CharField(
         max_length=25,
         choices=BANNER_CHOICES,
         default=BANNER_DEFAULT,
     )
-    url = models.CharField(max_length=255, null=True, blank=True)
-    published = models.BooleanField(default=False)
+    url = models.CharField(
+        max_length=255,
+        help_text="NOTE: Enter SLUG value if url is internal.",
+    )
+    url_type = models.CharField(
+        max_length=25,
+        choices=URL_CHOICES,
+        default=URL_DEFAULT,
+    )
+    published = models.BooleanField(default=True)
 
 
 class Movies(TimeStampedModel):

@@ -9,6 +9,11 @@ class GenersSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class BannerInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = library_models.Banner
+        fields = "__all__"
+        
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = library_models.Category
