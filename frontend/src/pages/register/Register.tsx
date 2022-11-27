@@ -19,9 +19,11 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { IMessage, IResponse, IError } from "@types";
+import { useAlert } from "@hooks";
 
 const Register = () => {
 	const navigate = useNavigate();
+	const showAlert = useAlert();
 
 	// * --- states start here ----------////
 
@@ -50,20 +52,20 @@ const Register = () => {
 
 	// * --- states ends here ----------////
 
-	const addMessage = (
-		severity: AlertColor,
-		title: string,
-		description: string = ""
-	) => {
-		setMessage({
-			severity,
-			title,
-			description,
-		});
-		setTimeout(() => {
-			setMessage(null);
-		}, 4000);
-	};
+	// const addMessage = (
+	// 	severity: AlertColor,
+	// 	title: string,
+	// 	description: string = ""
+	// ) => {
+	// 	setMessage({
+	// 		severity,
+	// 		title,
+	// 		description,
+	// 	});
+	// 	setTimeout(() => {
+	// 		setMessage(null);
+	// 	}, 4000);
+	// };
 
 	const errorHandler = () => {
 		if (!ageRequirement) {
@@ -104,7 +106,7 @@ const Register = () => {
 
 			if (res.status === 200) {
 				console.log("Registered");
-				addMessage("success", "Success", res?.data?.message);
+				showAlert("success", "Success", res?.data?.message);
 				setTimeout(() => {
 					navigate("/login", {
 						state: {
@@ -117,7 +119,7 @@ const Register = () => {
 			const err = error as AxiosError<IResponse>;
 			const data = err?.response?.data;
 			if (data?.message) {
-				addMessage("error", "Error", data?.message);
+				showAlert("error", "Error", data?.message);
 			} else if (data) {
 				setErrors(data);
 			}
@@ -207,10 +209,10 @@ const Register = () => {
 											/>
 										}
 										label={
-                                            <span className='age'>
-                                                Your age is 
-                                            </span>
-                                        }
+											<span className='age'>
+												Your age is
+											</span>
+										}
 									/>
 									{ageError && (
 										<FormHelperText>
@@ -276,6 +278,19 @@ const Register = () => {
 								register();
 							}}
 						/>
+						<Typography mt={2}>
+							<>
+								Already have an account?{" "}
+								<Link
+									to='/login'
+									style={{
+										color: "#ffa800",
+									}}
+								>
+									Login
+								</Link>
+							</>
+						</Typography>
 						<button
 							className='cancel-btn'
 							onClickCapture={(e) => {

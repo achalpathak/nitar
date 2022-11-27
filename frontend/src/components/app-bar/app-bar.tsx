@@ -117,15 +117,11 @@ const AppBar = () => {
 			<Box className='d-center'>
 				<List>
 					{routesMobile.map((item) => (
-						<ListItem
-							key={item.title}
-							disablePadding
-							sx={{
-								textAlign: "flex-start",
-							}}
-						>
+						<ListItem key={item.title} disablePadding>
 							<ListItemButton
-								sx={{ textAlign: "center" }}
+								sx={{
+									textAlign: "left",
+								}}
 								onClickCapture={(e) => {
 									e.preventDefault;
 									navigate(item?.path);

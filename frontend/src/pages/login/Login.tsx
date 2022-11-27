@@ -15,9 +15,10 @@ import {
 	Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IMessage, IResponse, IError } from "@types";
 import { useLocation } from "react-router-dom";
+import { useAlert } from "@hooks";
 
 type ILocationProps = {
 	pathname: string;
@@ -29,6 +30,7 @@ type ILocationProps = {
 const Login = () => {
 	const navigate = useNavigate();
 	const location: ILocationProps = useLocation();
+	const showAlert = useAlert();
 
 	// * --- states start here ----------////
 
@@ -51,20 +53,20 @@ const Login = () => {
 
 	// * --- states ends here ----------////
 
-	const addMessage = (
-		severity: AlertColor,
-		title: string,
-		description: string = ""
-	) => {
-		setMessage({
-			severity,
-			title,
-			description,
-		});
-		setTimeout(() => {
-			setMessage(null);
-		}, 4000);
-	};
+	// const addMessage = (
+	// 	severity: AlertColor,
+	// 	title: string,
+	// 	description: string = ""
+	// ) => {
+	// 	setMessage({
+	// 		severity,
+	// 		title,
+	// 		description,
+	// 	});
+	// 	setTimeout(() => {
+	// 		setMessage(null);
+	// 	}, 4000);
+	// };
 
 	const startTimer = () => {
 		setTimer(60);
@@ -122,7 +124,7 @@ const Login = () => {
 			if (res.status === 200) {
 				console.log("OTP Sent");
 				setProcess("otp");
-				addMessage("success", "Success", res?.data?.message);
+				showAlert("success", "Success", res?.data?.message);
 
 				startTimer();
 			}
@@ -130,7 +132,7 @@ const Login = () => {
 			const err = error as AxiosError<IResponse>;
 			const data = err?.response?.data;
 			if (data?.message) {
-				addMessage("error", "Error", data?.message);
+				showAlert("error", "Error", data?.message);
 			} else if (data) {
 				setErrors(data);
 			}
@@ -146,7 +148,7 @@ const Login = () => {
 
 			if (res.status === 200) {
 				console.log("");
-				addMessage("success", "Success", res?.data?.message);
+				showAlert("success", "Success", res?.data?.message);
 				setTimeout(() => {
 					navigate("/");
 				}, 3000);
@@ -155,7 +157,7 @@ const Login = () => {
 			const err = error as AxiosError<IResponse>;
 			const data = err?.response?.data;
 			if (data?.message) {
-				addMessage("error", "Error", data?.message);
+				showAlert("error", "Error", data?.message);
 			} else if (data) {
 				setErrors(data);
 			}
@@ -205,6 +207,19 @@ const Login = () => {
 									}}
 									errors={errors?.phone}
 								/>
+								<Typography mt={1}>
+									<>
+										Don't have an account?{" "}
+										<Link
+											to='/register'
+											style={{
+												color: "#ffa800",
+											}}
+										>
+											Register
+										</Link>
+									</>
+								</Typography>
 							</>
 						)}
 						{process === "otp" && (
