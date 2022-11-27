@@ -35,7 +35,7 @@ class BannerAdmin(admin.ModelAdmin):
         )
 
     website_banner_tag.short_description = "Website Banner"
-    mobile_banner_tag.short_description = "Website Banner"
+    mobile_banner_tag.short_description = "Mobile Banner"
 
     list_display = (
         "website_banner_tag",

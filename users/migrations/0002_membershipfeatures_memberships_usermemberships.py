@@ -16,12 +16,14 @@ class Migration(migrations.Migration):
 
     def insertData(apps, schema_editor):
         Membershipfeatures = apps.get_model("users", "MembershipFeatures")
+        
         data = [
-            "Unlimited Streaming",
-            "Unlimited Downloads",
-            "4K Downloading",
-            "Watch on 3 screens",
-            "Ad-free experience",
+            "Premium content",
+            "Ad-Free ",
+            "Device - Mobile Tab Laptop",
+            "No screen limitation",
+            "HD Audio quality",
+            "HD video quality",
         ]
         membership_features_ids = []
         for _ in data:
@@ -46,7 +48,7 @@ class Migration(migrations.Migration):
             )
             obj.save()
             _id=1
-            for i in range(0, random.randint(1, 4)):
+            for i in range(0, random.randint(1, 5)):
                 obj.membership_features.add(_id)
                 _id+=1
 
