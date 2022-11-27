@@ -36,11 +36,15 @@ const BannerCarousel: FC<ICarouselProps> = ({ items }) => {
 				style={{
 					paddingLeft: 0,
 				}}
+				height={{
+					xs: "15rem",
+					md: "37rem",
+				}}
 			>
 				<ReactCarousel
 					carouselConfig={{
 						transform: {
-							zIndex: false,
+							// zIndex: false,
 						},
 					}}
 					itemBackgroundStyle={{
@@ -93,13 +97,10 @@ const BannerCarousel: FC<ICarouselProps> = ({ items }) => {
 								alt={image?.title}
 								loading='lazy'
 								style={{
-									// height: "300px",
 									borderRadius: "20px",
-									width: "100vw",
+									width: "auto",
 									height: "100%",
-									objectFit: "contain",
-									// boxShadow: "0 7px 20px 2px rgb(150, 170, 180)",
-									// margin: "1rem",
+									objectFit: "fill",
 								}}
 							/>
 						</div>

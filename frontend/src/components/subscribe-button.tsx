@@ -49,7 +49,6 @@ const SubscribeButton = () => {
 			container
 			justifyContent='center'
 			className='subscribe-button-container'
-			mt={5}
 		>
 			<Grid item xs={10} md={7} className='subscribe-bg'>
 				<Grid container>

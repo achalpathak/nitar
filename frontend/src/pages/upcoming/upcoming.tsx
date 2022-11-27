@@ -7,8 +7,9 @@ import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import ReactCarousel, { AFTER, CENTER, BEFORE } from "react-carousel-animated";
 import { ChevronLeftOutlined, ChevronRightOutlined } from "@mui/icons-material";
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import "./upcoming.scss";
+import moment from "moment";
 
 const Upcoming = () => {
 	const showAlert = useAlert();
@@ -94,9 +95,20 @@ const Upcoming = () => {
 		<>
 			<Grid container justifyContent='center'>
 				<Grid item xs={12} mt={3}>
-					<Grid container>
+					<Grid container px={3}>
 						{upcomingMovies?.map((image, index) => (
-							<Grid item xs={12} sm={4} mb={2}>
+							<Grid
+								item
+								xs={12}
+								sm={4}
+								mb={2}
+								className='movie-item-container'
+								sx={{
+									zIndex: {
+										"&:hover": 2,
+									},
+								}}
+							>
 								<div className='movie-item-upcoming'>
 									<a href='#'>
 										<figure>
@@ -110,14 +122,27 @@ const Upcoming = () => {
 															? BASE_URL
 															: ""
 													}${
-														image.poster_large_horizontal_image
+														image.poster_large_vertical_image
 													}`}
 													alt={image?.name}
 													loading='lazy'
 													className='poster'
 												/>
 											</picture>
-											<figcaption>
+											<div className='details'>
+												<Typography fontFamily='Barlow Condensed'>
+													{image?.name}
+												</Typography>
+												<Typography fontFamily='Barlow Condensed'>
+													<>
+														Release Date:{" "}
+														{moment(
+															image?.release_date_time
+														).format("DD/MM/YYYY")}
+													</>
+												</Typography>
+											</div>
+											{/* <figcaption>
 												<div className='title'>
 													{image?.name}
 												</div>
@@ -139,7 +164,7 @@ const Upcoming = () => {
 														View Details
 													</a>
 												</div>
-											</figcaption>
+											</figcaption> */}
 										</figure>
 									</a>
 								</div>

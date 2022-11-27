@@ -171,11 +171,21 @@
 
 .movie-card {
 	flex-shrink: 0;
-	width: 150px;
-	height: 200px;
+	width: 300px;
+	height: 400px;
 	border-radius: 10px;
 	margin-left: 10px;
-	background-size: contain;
+	margin-right: 10px;
+	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center center;
+
+	&:hover {
+		transform: scale(1.2);
+	}
+
+	@media only screen and (max-width: 699px) {
+		width: 150px;
+		height: 200px;
+	}
 }

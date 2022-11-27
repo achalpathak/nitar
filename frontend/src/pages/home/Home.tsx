@@ -1,54 +1,10 @@
 import { Banner, DownloadApp, SubscribeButton } from "@components";
 import MovieList from "@components/movies";
-import MovieTile from "@assets/home/movie-tile.png";
 import { useEffect, useState } from "react";
 import { ICategories, ICategory, IError, IResponse, ISuccess } from "@types";
 import { AxiosError } from "axios";
 import { useAlert } from "@hooks";
 import api, { Routes } from "@api";
-
-// const movies = [
-// 	{
-// 		title: "Undone",
-// 		image: MovieTile,
-// 	},
-// 	{
-// 		title: "Undone",
-// 		image: MovieTile,
-// 	},
-// 	{
-// 		title: "Undone",
-// 		image: MovieTile,
-// 	},
-// 	{
-// 		title: "Undone",
-// 		image: MovieTile,
-// 	},
-// 	{
-// 		title: "Undone",
-// 		image: MovieTile,
-// 	},
-// 	{
-// 		title: "Undone",
-// 		image: MovieTile,
-// 	},
-// 	{
-// 		title: "Undone",
-// 		image: MovieTile,
-// 	},
-// 	{
-// 		title: "Undone",
-// 		image: MovieTile,
-// 	},
-// 	{
-// 		title: "Undone",
-// 		image: MovieTile,
-// 	},
-// 	{
-// 		title: "Undone",
-// 		image: MovieTile,
-// 	},
-// ];
 
 const Home = () => {
 	//Hooks
@@ -84,13 +40,12 @@ const Home = () => {
 			}}
 		>
 			<Banner />
-			{/* <DownloadApp /> */}
 			{movies?.slice(0, 2)?.map((m) => (
-				<MovieList name={m?.name} category_items={m?.category_items} />
+				<MovieList key={m?.name} {...m} />
 			))}
 			<SubscribeButton />
 			{movies?.slice(2)?.map((m) => (
-				<MovieList name={m?.name} category_items={m?.category_items} />
+				<MovieList key={m?.name} {...m} />
 			))}
 		</div>
 	);

@@ -13,8 +13,8 @@ import { BASE_URL } from "@api";
 import { useScroll, useWheel } from "@use-gesture/react";
 import { animated, useSpring } from "react-spring";
 
-const MovieList: FC<ICategory> = ({ name, category_items }) => {
-	if ((category_items?.length ?? 0) === 0) {
+const MovieList: FC<ICategory> = ({ name, poster_type, data }) => {
+	if ((data?.length ?? 0) === 0) {
 		return null;
 	}
 	const moviesRef = useRef<HTMLDivElement>(null);
@@ -109,7 +109,7 @@ const MovieList: FC<ICategory> = ({ name, category_items }) => {
 						{...bind()}
 						{...wheel()}
 					>
-						{category_items?.map((img) => (
+						{data?.map((img) => (
 							<animated.div
 								key={img.id}
 								className='movie-card'
@@ -119,10 +119,11 @@ const MovieList: FC<ICategory> = ({ name, category_items }) => {
 										BASE_URL?.includes("localhost")
 											? BASE_URL
 											: ""
-									}${img.poster_small_vertical_image})`,
+									}${img?.[poster_type]})`,
 								}}
+								data-movie-name={img?.name}
 							>
-								<a href='#'>
+								{/* <a href='#'>
 									<figure>
 										<figcaption>
 											<div>{img?.name}</div>
@@ -146,7 +147,7 @@ const MovieList: FC<ICategory> = ({ name, category_items }) => {
 											</div>
 										</figcaption>
 									</figure>
-								</a>
+								</a> */}
 							</animated.div>
 						))}
 					</Grid>

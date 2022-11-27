@@ -16,7 +16,7 @@ const MovieItem: FC<IMovieItemProps> = ({ item }) => {
 						alt={item?.name}
 						loading='lazy'
 					/>
-					<figcaption>
+					{/* <figcaption>
 						<div>{item?.name}</div>
 						<div>
 							{item?.genres?.map((g) => (
@@ -28,7 +28,7 @@ const MovieItem: FC<IMovieItemProps> = ({ item }) => {
 						<a href='#' className='view-details'>
 							View Details
 						</a>
-					</figcaption>
+					</figcaption> */}
 				</figure>
 			</a>
 		</div>

@@ -23,8 +23,8 @@ import {
 	ICategoryItem,
 	ICustomSelectOption,
 	IRoutes,
-	ISearch,
 	ISearchResult,
+	ISuccess,
 } from "@types";
 import { CustomSelectUtils } from "@utils";
 import { useAppSelector } from "@redux/hooks";
@@ -78,19 +78,17 @@ const AppBar = () => {
 
 	const loadSuggestions = async (searchKey: string) => {
 		try {
-			if (searchKey?.length > 1) {
-				const res = await api.get<ISearch>(Routes.SEARCH, {
-					params: {
-						q: searchKey,
-					},
-				});
+			const res = await api.get<ISearchResult[]>(Routes.SEARCH, {
+				params: {
+					q: searchKey,
+				},
+			});
 
-				if (res.status === 200) {
-					return Object.values(res.data).flat(1);
-				}
+			if (res.status === 200) {
+				return res.data;
 			}
 		} catch (error) {
-			const err = error as AxiosError;
+			const err = error as AxiosError<ISuccess>;
 			console.log(err.response);
 		}
 		return [];
@@ -142,51 +140,37 @@ const AppBar = () => {
 		</Box>
 	);
 
-	const formatOptionLabel = (props: any) => {
-		console.log("Option Label", props);
-		return Object.entries(props as ISearch)
-			?.map(([key, value], i) => {
-				return value?.map((v) => (
-					<Box display='flex'>
-						<Box>
-							<picture>
-								<img
-									src={`${
-										BASE_URL?.includes("localhost")
-											? BASE_URL
-											: ""
-									}/media/${v?.poster_small_vertical_image}`}
-									style={{
-										height: "100%",
-										width: "100%",
-										objectFit: "cover",
-									}}
-									alt={v?.name}
-								/>
-							</picture>
-						</Box>
-						<Box
-							display='flex'
-							flexDirection='column'
-							alignItems='flex-start'
-							justifyContent='space-between'
-							p={1}
-						>
-							<Box
-								fontFamily='Barlow Condensed'
-								fontSize='1.2rem'
-							>
-								{v?.name}
-							</Box>
-							<Box fontFamily='Barlow Condensed'>
-								{v?.description}
-							</Box>
-						</Box>
-					</Box>
-				));
-			})
-			.flat(1);
-	};
+	const formatOptionLabel = (v: ISearchResult) => (
+		<Box display='flex' key={v?.name}>
+			<Box>
+				<picture>
+					<img
+						src={`${
+							BASE_URL?.includes("localhost") ? BASE_URL : ""
+						}/media/${v?.poster_small_vertical_image}`}
+						style={{
+							height: "100%",
+							width: "100%",
+							objectFit: "cover",
+						}}
+						alt={v?.name}
+					/>
+				</picture>
+			</Box>
+			<Box
+				display='flex'
+				flexDirection='column'
+				alignItems='flex-start'
+				justifyContent='space-between'
+				p={1}
+			>
+				<Box fontFamily='Barlow Condensed' fontSize='1.2rem'>
+					{v?.name}
+				</Box>
+				<Box fontFamily='Barlow Condensed'>{v?.description}</Box>
+			</Box>
+		</Box>
+	);
 
 	return (
 		<>

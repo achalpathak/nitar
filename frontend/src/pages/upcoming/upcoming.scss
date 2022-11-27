@@ -1,8 +1,13 @@
-.movie-item-upcoming {
-	display: flex;
+.movie-item-container {
 	transition: all 300ms;
 	transition-delay: 100ms;
-	margin-right: 1rem;
+
+	.movie-item-upcoming {
+		display: flex;
+		transition: all 300ms;
+		transition-delay: 100ms;
+		margin-right: 1rem;
+	}
 
 	a {
 		color: white;
@@ -11,12 +16,10 @@
 	}
 
 	img {
-		// width: 100%;
-		// height: 250px;
 		object-fit: fill;
 		transition: all 300ms;
 		transition-delay: 100ms;
-		// margin-right: 1rem;
+		border-radius: 10px;
 
 		&.poster {
 			height: 100%;
@@ -24,6 +27,12 @@
 			object-fit: fill;
 			// border-radius: 10px;
 		}
+	}
+
+	.details {
+		transition: all 300ms;
+		opacity: 0;
+		padding: 0 20px;
 	}
 
 	figure {
@@ -46,7 +55,6 @@
 			opacity: 0;
 			transition: all 300ms;
 			transition-delay: 100ms;
-			overflow: hidden;
 
 			div {
 				display: flex;
@@ -85,19 +93,26 @@
 	&:hover {
 		cursor: pointer;
 
-		figcaption {
-			opacity: 1;
-			background-color: rgba($color: #000000, $alpha: 0.5);
-		}
+		transform: scale(1.1);
+		z-index: 2;
 
-		img {
-			// transform: scale(1.2);
-		}
-
-		.view-details {
-			transform: translateY(0%);
+		.details {
 			opacity: 1;
 		}
+
+		// figcaption {
+		// 	opacity: 1;
+		// 	background-color: rgba($color: #000000, $alpha: 0.5);
+		// }
+
+		// img {
+		// 	// transform: scale(1.2);
+		// }
+
+		// .view-details {
+		// 	transform: translateY(0%);
+		// 	opacity: 1;
+		// }
 	}
 
 	// &:hover {

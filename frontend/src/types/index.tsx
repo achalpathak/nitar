@@ -62,7 +62,8 @@ export type ICategories = {
 
 export type ICategory = {
 	name: string;
-	category_items: ICategoryItem[];
+	poster_type: keyof IImageType;
+	data: ICategoryItem[];
 };
 
 export type ICategoryItem = {
@@ -74,10 +75,6 @@ export type ICategoryItem = {
 	modified: Date;
 	name: string;
 	description: string;
-	poster_small_vertical_image: string;
-	poster_large_vertical_image: string;
-	poster_small_horizontal_image: string;
-	poster_large_horizontal_image: string;
 	duration?: string;
 	release_date_time: Date;
 	coming_soon_flag: boolean;
@@ -87,6 +84,13 @@ export type ICategoryItem = {
 	trailer_link?: string;
 	published: boolean;
 	rankings: number;
+} & IImageType;
+
+export type IImageType = {
+	poster_small_vertical_image: string;
+	poster_large_vertical_image: string;
+	poster_small_horizontal_image: string;
+	poster_large_horizontal_image: string;
 };
 
 export type IGenre = {
@@ -104,17 +108,8 @@ export type IPreferences = {
 	field_description: string;
 };
 
-export type ISearch = {
-	movies_results: ISearchResult[];
-	series_results: ISearchResult[];
-	episodes_results: ISearchResult[];
-	extras_results: ISearchResult[];
-	upcoming_results: ISearchResult[];
-};
-
 export type ISearchResult = {
 	name: string;
 	description: string;
 	poster_small_vertical_image: string;
-	type: string;
 };
