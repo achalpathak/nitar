@@ -51,16 +51,18 @@ class HomePageAPI(APIView):
     serializer = serializers.HomePageListSerializer
 
     def get(self, request):
-        data = {"categories": None, "categories_data": []}
+        data = {"categories": [], "categories_data": []}
         categories = (
             library_models.Category.objects.filter(published=True)
             .values("name", "poster_type")
             .order_by("rankings")
         )
-        data["categories"] = categories
-
         for category in categories:
-            category_dto_obj = {category.get("name"): []}
+            _dto = {
+                "name": category.get("name"),
+                "poster_type": category.get("poster_type"),
+                "data": [],
+            }
             category_objs = (
                 library_models.CategoryMovieSeriesMapping.objects.select_related(
                     "movies", "series"
@@ -77,8 +79,8 @@ class HomePageAPI(APIView):
                     dto = obj.series
                     dto.content_type = "series"
                 dto.rankings = obj.rankings
-                category_dto_obj[category.get("name")].append(self.serializer(dto).data)
-            data["categories_data"].append(category_dto_obj)
+                _dto["data"].append(self.serializer(dto).data)
+            data["categories"].append(_dto)
         return Response({"result": data})
 
 
