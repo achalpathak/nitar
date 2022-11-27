@@ -157,8 +157,10 @@ class MoviesAPI(APIView):
     serializer = serializers.MovieDetailSerializer
 
     def get(self, request, slug):
+        data = []
         movies_results = library_models.Movies.objects.filter(slug=slug).first()
-        data = self.serializer(movies_results).data
+        if movies_results:
+            data = self.serializer(movies_results).data
         return Response({"result": data})
 
 
@@ -166,12 +168,14 @@ class SeriesAPI(APIView):
     serializer = serializers.SeriesDetailSerializer
 
     def get(self, request, slug):
+        data = []
         series_results = (
             library_models.Series.objects.prefetch_related("episodes_set")
             .filter(slug=slug)
             .first()
         )
-        data = self.serializer(series_results).data
+        if series_results:
+            data = self.serializer(series_results).data
         return Response({"result": data})
 
 
@@ -180,9 +184,10 @@ class EpisodesAPI(APIView):
     serializer_other_episodes = serializers.EpisodesDetailWithoutSeriesSerializer
 
     def get(self, request, slug):
+        data = []
         episodes_results = library_models.Episodes.objects.filter(slug=slug).first()
-        data = self.serializer(episodes_results).data
         if episodes_results:
+            data = self.serializer(episodes_results).data
             all_episodes_results = library_models.Episodes.objects.filter(
                 series=episodes_results.series
             )
@@ -196,8 +201,10 @@ class UpcomingDetailsAPI(APIView):
     serializer = serializers.UpcomingDetailSerializer
 
     def get(self, request, slug):
+        data = []
         upcoming_results = library_models.Upcoming.objects.filter(slug=slug).first()
-        data = self.serializer(upcoming_results).data
+        if upcoming_results:
+            data = self.serializer(upcoming_results).data
         return Response({"result": data})
 
 
@@ -205,6 +212,8 @@ class ExtrasAPI(APIView):
     serializer = serializers.ExtrasDetailSerializer
 
     def get(self, request, slug):
+        data = []
         extras_results = library_models.Extras.objects.filter(slug=slug).first()
-        data = self.serializer(extras_results).data
+        if extras_results:
+            data = self.serializer(extras_results).data
         return Response({"result": data})
