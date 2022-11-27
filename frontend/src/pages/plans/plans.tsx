@@ -6,6 +6,7 @@ import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import SubscribeButton from "@components/subscribe-button";
+import { useNavigate } from "react-router-dom";
 
 //****************************************************************All imports ends here!***************************************************************
 
@@ -32,6 +33,9 @@ const Plans = () => {
 			name: "Starter",
 		},
 	];
+
+	const navigate = useNavigate();
+
 	return (
 		<Grid container>
 			<Grid container className='plans-container'>
@@ -123,7 +127,13 @@ const Plans = () => {
 						semper vitae sapien risus curabitur ut.
 					</span>
 					<Grid item className='contact-us-btn'>
-						<Button title='Contact us' />
+						<Button
+							title='Contact us'
+							onClickCapture={(e) => {
+								e.preventDefault();
+								navigate("/contact-us");
+							}}
+						/>
 					</Grid>
 				</Grid>
 			</Grid>
