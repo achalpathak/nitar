@@ -295,7 +295,7 @@ const Register = () => {
 							className='cancel-btn'
 							onClickCapture={(e) => {
 								e.preventDefault();
-								navigate(-1);
+								navigate("/");
 							}}
 						>
 							<svg

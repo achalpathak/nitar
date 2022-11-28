@@ -1,7 +1,7 @@
 .app-bar-container {
 	margin: 1rem 0;
 	height: 50px;
-	transition: all 0.5s ease-in;
+	transition: all 0.3s ease-in;
 
 	a {
 		transition: all 0.2s ease-in;
@@ -74,7 +74,7 @@
 
 .MuiGrid-item {
 	&.search-icon {
-		transition: all 0.5s ease;
+		transition: all 0.3s ease;
 		width: 0;
 
 		&.searching {
@@ -98,9 +98,10 @@
 	transform-origin: top right;
 
 	&.active {
-		width: 300px;
+		width: 250px;
 		height: 2rem;
 		overflow: visible;
+		margin-right: 10px;
 	}
 }
 
@@ -119,4 +120,24 @@
 	span {
 		color: #ffa800;
 	}
+}
+
+.logo-mobile {
+	transition: all 0.3s;
+	opacity: 1;
+
+	&.hide {
+		opacity: 0;
+		transform: translateX(-100%);
+	}
+}
+
+.search-movie-desc {
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-align: left;
+	line-height: 1rem;
 }

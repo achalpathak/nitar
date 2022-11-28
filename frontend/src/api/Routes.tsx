@@ -10,5 +10,9 @@ export const Routes = {
 	HOME_PAGE_LISTINGS: "/api/library/home_page_listings/",
 	WEBSITE_CONFIG: "/api/settings/website_config_settings/",
 	UPCOMING: "/api/library/upcoming/",
-	SEARCH: "api/library/search/",
+	SEARCH: "/api/library/search/",
+	PLANS: "/api/users/plans/",
+	BANNER: "/api/library/banner/",
+	MOVIES: "/api/library/movies",
+	SERIES: "/api/library/series",
 };

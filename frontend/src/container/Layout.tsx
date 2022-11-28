@@ -11,14 +11,13 @@ import {
 	MovieDetails,
 } from "@pages";
 
-const Wrapper = ({ children }:any) => {
-    const location = useLocation()
-    useLayoutEffect(() => {
-      document.documentElement.scrollTo(0, 0)
-    }, [location.pathname])
-    return children
-  }
-
+const Wrapper = ({ children }: any) => {
+	const location = useLocation();
+	useLayoutEffect(() => {
+		document.documentElement.scrollTo(0, 0);
+	}, [location.pathname]);
+	return children;
+};
 
 const TheContent = () => {
 	return (
@@ -35,21 +34,31 @@ const TheContent = () => {
 			<main>
 				<Suspense fallback={<Loader />}>
 					<Wrapper>
-                    <Routes>
-						<Route path='/' element={<Home />} />
-						<Route path='/upcoming' element={<Upcoming />} />
-						<Route path='/movie/:slug' element={<MovieDetails />} />
-						<Route path='/plans' element={<Plans />} />
-						<Route path='/contact-us' element={<ContactUs />} />
-						<Route
-							path='/terms-and-conditions'
-							element={<Policy />}
-						/>
-						<Route path='/contact-us' element={<Policy />} />
-						<Route path='/privacy-policy' element={<Policy />} />
-						<Route path='/refund-policy' element={<Policy />} />
-					</Routes>
-                    </Wrapper>
+						<Routes>
+							<Route path='/' element={<Home />} />
+							<Route path='/upcoming' element={<Upcoming />} />
+							<Route
+								path='/movies/:slug'
+								element={<MovieDetails />}
+							/>
+							<Route
+								path='/series/:slug'
+								element={<MovieDetails />}
+							/>
+							<Route path='/plans' element={<Plans />} />
+							<Route path='/contact-us' element={<ContactUs />} />
+							<Route
+								path='/terms-and-conditions'
+								element={<Policy />}
+							/>
+							<Route path='/contact-us' element={<Policy />} />
+							<Route
+								path='/privacy-policy'
+								element={<Policy />}
+							/>
+							<Route path='/refund-policy' element={<Policy />} />
+						</Routes>
+					</Wrapper>
 				</Suspense>
 			</main>
 			<footer>

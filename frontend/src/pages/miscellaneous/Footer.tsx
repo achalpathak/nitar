@@ -6,14 +6,37 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import YouTubeIcon from "@mui/icons-material/YouTube";
+import { useAppSelector } from "@redux/hooks";
 import { IError, ISuccess } from "@types";
 import { AxiosError } from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import "../miscellaneous/index.scss";
 
 const Footer = () => {
 	const [html, setHtml] = useState<string>("");
+	const prefs = useAppSelector((state) => state.preferences);
+
+	const [
+		app_name,
+		playstore,
+		appstore,
+		facebook,
+		twitter,
+		youtube,
+		instagram,
+	] = useMemo(
+		() => [
+			prefs?.find((v) => v.field === "name_of_the_app")?.value,
+			prefs?.find((v) => v.field === "play_store_link")?.value,
+			prefs?.find((v) => v.field === "apple_store_link")?.value,
+			prefs?.find((v) => v.field === "facebook")?.value,
+			prefs?.find((v) => v.field === "twitter")?.value,
+			prefs?.find((v) => v.field === "youtube")?.value,
+			prefs?.find((v) => v.field === "instagram")?.value,
+		],
+		[]
+	);
 
 	useEffect(() => {
 		(async () => {
@@ -61,24 +84,46 @@ const Footer = () => {
 						</span> */}
 					</div>
 					<div>
-						<div className='flex-row'>
-							<div className='line'></div>
-							<div style={{ marginLeft: "10px" }}>
-								Download App
+						{(playstore !== "" || appstore !== "") && (
+							<div className='flex-row'>
+								<div className='line'></div>
+								<div style={{ marginLeft: "10px" }}>
+									Download App
+								</div>
+								<a href={playstore} target='_blank'>
+									<GooglePlay height={40} />
+								</a>
+								<a href={appstore} target='_blank'>
+									<AppStore height={40} />
+								</a>
 							</div>
-							<GooglePlay height={40} />
-							<AppStore height={40} />
-						</div>
+						)}
 						<div className='social-icons'>
-							<FacebookIcon fontSize='large' />
-							<TwitterIcon fontSize='large' />
-							<YouTubeIcon fontSize='large' />
-							<InstagramIcon fontSize='large' />
+							{facebook && (
+								<a href={facebook} target='_blank'>
+									<FacebookIcon fontSize='large' />
+								</a>
+							)}
+							{twitter && (
+								<a href={twitter} target='_blank'>
+									<TwitterIcon fontSize='large' />
+								</a>
+							)}
+							{youtube && (
+								<a href={youtube} target='_blank'>
+									<YouTubeIcon fontSize='large' />
+								</a>
+							)}
+							{instagram && (
+								<a href={instagram} target='_blank'>
+									<InstagramIcon fontSize='large' />
+								</a>
+							)}
 						</div>
 					</div>
 					<div className='footer-links'>
 						<Link to='/privacy-policy'>Privacy Policy</Link>
-						<a className='reserved-rights'>
+						<a className='reserved-rights' data-app-name={app_name}>
 							© 2022 All Rights Reserved to{" "}
 						</a>
 						<Link to='/refund-policy'>Refund Policy</Link>

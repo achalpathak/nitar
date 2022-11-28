@@ -3,10 +3,12 @@ import Actions from "@redux/actions";
 import { useAppDispatch } from "@redux/hooks";
 import { IMessage } from "@types";
 
+type IAlert = (icon: AlertColor, title: string, description?: string) => void;
+
 const UseAlert = () => {
 	const dispatch = useAppDispatch();
 
-	const showAlert = (
+	const showAlert: IAlert = (
 		icon: AlertColor,
 		title: string,
 		description: string = ""

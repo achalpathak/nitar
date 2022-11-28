@@ -73,19 +73,24 @@ const AppBar = () => {
 	const [isSearching, setSearching] = useState<boolean>(false);
 	const [isDrawerOpen, setDrawerOpen] = useState<boolean>(false);
 
-	const data = ["Aquaman", "Avengers"];
 	const drawerWidth = 240;
 
 	const loadSuggestions = async (searchKey: string) => {
 		try {
-			const res = await api.get<ISearchResult[]>(Routes.SEARCH, {
-				params: {
-					q: searchKey,
-				},
-			});
+			if (searchKey) {
+				const res = await api.get<ISuccess<ISearchResult[]>>(
+					Routes.SEARCH,
+					{
+						params: {
+							q: searchKey,
+						},
+					}
+				);
 
-			if (res.status === 200) {
-				return res.data;
+				if (res.status === 200) {
+					console.log("SearchData", res.data);
+					return res.data.result;
+				}
 			}
 		} catch (error) {
 			const err = error as AxiosError<ISuccess>;
@@ -136,37 +141,48 @@ const AppBar = () => {
 		</Box>
 	);
 
-	const formatOptionLabel = (v: ISearchResult) => (
-		<Box display='flex' key={v?.name}>
-			<Box>
-				<picture>
-					<img
-						src={`${
-							BASE_URL?.includes("localhost") ? BASE_URL : ""
-						}/media/${v?.poster_small_vertical_image}`}
-						style={{
-							height: "100%",
-							width: "100%",
-							objectFit: "cover",
-						}}
-						alt={v?.name}
-					/>
-				</picture>
-			</Box>
-			<Box
-				display='flex'
-				flexDirection='column'
-				alignItems='flex-start'
-				justifyContent='space-between'
-				p={1}
-			>
-				<Box fontFamily='Barlow Condensed' fontSize='1.2rem'>
-					{v?.name}
+	const formatOptionLabel = (v: ISearchResult) => {
+		return (
+			<a href='#' className='search'>
+				<Box display='flex' key={v?.name}>
+					<Box height='100px' width='500px' mr={1}>
+						<picture>
+							<img
+								src={`${
+									BASE_URL?.includes("localhost")
+										? BASE_URL
+										: ""
+								}/media/${v?.poster_small_vertical_image}`}
+								style={{
+									height: "100%",
+									width: "100%",
+									objectFit: "cover",
+								}}
+								alt={v?.name}
+							/>
+						</picture>
+					</Box>
+					<Box
+						display='flex'
+						flexDirection='column'
+						alignItems='flex-start'
+						justifyContent='space-between'
+						p={1}
+					>
+						<Box fontFamily='Barlow Condensed' fontSize='1.2rem'>
+							{v?.name}
+						</Box>
+						<Box
+							fontFamily='Barlow Condensed'
+							className='search-movie-desc'
+						>
+							{v?.description}
+						</Box>
+					</Box>
 				</Box>
-				<Box fontFamily='Barlow Condensed'>{v?.description}</Box>
-			</Box>
-		</Box>
-	);
+			</a>
+		);
+	};
 
 	return (
 		<>
@@ -199,10 +215,30 @@ const AppBar = () => {
 								sx={{
 									mx: 2,
 									display: { xs: "none", sm: "flex" },
+									alignSelf: {
+										xs: "center",
+										md: "flex-start",
+									},
 								}}
 							>
-								<LogoText width={100} />
+								<Link to='/'>
+									<LogoText width={100} />
+								</Link>
 							</Box>
+						</Box>
+						<Box
+							sx={{
+								mx: 2,
+								display: { xs: "flex", sm: "none" },
+								alignSelf: "center",
+							}}
+							className={`logo-mobile ${
+								isSearching ? "hide" : ""
+							}`}
+						>
+							<Link to='/'>
+								<LogoText width={60} height={30} />
+							</Link>
 						</Box>
 						<Box className='d-center'>
 							<Box
@@ -283,6 +319,7 @@ const AppBar = () => {
 									styles={CustomSelectUtils.customStyles()}
 									formatOptionLabel={formatOptionLabel}
 									placeholder='Search...'
+									isClearable={false}
 								/>
 								<Tooltip title='Close Search'>
 									<IconButton

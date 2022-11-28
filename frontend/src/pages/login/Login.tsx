@@ -288,7 +288,7 @@ const Login = () => {
 								e.preventDefault();
 								stopTimer();
 								if (process === "login") {
-									navigate(-1);
+									navigate("/");
 								} else {
 									setProcess("login");
 								}

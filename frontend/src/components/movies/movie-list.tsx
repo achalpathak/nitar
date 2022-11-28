@@ -1,17 +1,12 @@
-import { Grid, Paper, Typography } from "@mui/material";
-import { Box } from "@mui/system";
-import MovieItem from "./movie-item";
-import { ChevronLeftOutlined, ChevronRightOutlined } from "@mui/icons-material";
-import MovieTile from "@assets/home/movie-tile.png";
-import HorizontalScroll from "react-horizontal-scrolling";
-import { FC, useRef, useState } from "react";
-import { ICategory, IMovieList } from "@types";
-import LeftRightButton from "@components/left-right-button";
-import ReactCarousel, { AFTER, CENTER, BEFORE } from "react-carousel-animated";
-import "./movies.scss";
 import { BASE_URL } from "@api";
+import LeftRightButton from "@components/left-right-button";
+import { Grid, Typography } from "@mui/material";
+import { ICategory } from "@types";
 import { useScroll, useWheel } from "@use-gesture/react";
+import { FC, useRef } from "react";
+import { Link } from "react-router-dom";
 import { animated, useSpring } from "react-spring";
+import "./movies.scss";
 
 const MovieList: FC<ICategory> = ({ name, poster_type, data }) => {
 	if ((data?.length ?? 0) === 0) {
@@ -24,7 +19,6 @@ const MovieList: FC<ICategory> = ({ name, poster_type, data }) => {
 	}));
 
 	const bind = useScroll((event) => {
-		console.log("Scrolling", event);
 		set({
 			transform: `perspective(500px) rotateY(${
 				event.scrolling ? clamp(event.delta[0]) : 0
@@ -110,45 +104,24 @@ const MovieList: FC<ICategory> = ({ name, poster_type, data }) => {
 						{...wheel()}
 					>
 						{data?.map((img) => (
-							<animated.div
-								key={img.id}
-								className='movie-card'
-								style={{
-									...style,
-									backgroundImage: `url(${
-										BASE_URL?.includes("localhost")
-											? BASE_URL
-											: ""
-									}${img?.[poster_type]})`,
-								}}
-								data-movie-name={img?.name}
+							<Link
+								to={`${img?.content_type}/${img?.slug}`}
+								state={img}
 							>
-								{/* <a href='#'>
-									<figure>
-										<figcaption>
-											<div>{img?.name}</div>
-											<div>
-												{img?.genres?.map((g) => (
-													<span
-														key={g?.id}
-														className='genre'
-													>
-														{g?.name}
-													</span>
-												))}
-											</div>
-											<div className='details-btn'>
-												<a
-													href='#'
-													className='view-details'
-												>
-													View Details
-												</a>
-											</div>
-										</figcaption>
-									</figure>
-								</a> */}
-							</animated.div>
+								<animated.div
+									key={img.id}
+									className='movie-card'
+									style={{
+										...style,
+										backgroundImage: `url(${
+											BASE_URL?.includes("localhost")
+												? BASE_URL
+												: ""
+										}${img?.[poster_type]})`,
+									}}
+									data-movie-name={img?.name}
+								/>
+							</Link>
 						))}
 					</Grid>
 				</Grid>

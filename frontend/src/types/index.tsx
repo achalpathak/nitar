@@ -84,6 +84,11 @@ export type ICategoryItem = {
 	trailer_link?: string;
 	published: boolean;
 	rankings: number;
+	content_type: "movie" | "series";
+	slug: string;
+	get_genres: string[];
+	membership_required: boolean;
+	video_link: string;
 } & IImageType;
 
 export type IImageType = {
@@ -112,4 +117,49 @@ export type ISearchResult = {
 	name: string;
 	description: string;
 	poster_small_vertical_image: string;
+};
+
+export type IPlans = {
+	features: string[];
+	plans: IPlanItem[];
+};
+
+export type IPlanItem = {
+	id: number;
+	get_membership_features: string[];
+	created: Date;
+	modified: Date;
+	name: string;
+	validity_in_days: number;
+	price_in_inr: string;
+	published: boolean;
+};
+
+export type IBanners = {
+	welcome_banner: IWelcomeBanner[];
+	poster_banner: IPosterBanner[];
+};
+
+export type IWelcomeBanner = {
+	id: number;
+	created: Date;
+	modified: Date;
+	website_banner: string;
+	mobile_banner: string;
+	banner_type: string;
+	url: string;
+	url_type: string;
+	published: boolean;
+};
+
+export type IPosterBanner = {
+	id: number;
+	created: Date;
+	modified: Date;
+	website_banner: string;
+	mobile_banner: string;
+	banner_type: string;
+	url: string;
+	url_type: "INTERNAL" | "EXTERNAL";
+	published: boolean;
 };
