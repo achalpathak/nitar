@@ -69,6 +69,16 @@ class User(AbstractUser, TimeStampedModel):
     phone_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
 
+    @property
+    def has_active_membership(self):
+        membership = UserMemberships.objects.filter(
+            user=self, expiry_at__gte=timezone.now(), published=True
+        ).first()
+        if membership:
+            return True
+        else:
+            return False
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
@@ -125,6 +135,10 @@ class Memberships(TimeStampedModel):
     )
     membership_features = models.ManyToManyField(MembershipFeatures)
     published = models.BooleanField(default=True)
+
+    @property
+    def get_membership_features(self):
+        return list(self.membership_features.values_list("name", flat=True))
 
     def __str__(self):
         return self.name

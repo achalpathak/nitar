@@ -160,7 +160,7 @@ class MoviesAPI(APIView):
         data = []
         movies_results = library_models.Movies.objects.filter(slug=slug).first()
         if movies_results:
-            data = self.serializer(movies_results).data
+            data = self.serializer(movies_results, context={"request": request}).data
         return Response({"result": data})
 
 
@@ -175,7 +175,7 @@ class SeriesAPI(APIView):
             .first()
         )
         if series_results:
-            data = self.serializer(series_results).data
+            data = self.serializer(series_results, context={"request": request}).data
         return Response({"result": data})
 
 
@@ -187,12 +187,12 @@ class EpisodesAPI(APIView):
         data = []
         episodes_results = library_models.Episodes.objects.filter(slug=slug).first()
         if episodes_results:
-            data = self.serializer(episodes_results).data
+            data = self.serializer(episodes_results, context={"request": request}).data
             all_episodes_results = library_models.Episodes.objects.filter(
                 series=episodes_results.series
             )
             data["other_episodes"] = self.serializer_other_episodes(
-                all_episodes_results, many=True
+                all_episodes_results, many=True, context={"request": request}
             ).data
         return Response({"result": data})
 
@@ -215,5 +215,5 @@ class ExtrasAPI(APIView):
         data = []
         extras_results = library_models.Extras.objects.filter(slug=slug).first()
         if extras_results:
-            data = self.serializer(extras_results).data
+            data = self.serializer(extras_results, context={"request": request}).data
         return Response({"result": data})

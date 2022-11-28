@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from . import models as library_models
 from settings.serializers import AgeSerializer, LanguageSerializer
+from . import utils
 
 
 class GenersSerializer(serializers.ModelSerializer):
@@ -13,7 +14,8 @@ class BannerInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = library_models.Banner
         fields = "__all__"
-        
+
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = library_models.Category
@@ -51,24 +53,40 @@ class HomePageListSerializer(serializers.Serializer):
 class MovieDetailSerializer(serializers.ModelSerializer):
     age_rating = serializers.ReadOnlyField(source="age_rating.name")
     language = serializers.ReadOnlyField(source="language.name")
-    genres = GenersSerializer(many=True)
+    get_genres = serializers.JSONField()
+
+    def to_representation(self, obj):
+        ret = super(serializers.ModelSerializer, self).to_representation(obj)
+        if not utils.check_user_logged_in_and_has_membership(
+            self.context.get("request", None).user, obj
+        ):
+            ret.pop("video_link")
+        return ret
 
     class Meta:
         model = library_models.Movies
-        fields = "__all__"
+        exclude = ["genres"]
 
 
 class SeriesBasicDetailSerializer(serializers.ModelSerializer):
     age_rating = serializers.ReadOnlyField(source="age_rating.name")
     language = serializers.ReadOnlyField(source="language.name")
-    genres = GenersSerializer(many=True)
+    get_genres = serializers.JSONField()
 
     class Meta:
         model = library_models.Series
-        fields = "__all__"
+        exlcude = ["genres"]
 
 
 class EpisodesDetailWithoutSeriesSerializer(serializers.ModelSerializer):
+    def to_representation(self, obj):
+        ret = super(EpisodesDetailWithoutSeriesSerializer, self).to_representation(obj)
+        if not utils.check_user_logged_in_and_has_membership(
+            self.context.get("request", None).user, obj
+        ):
+            ret.pop("video_link")
+        return ret
+
     class Meta:
         model = library_models.Episodes
         fields = "__all__"
@@ -76,6 +94,14 @@ class EpisodesDetailWithoutSeriesSerializer(serializers.ModelSerializer):
 
 class EpisodesDetailSerializer(EpisodesDetailWithoutSeriesSerializer):
     series = SeriesBasicDetailSerializer()
+
+    def to_representation(self, obj):
+        ret = super(EpisodesDetailSerializer, self).to_representation(obj)
+        if not utils.check_user_logged_in_and_has_membership(
+            self.context.get("request", None).user, obj
+        ):
+            ret.pop("video_link")
+        return ret
 
 
 class SeriesDetailSerializer(serializers.ModelSerializer):
@@ -102,6 +128,14 @@ class UpcomingDetailSerializer(serializers.ModelSerializer):
 class ExtrasDetailSerializer(serializers.ModelSerializer):
     language = serializers.ReadOnlyField(source="language.name")
     genres = GenersSerializer(many=True)
+
+    def to_representation(self, obj):
+        ret = super(ExtrasDetailSerializer, self).to_representation(obj)
+        if not utils.check_user_logged_in_and_has_membership(
+            self.context.get("request", None).user, obj
+        ):
+            ret.pop("video_link")
+        return ret
 
     class Meta:
         model = library_models.Extras

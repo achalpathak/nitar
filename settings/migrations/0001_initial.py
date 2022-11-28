@@ -26,6 +26,7 @@ class Migration(migrations.Migration):
             "color_alternate": "#000000",  # black
             "play_store_link": "https://play.google.com/store/apps/details?id=com.netflix.mediaclient",
             "apple_store_link": "https://apps.apple.com/in/app/netflix/id363590051",
+            "pay_description": "Payment Gateway is secured. For any queries use our contact form.",
         }
 
         for _, val in enumerate(data):

@@ -40,3 +40,16 @@ def unique_slug_generator(instance, new_slug=None, episodes=False):
         )
         return unique_slug_generator(instance, new_slug=new_slug)
     return slug
+
+
+def check_user_logged_in_and_has_membership(user_obj, data):
+    try:
+        if data.membership_required:
+            if user_obj.has_active_membership:  # checks user has membership or not
+                return True
+            else:
+                return False
+        else:
+            return True
+    except AttributeError:  # it will be raised since Anonymous user doesnt have membership
+        return False

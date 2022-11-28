@@ -81,6 +81,20 @@ class ContactUsSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class MembershipFeaturesSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = user_models.MembershipFeatures
+        fields = ["name"]
+
+
+class PlansSerializer(serializers.ModelSerializer):
+    get_membership_features = serializers.JSONField()
+
+    class Meta:
+        model = user_models.Memberships
+        exclude = ["membership_features"]
+
+
 class PhoneOtpSerializer(serializers.Serializer):
     phone = serializers.CharField(required=True)
 

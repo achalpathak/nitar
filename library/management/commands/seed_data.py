@@ -58,6 +58,7 @@ class Command(BaseCommand):
                     ),
                     published=True,
                     membership_requried=True,
+                    slug="hot-wheels",
                 ),
                 Movies(
                     name="Die Hard",
@@ -78,6 +79,7 @@ class Command(BaseCommand):
                     ),
                     published=True,
                     membership_requried=True,
+                    slug="die-hard",
                 ),
                 Movies(
                     name="Avengers",
@@ -97,7 +99,8 @@ class Command(BaseCommand):
                         open(die_hard_poster_horizontal_large_url[0], "rb")
                     ),
                     published=True,
-                    membership_requried=True,
+                    membership_requried=False,
+                    slug="avengers",
                 ),
             ]
         )

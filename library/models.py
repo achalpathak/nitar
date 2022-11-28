@@ -160,9 +160,12 @@ class Movies(TimeStampedModel):
     trailer_link = models.CharField(max_length=255, null=True, blank=True)
     genres = models.ManyToManyField(Geners)
     published = models.BooleanField(default=False)
-    membership_requried = models.BooleanField(default=True)
-    show_banner = GenericRelation(Banner)
+    membership_required = models.BooleanField(default=True)
     slug = models.SlugField(null=True, unique=True)
+
+    @property
+    def get_genres(self):
+        return list(self.genres.values_list("name", flat=True))
 
     def __str__(self):
         return self.name
@@ -210,7 +213,10 @@ class Series(TimeStampedModel):
     genres = models.ManyToManyField(Geners)
     published = models.BooleanField(default=False)
     slug = models.SlugField(null=True, unique=True)
-    show_banner = GenericRelation(Banner)
+
+    @property
+    def get_genres(self):
+        return list(self.genres.values_list("name", flat=True))
 
     def __str__(self):
         return self.name
@@ -250,7 +256,7 @@ class Episodes(TimeStampedModel):
         help_text=ERROR_MSG,
     )
     duration = models.CharField(max_length=15, null=True, blank=True)
-    membership_requried = models.BooleanField(default=True)
+    membership_required = models.BooleanField(default=True)
     video_link = models.CharField(max_length=255, null=True, blank=True)
     slug = models.SlugField(null=True, unique=True)
     published = models.BooleanField(default=False)
@@ -329,7 +335,7 @@ class Extras(TimeStampedModel):
     trailer_link = models.CharField(max_length=255, null=True, blank=True)
     genres = models.ManyToManyField(Geners)
     published = models.BooleanField(default=False)
-    membership_requried = models.BooleanField(default=True)
+    membership_required = models.BooleanField(default=True)
     slug = models.SlugField(null=True, unique=True)
     extras_category = models.ForeignKey(
         ExtrasCategory, null=True, on_delete=models.SET_NULL
