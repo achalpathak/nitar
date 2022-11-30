@@ -5,6 +5,7 @@ from . import serializers
 from rest_framework import status
 from django.db.models import Q
 from itertools import chain
+from django.db.models import CharField, Value
 
 
 class BannerInfo(APIView):
@@ -108,31 +109,31 @@ class SearchAPI(APIView):
             movies_results = (
                 library_models.Movies.objects.filter(lookups)
                 .values("name", "description", "poster_small_vertical_image", "slug")
-                .annotate(content_type="movies")
+                .annotate(content_type=Value("movies", output_field=CharField()))
                 .distinct()
             )
             series_results = (
                 library_models.Series.objects.filter(lookups)
                 .values("name", "description", "poster_small_vertical_image", "slug")
-                .annotate(content_type="series")
+                .annotate(content_type=Value("series", output_field=CharField()))
                 .distinct()
             )
             episodes_results = (
                 library_models.Episodes.objects.filter(lookups)
                 .values("name", "description", "poster_small_vertical_image", "slug")
-                .annotate(content_type="episodes")
+                .annotate(content_type=Value("episodes", output_field=CharField()))
                 .distinct()
             )
             extras_results = (
                 library_models.Extras.objects.filter(lookups)
                 .values("name", "description", "poster_small_vertical_image", "slug")
-                .annotate(content_type="extras")
+                .annotate(content_type=Value("extras", output_field=CharField()))
                 .distinct()
             )
             upcoming_results = (
                 library_models.Upcoming.objects.filter(lookups)
                 .values("name", "description", "poster_small_vertical_image", "slug")
-                .annotate(content_type="upcoming")
+                .annotate(content_type=Value("upcoming", output_field=CharField()))
                 .distinct()
             )
 
