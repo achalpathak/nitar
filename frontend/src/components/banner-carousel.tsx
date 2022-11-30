@@ -1,22 +1,33 @@
+import api, { BASE_URL, Routes } from "@api";
 import { ChevronLeftOutlined, ChevronRightOutlined } from "@mui/icons-material";
 import { Grid } from "@mui/material";
-import { IMovieItem } from "@types";
-import { FC, useState } from "react";
-import ReactCarousel from "react-carousel-animated";
+import { IBanners, IMovieItem, ISuccess } from "@types";
+import { AxiosError } from "axios";
+import { FC, useEffect, useState } from "react";
+import Slider from "react-animated-slider";
+import "react-animated-slider/build/horizontal.css";
 
 type ICarouselProps = {
 	items: IMovieItem[];
 };
 
 const BannerCarousel: FC<ICarouselProps> = ({ items }) => {
-	const [currentIdx, setCurrentIdx] = useState<number>(0);
-	// const [upcomingMovies, setUpcomingMovies] = useState<
-	// 	Partial<ICategoryItem>[]
-	// >([
-	//     {
-	//         name: 'Aquaman'
-	//     }
-	// ]);
+	const [banner, setBanner] = useState<IBanners>();
+
+	useEffect(() => {
+		(async () => {
+			try {
+				const res = await api.get<ISuccess<IBanners>>(Routes.BANNER);
+
+				if (res.status === 200) {
+					setBanner(res.data?.result);
+				}
+			} catch (error) {
+				const err = error as AxiosError<ISuccess>;
+				console.error(err.response);
+			}
+		})();
+	}, []);
 
 	return (
 		<Grid
@@ -40,72 +51,80 @@ const BannerCarousel: FC<ICarouselProps> = ({ items }) => {
 					xs: "15rem",
 					md: "37rem",
 				}}
+				className='banner-container'
 			>
-				<ReactCarousel
-					carouselConfig={{
-						transform: {
-							// zIndex: false,
-						},
-					}}
-					itemBackgroundStyle={{
-						// backgroundColor: "#ece4db",
-						borderRadius: "3px",
-						// boxShadow: "8px 12px 14px -6px black",
-					}}
-					containerBackgroundStyle={{
-						filter: "blur(7px)",
-						// backgroundColor: "rgba(62, 212, 214, 0.3)",
-					}}
-					prevButtonText={
+				<Slider
+					autoplay={2000}
+					infinite
+					previousButton={
 						<ChevronLeftOutlined
 							style={{
 								width: 40,
 								height: 40,
+								color: "white",
 							}}
 						/>
 					}
-					nextButtonText={
+					nextButton={
 						<ChevronRightOutlined
 							style={{
 								width: 40,
 								height: 40,
+								color: "white",
 							}}
 						/>
 					}
-					// carouselHeight='400px'
-					showIndices={false}
-					containerStyle={{
-						height: "100%",
-					}}
 				>
-					{items.map((image, index) => (
-						<div
-							className='movie-item-upcoming'
-							style={{
-								height: "100%",
-								cursor: "pointer",
-							}}
-						>
-							<img
-								key={index}
-								// src={`${
-								// 	BASE_URL?.includes("localhost")
-								// 		? BASE_URL
-								// 		: ""
-								// }${image.image}`}
-								src={image?.image}
-								alt={image?.title}
-								loading='lazy'
+					{banner?.poster_banner?.map((item, index) => (
+						<div className='slider-content d-center'>
+							<a
+								href={
+									item?.url_type === "EXTERNAL"
+										? item?.url
+										: `/movies/${item?.url}`
+								}
 								style={{
-									borderRadius: "20px",
-									width: "auto",
 									height: "100%",
-									objectFit: "fill",
+									width: "100%",
 								}}
-							/>
+								className='d-center'
+							>
+								<picture
+									className='d-center'
+									style={{
+										height: "100%",
+										width: "100%",
+									}}
+								>
+									<source
+										media='(max-width: 500px)'
+										src={`${
+											BASE_URL?.includes("localhost")
+												? BASE_URL
+												: ""
+										}${item?.mobile_banner}`}
+									/>
+									<img
+										key={index}
+										src={`${
+											BASE_URL?.includes("localhost")
+												? BASE_URL
+												: ""
+										}${item?.website_banner}`}
+										alt={item?.banner_type}
+										loading='lazy'
+										style={{
+											borderRadius: "20px",
+											width: "auto",
+											height: "100%",
+											objectFit: "fill",
+										}}
+									/>
+								</picture>
+							</a>
 						</div>
 					))}
-				</ReactCarousel>
+				</Slider>
 			</Grid>
 			{/* <Grid item xs={9} display='flex' flex={1}>
 				<Grid container justifyContent='space-between'>

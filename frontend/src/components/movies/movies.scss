@@ -99,7 +99,7 @@
 				text-align: center;
 				transform: translateY(100%);
 				opacity: 0;
-				transition: all 0.5s ease-in-out;
+				transition: all 0.3s ease-in-out;
 			}
 		}
 	}
@@ -179,12 +179,13 @@
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center center;
+	transition: all 0.2s;
 
 	&:hover {
-		transform: scale(1.2);
+		transform: perspective(500px) translateY(-10px) !important;
 	}
 
-	@media only screen and (max-width: 699px) {
+	@media only screen and (max-width: 1299px) {
 		width: 150px;
 		height: 200px;
 	}

@@ -5,8 +5,6 @@ import { useAlert } from "@hooks";
 import { ICategories, ICategory, ICategoryItem, ISuccess } from "@types";
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
-import ReactCarousel, { AFTER, CENTER, BEFORE } from "react-carousel-animated";
-import { ChevronLeftOutlined, ChevronRightOutlined } from "@mui/icons-material";
 import { Grid, Typography } from "@mui/material";
 import "./upcoming.scss";
 import moment from "moment";
@@ -104,8 +102,8 @@ const Upcoming = () => {
 								mb={2}
 								className='movie-item-container'
 								sx={{
-									zIndex: {
-										"&:hover": 2,
+									"&:hover": {
+										zIndex: 3,
 									},
 								}}
 							>
@@ -142,84 +140,15 @@ const Upcoming = () => {
 													</>
 												</Typography>
 											</div>
-											{/* <figcaption>
-												<div className='title'>
-													{image?.name}
-												</div>
-												<div>
-													{image?.genres?.map((g) => (
-														<span
-															key={g?.id}
-															className='genre'
-														>
-															{g?.name}
-														</span>
-													))}
-												</div>
-												<div>
-													<a
-														href='#'
-														className='view-details'
-													>
-														View Details
-													</a>
-												</div>
-											</figcaption> */}
 										</figure>
 									</a>
 								</div>
 							</Grid>
 						))}
 					</Grid>
-					{/* {upcomingMovies.map((image, index) => (
-							<div className='movie-item-upcoming'>
-								<a href='#'>
-									<figure>
-										<img
-											key={image?.id}
-											src={`${
-												BASE_URL?.includes("localhost")
-													? BASE_URL
-													: ""
-											}${
-												image.poster_large_vertical_image
-											}`}
-											alt={image?.name}
-											loading='lazy'
-											style={{
-												height: "300px",
-												borderRadius: "20px",
-												// boxShadow: "0 7px 20px 2px rgb(150, 170, 180)",
-												// margin: "1rem",
-											}}
-										/>
-										<figcaption>
-											<div>{image?.name}</div>
-											<div>
-												{image?.genres?.map((g) => (
-													<span
-														key={g?.id}
-														className='genre'
-													>
-														{g?.name}
-													</span>
-												))}
-											</div>
-											<a
-												href='#'
-												className='view-details'
-											>
-												View Details
-											</a>
-										</figcaption>
-									</figure>
-								</a>
-							</div>
-						))} */}
 				</Grid>
 			</Grid>
 			{trendingMovies ? <MovieList {...trendingMovies} /> : null}
-			{/* <DownloadApp /> */}
 		</>
 	);
 };

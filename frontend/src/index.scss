@@ -82,7 +82,7 @@ button:not(.custom-btn) {
 
 button {
 	&.custom-btn {
-		transition: all 0.5s ease;
+		transition: all 0.3s ease;
 	}
 }
 
@@ -240,5 +240,18 @@ span {
 		color: #ff0c0c;
 		width: 20rem;
 		font-size: 0.8rem;
+	}
+}
+
+.slider {
+	height: 100%;
+}
+
+@media only screen and (max-width: 500px) {
+	.slider {
+		img {
+			width: 92% !important;
+			height: auto !important;
+		}
 	}
 }

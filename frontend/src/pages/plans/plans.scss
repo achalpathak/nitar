@@ -26,7 +26,7 @@
 		border-radius: 20px;
 		box-shadow: 1px 1px 10px 1px #ffa800;
 		margin-bottom: 20px;
-        max-width: 19rem;
+		max-width: 19rem;
 		> div {
 			flex-direction: column;
 		}
@@ -83,26 +83,26 @@ button {
 }
 
 .description {
-    border:  1px solid #ffa800;
-    padding: 1rem;
-    text-align: center;
-    position: relative;
+	border: 1px solid #ffa800;
+	padding: 1rem;
+	text-align: center;
+	position: relative;
 
 	h5 {
 		font-family: sans-serif;
 		text-align: center;
-        transform: translateY(-100%);
-        background-color: black;
-        display: inline-block;
-        padding: 0px 15px;
+		transform: translateY(-100%);
+		background-color: black;
+		display: inline-block;
+		padding: 0px 15px;
 	}
 	button {
 		font-family: sans-serif;
 		text-align: center;
-        transform: translateY(85%);
-        background-color: #ffa800;
-        display: inline-block;
-        color: white;
+		transform: translateY(85%);
+		background-color: #ffa800;
+		display: inline-block;
+		color: white;
 	}
 	span {
 		padding: 20px;
@@ -110,6 +110,5 @@ button {
 	}
 }
 
-.contact-us-btn{
-
+.contact-us-btn {
 }

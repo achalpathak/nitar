@@ -7,34 +7,40 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import SubscribeButton from "@components/subscribe-button";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { AxiosError } from "axios";
+import { IPlans, ISuccess } from "@types";
+import api, { Routes } from "@api";
+import { useAppSelector } from "@redux/hooks";
 
 //****************************************************************All imports ends here!***************************************************************
 
 const Plans = () => {
-	const data = [
-		{
-			price: 49,
-			name: "Starter",
-		},
-		{
-			price: 49,
-			name: "Starter",
-		},
-		{
-			price: 49,
-			name: "Starter",
-		},
-		{
-			price: 49,
-			name: "Starter",
-		},
-		{
-			price: 49,
-			name: "Starter",
-		},
-	];
+	const prefs = useAppSelector((state) => state.preferences);
+
+	const pay_description = useMemo(
+		() => prefs?.find((v) => v.field === "pay_description")?.value,
+		[]
+	);
+
+	const [plans, setPlans] = useState<IPlans>();
 
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		(async () => {
+			try {
+				const res = await api.get<ISuccess<IPlans>>(Routes.PLANS);
+
+				if (res.status === 200) {
+					setPlans(res.data?.result);
+				}
+			} catch (error) {
+				const err = error as AxiosError<ISuccess>;
+				console.error(err.response);
+			}
+		})();
+	}, []);
 
 	return (
 		<Grid container>
@@ -44,9 +50,9 @@ const Plans = () => {
 				</Grid>
 			</Grid>
 			<Grid container className='plans-card'>
-				{data?.map((d, i) => (
+				{plans?.plans?.map((d, i) => (
 					<Grid
-						key={i}
+						key={d.id}
 						item
 						xs={8}
 						sm={5}
@@ -63,36 +69,30 @@ const Plans = () => {
 						}}
 					>
 						<Grid container>
-							<Grid item className='plans-card-items'>
-								<Typography variant='h5'>{d?.name}</Typography>
+							<Grid item className='plans-card-items' mb={1}>
+								<Typography variant='h5' mb={1}>
+									{d?.name}
+								</Typography>
 								<Box>
 									<CurrencyRupeeIcon />
-									{d?.price}
-									<span>/Week</span>
+									{d?.price_in_inr}
+									<span> / {d?.validity_in_days} days</span>
 								</Box>
 							</Grid>
 							<Grid item className='plans-card-list'>
 								<ul>
-									<li>
-										<CheckCircleOutlineIcon color='success' />{" "}
-										Unlimited Streaming
-									</li>
-									<li>
-										<CancelOutlinedIcon className='cancel-icon' />{" "}
-										Unlimited Downloads
-									</li>
-									<li>
-										<CancelOutlinedIcon className='cancel-icon' />{" "}
-										4K downloading
-									</li>
-									<li>
-										<CancelOutlinedIcon className='cancel-icon' />{" "}
-										Watch on 3 screens at the same time
-									</li>
-									<li>
-										<CheckCircleOutlineIcon color='success' />{" "}
-										Advertisement free entertainment
-									</li>
+									{plans?.features?.map((f) => (
+										<li key={f}>
+											{d?.get_membership_features?.includes(
+												f
+											) ? (
+												<CheckCircleOutlineIcon color='success' />
+											) : (
+												<CancelOutlinedIcon className='cancel-icon' />
+											)}{" "}
+											{f}
+										</li>
+									))}
 								</ul>
 							</Grid>
 							<Grid item className='buy-now'>
@@ -102,30 +102,12 @@ const Plans = () => {
 					</Grid>
 				))}
 			</Grid>
-			<Grid
-				container
-				xs={12}
-				sm={11}
-				md={12}
-				className='d-center'
-				my={10}
-			>
+			<Grid container className='d-center' my={10}>
 				<Grid item xs={12} sm={12} md={10} className='description'>
 					<div>
-						<Typography variant='h5'>
-							Something Description
-						</Typography>
+						<Typography variant='h5'>Information</Typography>
 					</div>
-					<span>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-						Maecenas dignissim turpis nulla urna. Ornare aliquam
-						lectus nunc, lorem euismod. Eu, dictum integer tempor,
-						rhoncus vitae viverra lacus. Congue tellus et cras
-						egestas ultrices vel dolor. Neque tellus, enim in nullam
-						amet vitae. Tellus nibh et consectetur nunc, bibendum
-						tristique. Commodo massa, etiam id lacus. Pharetra
-						semper vitae sapien risus curabitur ut.
-					</span>
+					<span>{pay_description}</span>
 					<Grid item className='contact-us-btn'>
 						<Button
 							title='Contact us'
