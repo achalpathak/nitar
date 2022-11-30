@@ -1,11 +1,10 @@
 from django.contrib.auth import login
-from django.utils.decorators import method_decorator
-from rest_framework import generics, status
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from . import models as user_models
 from . import serializers as user_serializers
-from django.db.models import Prefetch
+from django.contrib.auth import logout
 
 
 class RegisterUser(APIView):
@@ -38,7 +37,13 @@ class VerifyOTP(APIView):
             login(
                 request, user_obj, backend="django.contrib.auth.backends.ModelBackend"
             )
-            return Response({"message": "Phone number is verified and logged in."})
+            return Response({"result": {
+                "full_name": user_obj.user.full_name,
+                "email": user_obj.user.email,
+                "phone": user_obj.user.phone,
+                "email": user_obj.user.email,
+                "has_active_membership": user_obj.user.has_active_membership
+            }})
         return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -63,3 +68,9 @@ class PlansAPI(APIView):
         serialized_data = self.serializer_class(objs, many=True)
         data = {"features": features_obj, "plans": serialized_data.data}
         return Response({"result": data})
+    
+class LogoutAPI(APIView):
+
+    def get(self, request):
+        logout(request)
+        return Response({"result": "User is logged out."})
