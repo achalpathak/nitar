@@ -103,6 +103,10 @@ class EpisodesDetailSerializer(EpisodesDetailWithoutSeriesSerializer):
             ret.pop("video_link")
         return ret
 
+    class Meta:
+        model = library_models.Episodes
+        fields = "__all__"
+
 
 class SeriesDetailSerializer(serializers.ModelSerializer):
     age_rating = serializers.ReadOnlyField(source="age_rating.name")

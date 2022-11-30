@@ -148,8 +148,8 @@ class Memberships(TimeStampedModel):
 
 
 class UserMemberships(TimeStampedModel):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    membership = models.OneToOneField(Memberships, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    membership = models.ForeignKey(Memberships, on_delete=models.CASCADE)
     expiry_at = models.DateTimeField(
         blank=True, help_text="NOTE: Field will autofill when saved."
     )

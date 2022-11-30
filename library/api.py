@@ -107,31 +107,32 @@ class SearchAPI(APIView):
             lookups = Q(name__icontains=query)
             movies_results = (
                 library_models.Movies.objects.filter(lookups)
-                .values("name", "description", "poster_small_vertical_image")
+                .values("name", "description", "poster_small_vertical_image", "slug")
+                .annotate(content_type="movies")
                 .distinct()
             )
             series_results = (
                 library_models.Series.objects.filter(lookups)
-                .values(
-                    "name",
-                    "description",
-                    "poster_small_vertical_image",
-                )
+                .values("name", "description", "poster_small_vertical_image", "slug")
+                .annotate(content_type="series")
                 .distinct()
             )
             episodes_results = (
                 library_models.Episodes.objects.filter(lookups)
-                .values("name", "description", "poster_small_vertical_image")
+                .values("name", "description", "poster_small_vertical_image", "slug")
+                .annotate(content_type="episodes")
                 .distinct()
             )
             extras_results = (
                 library_models.Extras.objects.filter(lookups)
-                .values("name", "description", "poster_small_vertical_image")
+                .values("name", "description", "poster_small_vertical_image", "slug")
+                .annotate(content_type="extras")
                 .distinct()
             )
             upcoming_results = (
                 library_models.Upcoming.objects.filter(lookups)
-                .values("name", "description", "poster_small_vertical_image")
+                .values("name", "description", "poster_small_vertical_image", "slug")
+                .annotate(content_type="upcoming")
                 .distinct()
             )
 
@@ -187,6 +188,7 @@ class EpisodesAPI(APIView):
         data = []
         episodes_results = library_models.Episodes.objects.filter(slug=slug).first()
         if episodes_results:
+            print("hello world")
             data = self.serializer(episodes_results, context={"request": request}).data
             all_episodes_results = library_models.Episodes.objects.filter(
                 series=episodes_results.series
