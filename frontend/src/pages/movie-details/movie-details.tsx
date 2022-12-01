@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Box, Grid, Modal, Typography } from "@mui/material";
-import api, { BASE_URL, Routes } from "@api";
+import api, { Routes } from "@api";
 import {
 	IBanners,
 	ICategories,
@@ -459,9 +459,7 @@ const MovieDetails = (props: any) => {
 					>
 						<ReactPlayer
 							controls
-							url={`${
-								BASE_URL?.includes("localhost") ? BASE_URL : ""
-							}${movie?.trailer_link}`}
+							url={`${movie?.trailer_link}`}
 							width='100%'
 							height='100%'
 							playing={showTrailer}
