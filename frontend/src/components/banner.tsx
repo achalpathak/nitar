@@ -1,37 +1,5 @@
-import { Box, Grid, Typography } from "@mui/material";
-import movie1 from "@assets/home/movie1.png";
-import movie2 from "@assets/home/movie2.png";
-import banner from "@assets/home/banner.jpg";
-import PlayCircleOutlineOutlinedIcon from "@mui/icons-material/PlayCircleOutlineOutlined";
-import { BannerCarousel, LeftRightButton } from "@components";
-import { IMovieItem } from "@types";
-
-const items: IMovieItem[] = [
-	{
-		title: "Movie 1",
-		image: banner,
-	},
-	{
-		title: "Movie 2",
-		image: movie2,
-	},
-	{
-		title: "Movie 1",
-		image: banner,
-	},
-	{
-		title: "Movie 2",
-		image: movie2,
-	},
-	{
-		title: "Movie 1",
-		image: banner,
-	},
-	{
-		title: "Movie 2",
-		image: movie2,
-	},
-];
+import { BannerCarousel } from "@components";
+import { Grid } from "@mui/material";
 
 const Banner = () => {
 	// return (
@@ -141,7 +109,7 @@ const Banner = () => {
 	return (
 		<Grid container>
 			<Grid xs={12}>
-				<BannerCarousel items={items} />
+				<BannerCarousel />
 			</Grid>
 		</Grid>
 	);

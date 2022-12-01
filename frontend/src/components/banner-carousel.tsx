@@ -4,14 +4,14 @@ import { Grid } from "@mui/material";
 import { IBanners, IMovieItem, ISuccess } from "@types";
 import { AxiosError } from "axios";
 import { FC, useEffect, useState } from "react";
-import Slider from "react-animated-slider";
+import AnimatedSlider from "react-animated-slider";
 import "react-animated-slider/build/horizontal.css";
 
-type ICarouselProps = {
-	items: IMovieItem[];
-};
+//* Fix for Element type is Invalid in Production Build
+//* https://stackoverflow.com/questions/71000577/react-application-has-element-type-is-invalid-error-on-production-but-is-work
+const Slider = AnimatedSlider.default ? AnimatedSlider.default : AnimatedSlider;
 
-const BannerCarousel: FC<ICarouselProps> = ({ items }) => {
+const BannerCarousel: FC = () => {
 	const [banner, setBanner] = useState<IBanners>();
 
 	useEffect(() => {
