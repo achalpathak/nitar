@@ -27,6 +27,10 @@ class Migration(migrations.Migration):
             "play_store_link": "https://play.google.com/store/apps/details?id=com.netflix.mediaclient",
             "apple_store_link": "https://apps.apple.com/in/app/netflix/id363590051",
             "pay_description": "Payment Gateway is secured. For any queries use our contact form.",
+            "facebook": "https://facebook.com",
+            "twitter": "https://twitter.com",
+            "youtube": "https://youtube.com",
+            "instagram": "https://instagram.com",
         }
 
         for _, val in enumerate(data):

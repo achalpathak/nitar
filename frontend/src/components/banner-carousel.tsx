@@ -49,6 +49,7 @@ const BannerCarousel: FC<ICarouselProps> = ({ items }) => {
 				}}
 				height={{
 					xs: "15rem",
+					sm: "25rem",
 					md: "37rem",
 				}}
 				className='banner-container'

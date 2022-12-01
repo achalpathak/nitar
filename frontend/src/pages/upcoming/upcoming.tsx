@@ -1,6 +1,6 @@
 import api, { BASE_URL, Routes } from "@api";
 import { DownloadApp, SubscribeButton } from "@components";
-import MovieList from "@components/movies";
+import { MovieList } from "@components/movies";
 import { useAlert } from "@hooks";
 import { ICategories, ICategory, ICategoryItem, ISuccess } from "@types";
 import { AxiosError } from "axios";

@@ -1,5 +1,5 @@
 import { Banner, DownloadApp, SubscribeButton } from "@components";
-import MovieList from "@components/movies";
+import { MovieList } from "@components/movies";
 import { useEffect, useState } from "react";
 import { ICategories, ICategory, IError, IResponse, ISuccess } from "@types";
 import { AxiosError } from "axios";

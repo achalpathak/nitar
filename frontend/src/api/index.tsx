@@ -5,6 +5,9 @@ const BASE_URL = "backend";
 
 const api = axios.create({
 	baseURL: BASE_URL,
+	withCredentials: true,
+	xsrfCookieName: "csrftoken",
+	xsrfHeaderName: "x-csrftoken",
 });
 
 export { Routes } from "./Routes";

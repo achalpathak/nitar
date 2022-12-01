@@ -13,6 +13,7 @@ import {
 	ListItemText,
 	Divider,
 	SwipeableDrawer,
+	Typography,
 } from "@mui/material";
 import AsyncSelect from "react-select/async";
 import makeAnimated from "react-select/animated";
@@ -27,10 +28,12 @@ import {
 	ISuccess,
 } from "@types";
 import { CustomSelectUtils } from "@utils";
-import { useAppSelector } from "@redux/hooks";
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import { components } from "react-select";
 import axios, { AxiosError } from "axios";
 import api, { BASE_URL, Routes } from "@api";
+import Actions from "@redux/actions";
+import { useAlert } from "@hooks";
 
 const routes: IRoutes[] = [
 	{
@@ -67,8 +70,12 @@ const animatedComponents = makeAnimated();
 const AppBar = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
+
+	const showAlert = useAlert();
 
 	const prefs = useAppSelector((state) => state.preferences);
+	const user = useAppSelector((state) => state.user);
 
 	const [isSearching, setSearching] = useState<boolean>(false);
 	const [isDrawerOpen, setDrawerOpen] = useState<boolean>(false);
@@ -95,6 +102,23 @@ const AppBar = () => {
 		} catch (error) {
 			const err = error as AxiosError<ISuccess>;
 			console.log(err.response);
+		}
+		return [];
+	};
+
+	const logout = async () => {
+		try {
+			const res = await api.get<ISuccess>(Routes.LOGOUT);
+
+			if (res.status === 200) {
+				dispatch({
+					type: Actions.LOGOUT,
+				});
+			}
+		} catch (error) {
+			const err = error as AxiosError<ISuccess>;
+			console.log(err.response);
+			showAlert("error", "Unable to logout", "Please try again");
 		}
 		return [];
 	};
@@ -143,7 +167,7 @@ const AppBar = () => {
 
 	const formatOptionLabel = (v: ISearchResult) => {
 		return (
-			<a href='#' className='search'>
+			<a href={`${v?.content_type}/${v?.slug}`} className='search'>
 				<Box display='flex' key={v?.name}>
 					<Box height='100px' width='500px' mr={1}>
 						<picture>
@@ -352,19 +376,47 @@ const AppBar = () => {
 									<SearchOutlined />
 								</IconButton>
 							</Box>
-							<Box
-								mr={2}
-								sx={{
-									display: {
-										xs: "none",
-										sm: "flex",
-									},
-								}}
-							>
-								<Link to='/login' className='login-btn'>
-									Login
-								</Link>
-							</Box>
+							{!user?.full_name ? (
+								<Box
+									mr={2}
+									sx={{
+										display: {
+											xs: "none",
+											sm: "flex",
+										},
+									}}
+								>
+									<Link to='/login' className='login-btn'>
+										Login
+									</Link>
+								</Box>
+							) : (
+								<>
+									<Box
+										mr={2}
+										sx={{
+											display: "flex",
+										}}
+									>
+										<Typography mr={2}>
+											Welcome
+											<Typography color='var(--website-primary-color)'>
+												{user?.full_name}
+											</Typography>
+										</Typography>
+										<a
+											href='#'
+											className='login-btn'
+											onClickCapture={(e) => {
+												e.preventDefault();
+												logout();
+											}}
+										>
+											Logout
+										</a>
+									</Box>
+								</>
+							)}
 
 							{/* <Box
 								sx={{

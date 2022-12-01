@@ -1,13 +1,15 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useLayoutEffect, useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Layout } from "@container";
 import { Alert, Loader } from "@components";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
-import api, { Routes } from "@api";
-import { IPreferences, ISuccess } from "@types";
+import api, { BASE_URL, Routes } from "@api";
+import { IBanners, IPreferences, ISuccess, IWelcomeBanner } from "@types";
 import { AxiosError } from "axios";
 import Actions from "@redux/actions";
 import "react-carousel-animated/dist/style.css";
+import { Box, Modal } from "@mui/material";
+import { Close } from "@mui/icons-material";
 
 const Login = lazy(() => import("@pages/login"));
 const Register = lazy(() => import("@pages/register"));
@@ -34,10 +36,49 @@ const router = createBrowserRouter([
 
 const App = () => {
 	const dispatch = useAppDispatch();
-
 	const preferences = useAppSelector((state) => state.preferences);
+	const [welcomeBanner, setWelcomeBanner] = useState<IWelcomeBanner>();
+	const [isOpen, setOpen] = useState<boolean>(false);
 
-	useEffect(() => {
+	const hexToRgb = (hex: string | undefined) => {
+		let c: any;
+		if (hex && /^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+			c = hex.substring(1).split("");
+			if (c.length == 3) {
+				c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+			}
+			c = "0x" + c.join("");
+			return (
+				"rgb(" +
+				[(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") +
+				")"
+			);
+		}
+		return "";
+	};
+
+	const setCSSVariables = (prefs: IPreferences[]) => {
+		const htmlElement = document.documentElement;
+
+		htmlElement.style.setProperty(
+			"--website-primary-color",
+			prefs?.find((v) => v.field === "color_primary")?.value ?? ""
+		);
+
+		htmlElement.style.setProperty(
+			"--website-secondary-color",
+
+			prefs?.find((v) => v.field === "color_secondary")?.value ?? ""
+		);
+
+		htmlElement.style.setProperty(
+			"--website-alternate-color",
+
+			prefs?.find((v) => v.field === "color_alternate")?.value ?? ""
+		);
+	};
+
+	useLayoutEffect(() => {
 		(async () => {
 			try {
 				if (preferences?.length === 0) {
@@ -45,11 +86,34 @@ const App = () => {
 						Routes.WEBSITE_CONFIG
 					);
 
+					setCSSVariables(res.data?.result);
+
 					if (res.status === 200) {
 						dispatch({
 							type: Actions.SAVE_PREFERENCES,
 							payload: res.data?.result,
 						});
+					}
+				} else {
+					setCSSVariables(preferences);
+				}
+			} catch (error) {
+				const err = error as AxiosError<ISuccess>;
+				console.error(err.response);
+			}
+		})();
+	}, []);
+
+	useEffect(() => {
+		(async () => {
+			try {
+				const res = await api.get<ISuccess<IBanners>>(Routes.BANNER);
+
+				if (res.status === 200) {
+					const banner = res.data?.result?.welcome_banner;
+
+					if (banner?.length > 0) {
+						setWelcomeBanner(banner?.[0]);
 					}
 				}
 			} catch (error) {
@@ -59,11 +123,86 @@ const App = () => {
 		})();
 	}, []);
 
+	useEffect(() => {
+		if (welcomeBanner) {
+			setTimeout(() => {
+				setOpen(true);
+			}, 2000);
+		}
+	}, [welcomeBanner]);
+
 	return (
 		<Suspense fallback={<Loader />}>
 			<RouterProvider router={router} />
 			{false ? <Loader /> : null}
 			<Alert />
+			{welcomeBanner && false ? (
+				<Modal
+					keepMounted
+					closeAfterTransition
+					open={isOpen}
+					onClose={() => setOpen(false)}
+					className='d-center'
+				>
+					<Box
+						style={{
+							height: "100%",
+							width: "100%",
+						}}
+					>
+						<Box
+							style={{
+								width: "80vw",
+								height: "80vh",
+								backdropFilter: "brightness(0.5)",
+								position: "relative",
+							}}
+						>
+							<a
+								href={welcomeBanner?.url}
+								target={
+									welcomeBanner?.url_type === "EXTERNAL"
+										? "_blank"
+										: "_self"
+								}
+							>
+								<picture>
+									<img
+										src={`${
+											BASE_URL?.includes("localhost")
+												? BASE_URL
+												: ""
+										}${welcomeBanner?.website_banner}`}
+										style={{
+											height: "100%",
+											width: "100%",
+											objectFit: "contain",
+											borderRadius: 20,
+										}}
+									/>
+								</picture>
+							</a>
+							<a
+								href=''
+								onClickCapture={(e) => {
+									e.preventDefault();
+									setOpen(false);
+								}}
+							>
+								<Close
+									height={80}
+									style={{
+										color: "var(--website-primary-color)",
+										position: "absolute",
+										top: 0,
+										right: 0,
+									}}
+								/>
+							</a>
+						</Box>
+					</Box>
+				</Modal>
+			) : null}
 		</Suspense>
 	);
 };

@@ -10,6 +10,7 @@ const Plans = lazy(() => import("@pages/plans"));
 const ContactUs = lazy(() => import("@pages/contact-us"));
 const Upcoming = lazy(() => import("@pages/upcoming"));
 const MovieDetails = lazy(() => import("@pages/movie-details"));
+const SeriesDetails = lazy(() => import("@pages/series-details"));
 
 export {
 	Login,

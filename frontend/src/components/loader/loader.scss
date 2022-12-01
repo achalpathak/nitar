@@ -1,67 +1,77 @@
-#loader{
-    position:fixed;
-    top: 0;
-    left: 0;
-    display: grid;
-    place-items: center;
-    width: 100%;
-    height: 100%;
-    background-color: rgba($color: #000000, $alpha: 0.7);
+#loader {
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: grid;
+	place-items: center;
+	width: 100%;
+	height: 100%;
+	background-color: rgba($color: #000000, $alpha: 0.7);
 }
 @keyframes loader-out {
-    100% {
-        visibility: hidden;
-        opacity: 0;
-    }
+	100% {
+		visibility: hidden;
+		opacity: 0;
+	}
 }
-#loader.loaded{
-    animation: loader-out 0.3s both;
+#loader.loaded {
+	animation: loader-out 0.3s both;
 }
 
 .loader {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    display: inline-block;
-    position: relative;
-    border: 3px solid;
-    border-color:  #f9f9f9 #f9f9f9 transparent transparent;
-    box-sizing: border-box;
-    scale: 1.5;
-    animation: rotation 1s linear infinite;
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	display: inline-block;
+	position: relative;
+	border: 3px solid;
+	border-color: #f9f9f9 #f9f9f9 transparent transparent;
+	box-sizing: border-box;
+	scale: 1.5;
+	animation: rotation 1s linear infinite;
 }
 
-.loader::after, .loader::before {
-    content: "";
-    position: absolute;
-    box-sizing: border-box;
-    margin: auto;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    border: 3px solid;
-    border-color: transparent transparent #ffa800 #ffa800;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    transform-origin: center center;
-    animation: rotationBack 0.5s linear infinite;
+.loader::after,
+.loader::before {
+	content: "";
+	position: absolute;
+	box-sizing: border-box;
+	margin: auto;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	border: 3px solid;
+	border-color: transparent transparent var(--website-primary-color)
+		var(--website-primary-color);
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	transform-origin: center center;
+	animation: rotationBack 0.5s linear infinite;
 }
 
 .loader::before {
-    width: 32px;
-    height: 32px;
-    border-color:  #f9f9f9 #f9f9f9 transparent transparent;
-    animation: rotation 1s linear infinite;
-    box-shadow: 1px 1px 10px 1px #ffa800;
+	width: 32px;
+	height: 32px;
+	border-color: #f9f9f9 #f9f9f9 transparent transparent;
+	animation: rotation 1s linear infinite;
+	box-shadow: 1px 1px 10px 1px var(--website-primary-color);
 }
 
 @keyframes rotation {
-    0% {rotate: (0deg)}
-    100% {rotate: (360deg)}
+	0% {
+		rotate: (0deg);
+	}
+	100% {
+		rotate: (360deg);
+	}
 }
 @keyframes rotationBack {
-    0% {rotate: (0deg)}
-    100% {rotate: (-360deg)}
+	0% {
+		rotate: (0deg);
+	}
+	100% {
+		rotate: (-360deg);
+	}
 }

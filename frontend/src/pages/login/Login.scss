@@ -75,7 +75,7 @@
 		width: 20rem;
 		color: white;
 		border-radius: 5px;
-		border: 0.5px solid #ffa800;
+		border: 0.5px solid var(--website-primary-color);
 		margin-top: 15px;
 		padding: 0 10px;
 		background-color: transparent;
@@ -95,7 +95,7 @@
 .cancel-btn {
 	width: 4rem !important;
 	height: 4rem !important;
-	border: 3px solid #ffa800 !important;
+	border: 3px solid var(--website-primary-color) !important;
 	border-radius: 100% !important;
 	display: flex;
 	align-items: center;
@@ -108,7 +108,7 @@
 }
 
 .cancel-btn:hover {
-	box-shadow: 1px 1px 10px 1px #ffa800;
+	box-shadow: 1px 1px 10px 1px var(--website-primary-color);
 	svg {
 		color: white;
 	}
@@ -119,7 +119,7 @@
 	margin: 1rem 0 0 0 !important;
 	.age::after {
 		content: " 18+";
-		color: #ffa800;
+		color: var(--website-primary-color);
 	}
 
 	label {

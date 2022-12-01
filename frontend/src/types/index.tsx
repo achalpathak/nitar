@@ -4,7 +4,6 @@ import Actions from "@redux/actions";
 export type ISuccess<T = string> = {
 	message: string;
 	result: T;
-	// phone: string[];
 };
 
 export type IMessage = {
@@ -17,7 +16,7 @@ export type IError = {
 	[s: string]: string[];
 };
 
-export type IResponse = ISuccess & IError;
+export type IResponse<T = any> = ISuccess<T> & IError;
 
 export type IAPI = {
 	[s: string]: {
@@ -66,6 +65,13 @@ export type ICategory = {
 	data: ICategoryItem[];
 };
 
+export type IEpisodes = {
+	name: string;
+	poster_type: keyof IImageType;
+	series: ISeriesItem;
+	onChange: (item: IEpisodesSet) => void;
+};
+
 export type ICategoryItem = {
 	id: number;
 	genres: IGenre[];
@@ -89,7 +95,45 @@ export type ICategoryItem = {
 	get_genres: string[];
 	membership_required: boolean;
 	video_link: string;
+	episodes_set: IEpisodesSet[];
 } & IImageType;
+
+export type ISeriesItem = {
+	id: number;
+	genres: IGenre[];
+	age_rating: string;
+	language: string;
+	created: Date;
+	modified: Date;
+	name: string;
+	description: string;
+	duration?: string;
+	director_name?: string;
+	star_cast?: string;
+	trailer_link?: string;
+	published: boolean;
+	slug: string;
+	episodes_set: IEpisodesSet[];
+} & IImageType;
+
+export type IEpisodesSet = {
+	id: number;
+	created: Date;
+	modified: Date;
+	name: string;
+	description: string;
+	episode_number: number;
+	poster_small_vertical_image: string;
+	poster_large_vertical_image: string;
+	poster_small_horizontal_image: string;
+	poster_large_horizontal_image: string;
+	duration: string;
+	membership_required: boolean;
+	video_link: string;
+	slug: string;
+	published: boolean;
+	series: number;
+};
 
 export type IImageType = {
 	poster_small_vertical_image: string;
@@ -117,6 +161,8 @@ export type ISearchResult = {
 	name: string;
 	description: string;
 	poster_small_vertical_image: string;
+	slug: string;
+	content_type: string;
 };
 
 export type IPlans = {
@@ -148,7 +194,7 @@ export type IWelcomeBanner = {
 	mobile_banner: string;
 	banner_type: string;
 	url: string;
-	url_type: string;
+	url_type: "INTERNAL" | "EXTERNAL";
 	published: boolean;
 };
 
@@ -162,4 +208,11 @@ export type IPosterBanner = {
 	url: string;
 	url_type: "INTERNAL" | "EXTERNAL";
 	published: boolean;
+};
+
+export type IUser = {
+	full_name: string;
+	email: string;
+	phone: string;
+	has_active_membership: boolean;
 };

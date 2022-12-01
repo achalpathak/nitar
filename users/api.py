@@ -38,11 +38,11 @@ class VerifyOTP(APIView):
                 request, user_obj, backend="django.contrib.auth.backends.ModelBackend"
             )
             return Response({"result": {
-                "full_name": user_obj.user.full_name,
-                "email": user_obj.user.email,
-                "phone": user_obj.user.phone,
-                "email": user_obj.user.email,
-                "has_active_membership": user_obj.user.has_active_membership
+                "full_name": user_obj.full_name,
+                "email": user_obj.email,
+                "phone": user_obj.phone,
+                "email": user_obj.email,
+                "has_active_membership": user_obj.has_active_membership
             }})
         return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
 

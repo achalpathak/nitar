@@ -4,6 +4,7 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+@import "/node_modules/@sweetalert2/theme-dark/dark.scss";
 
 :root {
 	font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
@@ -64,11 +65,11 @@ button:not(.custom-btn) {
 	cursor: pointer;
 	transition: all 0.1s ease;
 	width: 15rem;
-	color: #ffa800;
+	color: var(--website-primary-color);
 
 	&:hover:not(:disabled) {
-		border-color: #ffa800;
-		box-shadow: 1px 1px 10px 1px #ffa800;
+		border-color: var(--website-primary-color);
+		box-shadow: 1px 1px 10px 1px var(--website-primary-color);
 	}
 	&:disabled {
 		color: gray;
@@ -89,7 +90,7 @@ button {
 @media (prefers-color-scheme: light) {
 	:root {
 		color: #213547;
-		background-color: #ffffff;
+		background-color: var(--website-secondary-color);
 	}
 	a:hover {
 		color: #747bff;
@@ -129,29 +130,29 @@ input[type="number"] {
 
 .login-btn {
 	padding: 10px 20px;
-	border: 1px solid #ffa800;
-	color: #ffa800;
+	border: 1px solid var(--website-primary-color);
+	color: var(--website-primary-color);
 	text-transform: uppercase;
-	background-color: rgba($color: #ffa800, $alpha: 0.15);
+	// background-color: rgba($color: #fff, $alpha: 0.15);
 	font-family: "Barlow Condensed";
 
 	&:hover {
 		color: white;
-		box-shadow: 0px 0px 5px 1px #ffa800;
+		box-shadow: 0px 0px 5px 1px var(--website-primary-color);
 	}
 }
 
 .left-right {
 	> div {
 		div {
-			border: 0.5px solid rgba($color: #ffffff, $alpha: 0.5);
+			border: 0.5px solid rgba($color: #fff, $alpha: 0.5);
 			margin-right: 10px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 
 			a {
-				color: rgba($color: #ffffff, $alpha: 0.5);
+				color: rgba($color: #fff, $alpha: 0.5);
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -247,11 +248,15 @@ span {
 	height: 100%;
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 1099px) {
 	.slider {
 		img {
-			width: 92% !important;
+			width: 75% !important;
 			height: auto !important;
 		}
 	}
+}
+
+.swal2-confirm {
+	background-color: var(--website-primary-color) !important;
 }

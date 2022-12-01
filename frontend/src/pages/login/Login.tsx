@@ -15,10 +15,12 @@ import {
 	Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { Link, useNavigate } from "react-router-dom";
-import { IMessage, IResponse, IError } from "@types";
+import { Link, redirect, useNavigate } from "react-router-dom";
+import { IMessage, IResponse, IError, IUser } from "@types";
 import { useLocation } from "react-router-dom";
 import { useAlert } from "@hooks";
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import Actions from "@redux/actions";
 
 type ILocationProps = {
 	pathname: string;
@@ -29,8 +31,17 @@ type ILocationProps = {
 
 const Login = () => {
 	const navigate = useNavigate();
+	const user = useAppSelector((state) => state.user);
+
+	if (user?.full_name) {
+		navigate("/");
+		return null;
+	}
+
 	const location: ILocationProps = useLocation();
 	const showAlert = useAlert();
+
+	const dispatch = useAppDispatch();
 
 	// * --- states start here ----------////
 
@@ -141,15 +152,18 @@ const Login = () => {
 
 	const verifyOtp = async () => {
 		try {
-			const res = await api.post<IResponse>(Routes.VERIFY_OTP, {
+			const res = await api.post<IResponse<IUser>>(Routes.VERIFY_OTP, {
 				phone,
 				otp: parseInt(otp),
 			});
 
 			if (res.status === 200) {
-				console.log("");
 				showAlert("success", "Success", res?.data?.message);
 				setTimeout(() => {
+					dispatch({
+						type: Actions.LOGIN,
+						payload: res.data?.result,
+					});
 					navigate("/");
 				}, 3000);
 			}
@@ -213,7 +227,7 @@ const Login = () => {
 										<Link
 											to='/register'
 											style={{
-												color: "#ffa800",
+												color: "var(--website-primary-color)",
 											}}
 										>
 											Register
@@ -238,8 +252,8 @@ const Login = () => {
 										height: "2rem",
 										// background: "transparent",
 										padding: 5,
-										backgroundImage:
-											'url("src/assets/common/otp.png")',
+										// backgroundImage:
+										// 	'url("src/assets/common/otp.png")',
 										backgroundSize: "cover",
 									}}
 									isInputNum
@@ -259,7 +273,6 @@ const Login = () => {
 									await sendOtp();
 								} else if (process === "otp") {
 									verifyOtp();
-									// setProcess("register");
 								}
 							}}
 						/>

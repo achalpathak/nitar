@@ -1,15 +1,20 @@
 import { BASE_URL } from "@api";
 import LeftRightButton from "@components/left-right-button";
 import { Grid, Typography } from "@mui/material";
-import { ICategory } from "@types";
+import { ICategory, IEpisodes } from "@types";
 import { useScroll, useWheel } from "@use-gesture/react";
 import { FC, useRef } from "react";
 import { Link } from "react-router-dom";
 import { animated, useSpring } from "react-spring";
 import "./movies.scss";
 
-const MovieList: FC<ICategory> = ({ name, poster_type, data }) => {
-	if ((data?.length ?? 0) === 0) {
+const EpisodesList: FC<IEpisodes> = ({
+	name,
+	series,
+	poster_type,
+	onChange,
+}) => {
+	if ((series?.episodes_set?.length ?? 0) === 0) {
 		return null;
 	}
 	const moviesRef = useRef<HTMLDivElement>(null);
@@ -103,25 +108,36 @@ const MovieList: FC<ICategory> = ({ name, poster_type, data }) => {
 						{...bind()}
 						{...wheel()}
 					>
-						{data?.map((img) => (
-							<Link
-								to={`${img?.content_type}/${img?.slug}`}
-								state={img}
+						{series?.episodes_set?.map((img) => (
+							<a
+								href=''
+								onClickCapture={(e) => {
+									e.preventDefault();
+									onChange(img);
+								}}
 								key={img.id}
+								className='d-center'
+								style={{
+									flexDirection: "column",
+								}}
 							>
 								<animated.div
 									className={`movie-card ${poster_type}`}
 									style={{
 										...style,
-										backgroundImage: `url(${
-											BASE_URL?.includes("localhost")
-												? BASE_URL
-												: ""
-										}${img?.[poster_type]})`,
+										// backgroundImage: `url(${
+										// 	BASE_URL?.includes("localhost")
+										// 		? BASE_URL
+										// 		: ""
+										// }${img?.[poster_type]})`,
+										backgroundImage: `url(${img?.[poster_type]})`,
 									}}
-									data-movie-name={img?.name}
+									data-episode-name={img?.name}
 								/>
-							</Link>
+								<Typography mt={1} fontFamily='inter'>
+									{img?.name}
+								</Typography>
+							</a>
 						))}
 					</Grid>
 				</Grid>
@@ -130,4 +146,4 @@ const MovieList: FC<ICategory> = ({ name, poster_type, data }) => {
 	);
 };
 
-export default MovieList;
+export default EpisodesList;

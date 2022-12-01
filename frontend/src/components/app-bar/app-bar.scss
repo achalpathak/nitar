@@ -10,7 +10,7 @@
 		text-align: center;
 
 		&:hover {
-			color: #ffa800;
+			color: var(--website-primary-color);
 		}
 	}
 
@@ -27,7 +27,7 @@
 				content: "";
 				width: 80%;
 				height: 1px;
-				background-color: #ffa800;
+				background-color: var(--website-primary-color);
 				position: absolute;
 				bottom: 0;
 				left: 0;
@@ -39,7 +39,7 @@
 				content: "";
 				width: 60%;
 				height: 1px;
-				background-color: #ffa800;
+				background-color: var(--website-primary-color);
 				position: absolute;
 				bottom: -5px;
 				left: 0;
@@ -53,7 +53,7 @@
 				}
 
 				a {
-					color: #ffa800;
+					color: var(--website-primary-color);
 				}
 			}
 		}
@@ -87,7 +87,7 @@
 	transition: all 0.2s ease-in;
 
 	&:hover {
-		color: #ffa800 !important;
+		color: var(--website-primary-color) !important;
 	}
 }
 
@@ -118,7 +118,7 @@
 
 .drawer-container {
 	span {
-		color: #ffa800;
+		color: var(--website-primary-color);
 	}
 }
 

@@ -10,6 +10,7 @@ import {
 	Upcoming,
 	MovieDetails,
 } from "@pages";
+import SeriesDetails from "@pages/series-details";
 
 const Wrapper = ({ children }: any) => {
 	const location = useLocation();
@@ -43,7 +44,7 @@ const TheContent = () => {
 							/>
 							<Route
 								path='/series/:slug'
-								element={<MovieDetails />}
+								element={<SeriesDetails />}
 							/>
 							<Route path='/plans' element={<Plans />} />
 							<Route path='/contact-us' element={<ContactUs />} />

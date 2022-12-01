@@ -7,18 +7,18 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import appReducer from "@redux/reducers";
 import Actions from "@redux/actions";
-import { IMessage, IPreferences, IReducer } from "@types";
+import { IMessage, IPreferences, IReducer, IUser } from "@types";
 
-const rootReducer = (state: any, action: IReducer) => {
-	if (action.type === Actions.LOGOUT) {
-		// for all keys defined in your persistConfig(s)
-		storage.removeItem("persist:root");
-		// storage.removeItem('persist:otherKey')
+// const rootReducer = (state: any, action: IReducer) => {
+// 	if (action.type === Actions.LOGOUT) {
+// 		// for all keys defined in your persistConfig(s)
+// 		storage.removeItem("persist:root");
+// 		// storage.removeItem('persist:otherKey')
 
-		return appReducer(undefined, action);
-	}
-	return appReducer(state, action);
-};
+// 		return appReducer(undefined, action);
+// 	}
+// 	return appReducer(state, action);
+// };
 
 const persistConfig = {
 	key: "root",
@@ -38,7 +38,7 @@ const persistedReducer = persistReducer(
 		// ],
 		...persistConfig,
 	},
-	rootReducer
+	appReducer
 );
 
 //Adding Redux devtools support
@@ -55,6 +55,7 @@ const persistor = persistStore(store);
 export type RootState = {
 	alert: IMessage;
 	preferences: IPreferences[];
+	user: IUser;
 };
 
 export type AppDispatch = typeof store.dispatch;

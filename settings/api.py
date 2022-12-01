@@ -20,6 +20,11 @@ class WebsiteConfigSettingsAPI(APIView):
             "favicon_url",
             "play_store_link",
             "apple_store_link",
+            'pay_description',
+            'facebook',
+            'twitter',
+            'youtube',
+            'instagram',
             "email",
             "phone",
         ]

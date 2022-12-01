@@ -74,9 +74,9 @@
 			}
 
 			.view-details {
-				border: 1px solid #ffa800;
+				border: 1px solid var(--website-primary-color);
 				color: white;
-				background-color: #ffa800;
+				background-color: var(--website-primary-color);
 				padding: 5px 8px;
 				border-radius: 5px;
 				font-weight: bold;

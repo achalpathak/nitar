@@ -29,13 +29,13 @@
 	height: 20rem;
 }
 .subscribe-button {
-	border: 1px solid #ffa800;
+	border: 1px solid var(--website-primary-color);
 	background: rgba(0, 0, 0, 0.5);
 	border-radius: 30px;
 	justify-content: space-between !important;
 	padding: 0 0 0 10px;
 	&:hover {
-		box-shadow: 1px 1px 10px 1px #ffa800;
+		box-shadow: 1px 1px 10px 1px var(--website-primary-color);
 	}
 	a {
 		display: flex;
@@ -52,7 +52,7 @@
 		font-size: 0.8rem;
 	}
 	svg {
-		color: #ffa800;
+		color: var(--website-primary-color);
 		background-color: white;
 		border-radius: 50%;
 	}
@@ -65,7 +65,7 @@
 		.MuiGrid-item {
 			justify-content: flex-start;
 			&:nth-child(2) {
-				background-color: #ffa800;
+				background-color: var(--website-primary-color);
 				border-radius: 30px;
 				// padding: 4px 2px 4px 10px;
 				padding: 3px 0;

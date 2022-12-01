@@ -1,29 +1,31 @@
 //*All imports go here!
-import "../login/Login.scss";
+import api from "@api";
 import logo from "@assets/common/logo.png";
 import { Button, CustomInput } from "@components";
-import { ChangeEvent, KeyboardEvent, MouseEvent, useState } from "react";
-import { AxiosError } from "axios";
-import api from "@api";
+import { useAlert } from "@hooks";
 import {
-	Alert,
-	AlertColor,
-	AlertTitle,
 	Checkbox,
 	FormControl,
 	FormControlLabel,
 	FormHelperText,
-	Grid,
-	Paper,
 	Typography,
 } from "@mui/material";
+import { useAppSelector } from "@redux/hooks";
+import { IError, IMessage, IResponse } from "@types";
+import { AxiosError } from "axios";
+import { ChangeEvent, KeyboardEvent, MouseEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { IMessage, IResponse, IError } from "@types";
-import { useAlert } from "@hooks";
+import "../login/Login.scss";
 
 const Register = () => {
 	const navigate = useNavigate();
 	const showAlert = useAlert();
+
+	const user = useAppSelector((state) => state.user);
+
+	if (user?.full_name) {
+		navigate("/");
+	}
 
 	// * --- states start here ----------////
 
@@ -194,7 +196,7 @@ const Register = () => {
 												sx={{
 													color: "white",
 													"&.Mui-checked": {
-														color: "#ffa800",
+														color: "var(--website-primary-color)",
 													},
 												}}
 												checked={ageRequirement}
@@ -227,7 +229,7 @@ const Register = () => {
 												sx={{
 													color: "white",
 													"&.Mui-checked": {
-														color: "#ffa800",
+														color: "var(--website-primary-color)",
 													},
 												}}
 												checked={termsAndConditions}
@@ -251,7 +253,7 @@ const Register = () => {
 													style={{
 														textDecoration:
 															"underline",
-														color: "#ffa800",
+														color: "var(--website-primary-color)",
 													}}
 												>
 													Terms & Conditions
@@ -284,7 +286,7 @@ const Register = () => {
 								<Link
 									to='/login'
 									style={{
-										color: "#ffa800",
+										color: "var(--website-primary-color)",
 									}}
 								>
 									Login
