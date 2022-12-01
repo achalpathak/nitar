@@ -133,6 +133,9 @@ class Memberships(TimeStampedModel):
     price_in_inr = models.DecimalField(
         max_digits=5, decimal_places=2, blank=True, null=True
     )
+    price_in_dollar = models.DecimalField(
+        max_digits=5, decimal_places=2, blank=True, null=True
+    )
     membership_features = models.ManyToManyField(MembershipFeatures)
     published = models.BooleanField(default=True)
 

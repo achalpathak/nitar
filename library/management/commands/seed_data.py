@@ -57,7 +57,7 @@ class Command(BaseCommand):
                         open(die_hard_poster_horizontal_large_url[0], "rb")
                     ),
                     published=True,
-                    membership_requried=True,
+                    membership_required=True,
                     slug="hot-wheels",
                 ),
                 Movies(
@@ -78,7 +78,7 @@ class Command(BaseCommand):
                         open(die_hard_poster_horizontal_large_url[0], "rb")
                     ),
                     published=True,
-                    membership_requried=True,
+                    membership_required=True,
                     slug="die-hard",
                 ),
                 Movies(
@@ -99,7 +99,7 @@ class Command(BaseCommand):
                         open(die_hard_poster_horizontal_large_url[0], "rb")
                     ),
                     published=True,
-                    membership_requried=False,
+                    membership_required=False,
                     slug="avengers",
                 ),
             ]
@@ -290,7 +290,7 @@ class Command(BaseCommand):
                         poster_large_horizontal_image=File(
                             open(die_hard_poster_horizontal_large_url[0], "rb")
                         ),
-                        membership_requried=False,
+                        membership_required=False,
                     ),
                     Episodes(
                         series=obj,
@@ -310,7 +310,7 @@ class Command(BaseCommand):
                         poster_large_horizontal_image=File(
                             open(die_hard_poster_horizontal_large_url[0], "rb")
                         ),
-                        membership_requried=True,
+                        membership_required=True,
                     ),
                     Episodes(
                         series=obj,
@@ -330,7 +330,7 @@ class Command(BaseCommand):
                         poster_large_horizontal_image=File(
                             open(die_hard_poster_horizontal_large_url[0], "rb")
                         ),
-                        membership_requried=True,
+                        membership_required=True,
                     ),
                 ]
             )
