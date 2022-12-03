@@ -6,6 +6,7 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import YouTubeIcon from "@mui/icons-material/YouTube";
+import { Box } from "@mui/material";
 import { useAppSelector } from "@redux/hooks";
 import { IError, ISuccess } from "@types";
 import { AxiosError } from "axios";
@@ -58,12 +59,23 @@ const Footer = () => {
 			<div className='footer-main-container'>
 				<div className='about-us-container'>
 					<div className='logo-container flex-row'>
-						<img
-							alt='logo'
-							src={logo}
-							width='100%'
-							height='100%'
-						></img>
+						<Box
+							sx={{
+								height: 100,
+								mt: 2,
+							}}
+							className='d-center'
+						>
+							{/* <LogoText height={30} /> */}
+							<img
+								alt='logo'
+								src={
+									prefs?.find((v) => v.field === "logo_url")
+										?.image
+								}
+								width='100%'
+							/>
+						</Box>
 					</div>
 					<div>
 						<h2
@@ -109,27 +121,39 @@ const Footer = () => {
 								</a>
 							</div>
 						)}
-						<div className='social-icons'>
-							{facebook && (
-								<a href={facebook} target='_blank'>
-									<FacebookIcon fontSize='large' />
-								</a>
-							)}
-							{twitter && (
-								<a href={twitter} target='_blank'>
-									<TwitterIcon fontSize='large' />
-								</a>
-							)}
-							{youtube && (
-								<a href={youtube} target='_blank'>
-									<YouTubeIcon fontSize='large' />
-								</a>
-							)}
-							{instagram && (
-								<a href={instagram} target='_blank'>
-									<InstagramIcon fontSize='large' />
-								</a>
-							)}
+						<div
+							className='social-icons'
+							style={{
+								flexDirection: "column",
+							}}
+						>
+							<div>
+								{facebook && (
+									<a href={facebook} target='_blank'>
+										<FacebookIcon fontSize='large' />
+									</a>
+								)}
+								{twitter && (
+									<a href={twitter} target='_blank'>
+										<TwitterIcon fontSize='large' />
+									</a>
+								)}
+								{youtube && (
+									<a href={youtube} target='_blank'>
+										<YouTubeIcon fontSize='large' />
+									</a>
+								)}
+								{instagram && (
+									<a href={instagram} target='_blank'>
+										<InstagramIcon fontSize='large' />
+									</a>
+								)}
+							</div>
+							<Box my={2} className='footer-links'>
+								<Link to='/terms-and-conditions'>
+									Terms & Conditions
+								</Link>
+							</Box>
 						</div>
 					</div>
 					<div className='footer-links'>

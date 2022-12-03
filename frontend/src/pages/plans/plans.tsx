@@ -12,6 +12,7 @@ import { AxiosError } from "axios";
 import { IPlans, ISuccess } from "@types";
 import api, { Routes } from "@api";
 import { useAppSelector } from "@redux/hooks";
+import Swal from "sweetalert2";
 
 //****************************************************************All imports ends here!***************************************************************
 
@@ -26,6 +27,7 @@ const Plans = () => {
 	const [plans, setPlans] = useState<IPlans>();
 
 	const navigate = useNavigate();
+	const user = useAppSelector((state) => state.user);
 
 	useEffect(() => {
 		(async () => {
@@ -41,6 +43,34 @@ const Plans = () => {
 			}
 		})();
 	}, []);
+
+	const initiatePayment = async () => {
+		try {
+			const res = await api.get<ISuccess>(Routes.PAYMENT);
+
+			if (res.status === 200) {
+				// setPlans(res.data?.result);
+				Swal.fire({
+					title: "Success",
+					text: res.data?.message ?? "Payment Successful",
+					icon: "success",
+					confirmButtonText: "Continue to Home",
+				}).then((res) => {
+					if (res.isConfirmed) {
+						navigate("/");
+					}
+				});
+			}
+		} catch (error) {
+			const err = error as AxiosError<ISuccess>;
+			console.error(err.response);
+			Swal.fire({
+				title: "Error",
+				text: err?.response?.data?.message ?? "Payment Unsuccessful",
+				icon: "error",
+			});
+		}
+	};
 
 	return (
 		<Grid container>
@@ -105,7 +135,29 @@ const Plans = () => {
 								</ul>
 							</Grid>
 							<Grid item className='buy-now'>
-								<Button title='Subscribe' />
+								<Button
+									title='Subscribe'
+									onClickCapture={(e) => {
+										e.preventDefault();
+										if (!user.full_name) {
+											Swal.fire({
+												title: "Login",
+												text: "Please login to continue",
+												icon: "warning",
+												confirmButtonText: "Login",
+												cancelButtonText: "Cancel",
+												showCancelButton: true,
+											}).then((res) => {
+												if (res.isConfirmed) {
+													navigate("/login");
+												}
+											});
+										} else {
+											console.log("Initiating Payment");
+											initiatePayment();
+										}
+									}}
+								/>
 							</Grid>
 						</Grid>
 					</Grid>

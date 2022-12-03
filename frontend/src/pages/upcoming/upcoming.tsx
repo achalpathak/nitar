@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { Grid, Typography } from "@mui/material";
 import "./upcoming.scss";
 import moment from "moment";
+import { Link } from "react-router-dom";
 
 const Upcoming = () => {
 	const showAlert = useAlert();
@@ -63,12 +64,10 @@ const Upcoming = () => {
 		const nextBtn = document.querySelector(".carousel__next");
 
 		const prevListener = (e: Event) => {
-			console.log("Prev Button Clicked");
 			setCurrentIndex((v) => v - 1);
 		};
 
 		const nextListener = (e: Event) => {
-			console.log("Next Button Clicked");
 			setCurrentIndex((v) => v + 1);
 		};
 
@@ -80,14 +79,6 @@ const Upcoming = () => {
 			nextBtn?.removeEventListener("click", nextListener);
 		};
 	}, []);
-
-	useEffect(() => {
-		console.log(
-			"CurrentIndex",
-			currentIndex,
-			upcomingMovies?.at(currentIndex)
-		);
-	}, [currentIndex]);
 
 	return (
 		<>
@@ -108,7 +99,12 @@ const Upcoming = () => {
 								}}
 							>
 								<div className='movie-item-upcoming'>
-									<a href='#'>
+									<Link
+										to={`/${
+											image?.content_type?.toLowerCase() ??
+											""
+										}/${image?.slug ?? ""}`}
+									>
 										<figure>
 											<picture>
 												<img
@@ -133,7 +129,7 @@ const Upcoming = () => {
 												</Typography>
 											</div>
 										</figure>
-									</a>
+									</Link>
 								</div>
 							</Grid>
 						))}

@@ -13,7 +13,6 @@ const UseAlert = () => {
 		title: string,
 		description: string = ""
 	) => {
-		console.log("Showing Alert", alert);
 		dispatch({
 			type: Actions.SHOW_ALERT,
 			payload: {

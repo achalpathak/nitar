@@ -196,6 +196,7 @@ export type IWelcomeBanner = {
 	banner_type: string;
 	url: string;
 	url_type: "INTERNAL" | "EXTERNAL";
+	content_type: string;
 	published: boolean;
 };
 
@@ -208,6 +209,7 @@ export type IPosterBanner = {
 	banner_type: string;
 	url: string;
 	url_type: "INTERNAL" | "EXTERNAL";
+	content_type: string;
 	published: boolean;
 };
 
@@ -216,6 +218,7 @@ export type IUser = {
 	email: string;
 	phone: string;
 	has_active_membership: boolean;
+	newsletter_subscribed: boolean;
 };
 
 export type ICountryList = {

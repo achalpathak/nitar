@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useLayoutEffect, useState } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Link, RouterProvider } from "react-router-dom";
 import { Layout } from "@container";
 import { Alert, Loader } from "@components";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
@@ -68,6 +68,10 @@ const App = () => {
 
 	const setCSSVariables = (prefs: IPreferences[]) => {
 		const htmlElement = document.documentElement;
+		const favicon = document.head.querySelector(
+			"#favicon"
+		) as HTMLLinkElement;
+		const title = document.head.querySelector("title") as HTMLTitleElement;
 
 		htmlElement.style.setProperty(
 			"--website-primary-color",
@@ -85,6 +89,15 @@ const App = () => {
 
 			prefs?.find((v) => v.field === "color_alternate")?.value ?? ""
 		);
+
+		//Setting Favicon
+		favicon.href = `${
+			prefs?.find((v) => v.field === "favicon_url")?.image ?? ""
+		}`;
+
+		//Setting Title of App
+		title.innerText =
+			prefs?.find((v) => v.field === "name_of_the_app")?.value ?? "";
 	};
 
 	useLayoutEffect(() => {
@@ -163,8 +176,14 @@ const App = () => {
 								position: "relative",
 							}}
 						>
-							<a
-								href={welcomeBanner?.url}
+							<Link
+								to={`${
+									welcomeBanner?.url_type === "EXTERNAL"
+										? welcomeBanner?.url
+										: `/${welcomeBanner?.content_type?.toLowerCase()}/${
+												welcomeBanner?.url
+										  }`
+								}`}
 								target={
 									welcomeBanner?.url_type === "EXTERNAL"
 										? "_blank"
@@ -182,7 +201,7 @@ const App = () => {
 										}}
 									/>
 								</picture>
-							</a>
+							</Link>
 							<a
 								href=''
 								onClickCapture={(e) => {

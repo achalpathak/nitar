@@ -68,6 +68,7 @@ const ContactUs = () => {
 					title: "Success",
 					text: msg,
 					icon: "success",
+					allowOutsideClick: () => true,
 				});
 			}
 		} catch (error) {

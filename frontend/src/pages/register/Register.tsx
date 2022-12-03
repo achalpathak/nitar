@@ -49,7 +49,7 @@ const Register = () => {
 		useState<boolean>(false);
 
 	const [countries, setCountries] = useState<ICountryList[]>([]);
-	const [country, setCountry] = useState<string>("India");
+	const [country, setCountry] = useState<ICountryList>({} as ICountryList);
 
 	const [errors, setErrors] = useState<IError>({
 		full_name: [],
@@ -87,6 +87,9 @@ const Register = () => {
 
 				if (res.status === 200) {
 					setCountries(res.data?.result);
+					setCountry(
+						res.data?.result?.find((v) => v.name === "India")
+					);
 				} else {
 					setCountries([]);
 				}
@@ -131,7 +134,7 @@ const Register = () => {
 				phone,
 				full_name: name,
 				email,
-				country: countries?.find((c) => c.name === country)?.code,
+				phone_code: country?.code,
 				age_above_18: ageRequirement,
 				terms_conditions_agreed: termsAndConditions,
 			});
@@ -199,6 +202,35 @@ const Register = () => {
 								}}
 								errors={errors?.email}
 							/>
+							<Select<ICountryList, false>
+								name='country'
+								id='country'
+								closeMenuOnSelect={true}
+								className='w-100'
+								components={animatedComponents}
+								isMulti={false}
+								isSearchable
+								options={countries}
+								value={country}
+								onChange={(newValue) => {
+									if (newValue) {
+										setCountry(newValue);
+									}
+								}}
+								noOptionsMessage={() => (
+									<Box>No results found</Box>
+								)}
+								getOptionLabel={(option) =>
+									`(${option.code}) ${option.name}`
+								}
+								getOptionValue={(option) => option.name}
+								filterOption={(option, input) =>
+									option.label
+										?.toLowerCase()
+										.includes(input?.toLowerCase())
+								}
+								styles={CustomSelectUtils.customStyles()}
+							/>
 							<CustomInput
 								type='number'
 								id='phone'
@@ -217,33 +249,6 @@ const Register = () => {
 									}
 								}}
 								errors={errors?.phone}
-							/>
-							<Select<ICustomSelectOption, false>
-								name='country'
-								id='country'
-								closeMenuOnSelect={true}
-								className='w-100'
-								components={animatedComponents}
-								isMulti={false}
-								isSearchable
-								options={CustomSelectUtils.convertToSelectOption(
-									countries,
-									"name"
-								)}
-								value={CustomSelectUtils.getDefaultValue(
-									country
-								)}
-								onChange={(newValue) => {
-									if (newValue) {
-										setCountry(newValue?.value);
-									}
-								}}
-								getOptionLabel={(option) => option.label}
-								getOptionValue={(option) => option.value}
-								noOptionsMessage={() => (
-									<Box>No results found</Box>
-								)}
-								styles={CustomSelectUtils.customStyles()}
 							/>
 							<Box className='custom-label' my={1}>
 								<FormControl error={ageError} margin='none'>
@@ -268,9 +273,21 @@ const Register = () => {
 											/>
 										}
 										label={
-											<span className='age'>
+											<a
+												href=''
+												className='age'
+												onClickCapture={(e) => {
+													e.preventDefault();
+													setAgeRequirement(
+														(val) => !val
+													);
+												}}
+												style={{
+													color: "var(--website-secondary-color)",
+												}}
+											>
 												Your age is
-											</span>
+											</a>
 										}
 									/>
 									{ageError && (
@@ -303,7 +320,20 @@ const Register = () => {
 										}
 										label={
 											<span>
-												You agree to the{" "}
+												<a
+													href=''
+													onClickCapture={(e) => {
+														e.preventDefault();
+														setTermsAndConditions(
+															(val) => !val
+														);
+													}}
+													style={{
+														color: "var(--website-secondary-color)",
+													}}
+												>
+													You agree to the{" "}
+												</a>
 												<Link
 													to='/terms-and-conditions'
 													target='_blank'

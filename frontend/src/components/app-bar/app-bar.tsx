@@ -1,20 +1,24 @@
 import api, { Routes } from "@api";
-import { AndroidLogo, AppleLogo, LogoText } from "@assets";
+import { AndroidLogo, AppleLogo } from "@assets";
 import { useAlert } from "@hooks";
 import { Close, Menu, SearchOutlined } from "@mui/icons-material";
 import {
-    AppBar as MuiAppBar, Box, Divider, IconButton, List,
-    ListItem,
-    ListItemButton,
-    ListItemText, SwipeableDrawer, Toolbar, Tooltip, Typography
+	AppBar as MuiAppBar,
+	Box,
+	Divider,
+	IconButton,
+	List,
+	ListItem,
+	ListItemButton,
+	ListItemText,
+	SwipeableDrawer,
+	Toolbar,
+	Tooltip,
+	Typography,
 } from "@mui/material";
 import Actions from "@redux/actions";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
-import {
-    IRoutes,
-    ISearchResult,
-    ISuccess
-} from "@types";
+import { IRoutes, ISearchResult, ISuccess } from "@types";
 import { CustomSelectUtils } from "@utils";
 import { AxiosError } from "axios";
 import { useState } from "react";
@@ -50,10 +54,6 @@ const routesMobileUnauth = routes?.concat([
 	{
 		title: "Register",
 		path: "/register",
-	},
-	{
-		title: "Logout",
-		path: "/logout",
 	},
 ]);
 
@@ -132,16 +132,21 @@ const AppBar = () => {
 			sx={{ textAlign: "center" }}
 			className='drawer-container'
 		>
-			<Link to='/'>
+			<Link to='/' className='d-center'>
 				<Box
 					sx={{
 						my: 2,
+						height: 90,
 					}}
 				>
-					<LogoText height={30} />
+					<img
+						alt='logo'
+						src={prefs?.find((v) => v.field === "logo_url")?.image}
+						height='100%'
+						width='100%'
+					/>
 				</Box>
 			</Link>
-			<Divider />
 			<Box className='d-center'>
 				<List>
 					{user?.full_name
@@ -190,7 +195,7 @@ const AppBar = () => {
 
 	const formatOptionLabel = (v: ISearchResult) => {
 		return (
-			<a href={`${v?.content_type}/${v?.slug}`} className='search'>
+			<Link to={`/${v?.content_type}/${v?.slug}`} className='search'>
 				<Box display='flex' key={v?.name}>
 					<Box height='100px' width='500px' mr={1}>
 						<picture>
@@ -223,7 +228,7 @@ const AppBar = () => {
 						</Box>
 					</Box>
 				</Box>
-			</a>
+			</Link>
 		);
 	};
 
@@ -233,7 +238,7 @@ const AppBar = () => {
 				<MuiAppBar
 					component='nav'
 					sx={{
-						backgroundColor: "black",
+						backgroundColor: "var(--website-alternate-color)",
 					}}
 				>
 					<Toolbar
@@ -250,7 +255,11 @@ const AppBar = () => {
 								edge='start'
 								className='custom-btn'
 								onClick={handleDrawerToggle}
-								sx={{ mr: 2, display: { sm: "none" } }}
+								sx={{
+									mr: 2,
+									display: { sm: "none" },
+									color: "var(--website-secondary-color)",
+								}}
 							>
 								<Menu />
 							</IconButton>
@@ -264,8 +273,23 @@ const AppBar = () => {
 									},
 								}}
 							>
-								<Link to='/'>
-									<LogoText width={100} />
+								<Link
+									to='/'
+									style={{
+										width: 70,
+									}}
+								>
+									{/* <LogoText width={100} /> */}
+									<img
+										alt='logo'
+										src={
+											prefs?.find(
+												(v) => v.field === "logo_url"
+											)?.image
+										}
+										height='100%'
+										width='100%'
+									/>
 								</Link>
 							</Box>
 						</Box>
@@ -279,8 +303,23 @@ const AppBar = () => {
 								isSearching ? "hide" : ""
 							}`}
 						>
-							<Link to='/'>
-								<LogoText width={60} height={30} />
+							<Link
+								to='/'
+								style={{
+									width: 70,
+								}}
+							>
+								{/* <LogoText width={60} height={30} /> */}
+								<img
+									alt='logo'
+									src={
+										prefs?.find(
+											(v) => v.field === "logo_url"
+										)?.image
+									}
+									height='100%'
+									width='100%'
+								/>
 							</Link>
 						</Box>
 						<Box className='d-center'>
@@ -354,18 +393,20 @@ const AppBar = () => {
 								<AsyncSelect<ISearchResult, false>
 									name='search'
 									className='w-200'
-									closeMenuOnSelect
+									closeMenuOnSelect={false}
 									components={animatedComponents}
 									isSearchable
 									loadOptions={loadSuggestions}
 									defaultOptions
 									styles={CustomSelectUtils.customStyles()}
 									formatOptionLabel={formatOptionLabel}
+									getOptionLabel={(option) => option.name}
 									placeholder='Search...'
 									noOptionsMessage={() => (
 										<div>No results found</div>
 									)}
 									isClearable={false}
+									controlShouldRenderValue={false}
 								/>
 								<Tooltip title='Close Search'>
 									<IconButton

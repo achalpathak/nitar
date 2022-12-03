@@ -105,9 +105,9 @@ const MovieList: FC<ICategory> = ({ name, poster_type, data }) => {
 					>
 						{data?.map((img) => (
 							<Link
-								to={`${img?.content_type}/${img?.slug}`}
+								to={`/${img?.content_type}/${img?.slug ?? ""}`}
 								state={img}
-								key={img.id}
+								key={img.rankings}
 							>
 								<animated.div
 									className={`movie-card ${poster_type}`}

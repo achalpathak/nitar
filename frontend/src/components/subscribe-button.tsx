@@ -40,11 +40,13 @@ const SubscribeButton = () => {
 			);
 
 			if (res.status === 200) {
-				// showAlert("success", "Success", res.data?.result);
+				setEmail("");
+
 				Swal.fire({
 					title: "Success",
 					text: res.data?.result,
 					icon: "success",
+					allowOutsideClick: () => true,
 				});
 
 				dispatch({

@@ -313,15 +313,12 @@ const MovieDetails = (props: any) => {
 												console.log("Watching Trailer");
 												setShowTrailer(true);
 											} else {
-												// showAlert(
-												// 	"warning",
-												// 	"Trailer not available",
-												// 	"Please contact admin"
-												// );
 												Swal.fire({
 													title: "Trailer not available",
 													text: "Please contact admin",
 													icon: "warning",
+													allowOutsideClick: () =>
+														true,
 												});
 											}
 										}}
@@ -361,8 +358,9 @@ const MovieDetails = (props: any) => {
 					}}
 				>
 					<a
-						href='#'
+						href=''
 						onClickCapture={(e) => {
+							e.preventDefault();
 							console.log("Playing");
 
 							//Checking for membership
@@ -376,6 +374,7 @@ const MovieDetails = (props: any) => {
 											title: "Video is not available",
 											text: "Please contact admin",
 											icon: "warning",
+											allowOutsideClick: () => true,
 										});
 									}
 								} else {
@@ -390,6 +389,8 @@ const MovieDetails = (props: any) => {
 													title: "Video is not available",
 													text: "Please contact admin",
 													icon: "warning",
+													allowOutsideClick: () =>
+														true,
 												});
 											}
 										} else {
@@ -398,6 +399,7 @@ const MovieDetails = (props: any) => {
 												title: "Video is not available",
 												text: "Please contact admin",
 												icon: "warning",
+												allowOutsideClick: () => true,
 											});
 										}
 									} else {
@@ -411,6 +413,7 @@ const MovieDetails = (props: any) => {
 												showCancelButton: true,
 												confirmButtonText: "Subscribe",
 												cancelButtonText: "Cancel",
+												allowOutsideClick: () => true,
 											}).then((res) => {
 												if (res.isConfirmed) {
 													navigate("/plans");
@@ -425,6 +428,7 @@ const MovieDetails = (props: any) => {
 												showCancelButton: true,
 												confirmButtonText: "Sign in",
 												cancelButtonText: "Cancel",
+												allowOutsideClick: () => true,
 											}).then((res) => {
 												if (res.isConfirmed) {
 													navigate("/login");

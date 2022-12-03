@@ -3,14 +3,14 @@
 	p {
 		color: var(--website-secondary-color);
 	}
+
+	.MuiTypography-root {
+		color: var(--website-secondary-color);
+	}
 }
 
 .main-play-button {
 	color: var(--website-primary-color);
 	font-size: 5rem;
 	background-color: rgba(0, 0, 0, 0.6);
-}
-
-.MuiTypography-root {
-	color: var(--website-secondary-color);
 }
