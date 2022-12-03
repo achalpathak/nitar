@@ -28,6 +28,7 @@ class WebsiteConfigSettingsAPI(APIView):
             "instagram",
             "email",
             "phone",
+            "contact_us_message"
         ]
         q_objects = Q()
         for t in fields:
