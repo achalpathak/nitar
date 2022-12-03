@@ -10,6 +10,7 @@ import Actions from "@redux/actions";
 import "react-carousel-animated/dist/style.css";
 import { Box, Modal } from "@mui/material";
 import { Close } from "@mui/icons-material";
+import { UnauthenticatedRoute } from "@router";
 
 const Login = lazy(() => import("@pages/login"));
 const Register = lazy(() => import("@pages/register"));
@@ -22,11 +23,19 @@ const router = createBrowserRouter([
 	},
 	{
 		path: "/login",
-		element: <Login />,
+		element: (
+			<UnauthenticatedRoute>
+				<Login />
+			</UnauthenticatedRoute>
+		),
 	},
 	{
 		path: "/register",
-		element: <Register />,
+		element: (
+			<UnauthenticatedRoute>
+				<Register />
+			</UnauthenticatedRoute>
+		),
 	},
 	{
 		path: "/404",

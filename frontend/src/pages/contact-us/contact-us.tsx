@@ -1,18 +1,17 @@
 //****************************************************************All imports go here!***************************************************************
-import Button from "@components/button";
-import { Box, Grid, Typography } from "@mui/material";
-import "./contact-us.scss";
-import PhoneIcon from "@mui/icons-material/Phone";
-import { ChangeEvent, FormEvent, useState } from "react";
-import { AxiosError } from "axios";
 import api, { Routes } from "@api";
 import { CustomInput } from "@components";
+import Button from "@components/button";
 import { useAlert } from "@hooks";
-import { IError, IResponse, ISuccess } from "@types";
-import Constants from "@constants";
 import { Email } from "@mui/icons-material";
+import PhoneIcon from "@mui/icons-material/Phone";
+import { Grid, Typography } from "@mui/material";
 import { useAppSelector } from "@redux/hooks";
+import { IError, IResponse, ISuccess } from "@types";
+import { AxiosError } from "axios";
+import { ChangeEvent, useState } from "react";
 import Swal from "sweetalert2";
+import "./contact-us.scss";
 
 //****************************************************************All imports ends here!***************************************************************
 
@@ -83,7 +82,7 @@ const ContactUs = () => {
 	};
 
 	return (
-		<Grid container>
+		<Grid container className='d-center'>
 			<Grid container className='contact-us-container'>
 				<Grid item xs={12} sm={12} md={6}>
 					<Typography variant='h2'>Contact Us</Typography>
@@ -96,13 +95,21 @@ const ContactUs = () => {
 				}}
 			>
 				<Grid container className='input-container d-center'>
-					<Grid item xs={12} sm={12} md={6} className='input-items'>
-						<Grid container className='input'>
+					<Grid
+						item
+						xs={12}
+						sm={10}
+						md={6}
+						xl={4}
+						className='input-items'
+					>
+						<Grid container className='input d-center'>
 							<Grid
 								item
 								xs={12}
 								display='flex'
 								flexDirection='column'
+								className='w-100'
 							>
 								<Typography>Full Name</Typography>
 								<CustomInput
@@ -120,6 +127,7 @@ const ContactUs = () => {
 								xs={12}
 								display='flex'
 								flexDirection='column'
+								className='w-100'
 							>
 								<Typography>Email Address</Typography>
 								<CustomInput
@@ -140,6 +148,7 @@ const ContactUs = () => {
 								xs={12}
 								display='flex'
 								flexDirection='column'
+								className='w-100'
 							>
 								<Typography>Phone Number</Typography>
 								<CustomInput
@@ -163,6 +172,7 @@ const ContactUs = () => {
 								xs={12}
 								display='flex'
 								flexDirection='column'
+								className='w-100'
 							>
 								<Typography>Subject</Typography>
 								<CustomInput
@@ -179,6 +189,7 @@ const ContactUs = () => {
 								xs={12}
 								display='flex'
 								flexDirection='column'
+								className='w-100'
 							>
 								<Typography>Your Message</Typography>
 								<textarea
@@ -188,70 +199,79 @@ const ContactUs = () => {
 									name='message'
 								/>
 							</Grid>
-							<Grid
-								item
-								xs={12}
-								display='flex'
-								flexDirection='column'
-							>
-								<Button
-									style={{
-										width: "20rem",
-										marginBottom: "20px",
-										border: "none",
-									}}
-									title='SUBMIT NOW'
-									type='submit'
-								/>
-							</Grid>
-							<Grid
-								item
-								xs={12}
-								display='flex'
-								flexDirection='column'
-								className='call-button'
-								mb={2}
-							>
-								<a
-									href={`tel:${
-										prefs?.find((v) => v.field === "phone")
-											?.value
-									}`}
-								>
-									<Grid container className='call-us'>
-										<PhoneIcon />
-										Call On:{" "}
-										{
-											prefs?.find(
-												(v) => v.field === "phone"
-											)?.value
-										}
+							<Grid item xs={12} sm={8}>
+								<Grid container>
+									<Grid
+										item
+										xs={12}
+										flexDirection='column'
+										className='d-center w-100'
+									>
+										<Button
+											style={{
+												marginBottom: "20px",
+												border: "none",
+												width: "100%",
+												textAlign: "center",
+											}}
+											title='SUBMIT NOW'
+											type='submit'
+										/>
 									</Grid>
-								</a>
-							</Grid>
-							<Grid
-								item
-								xs={12}
-								display='flex'
-								flexDirection='column'
-								className='call-button'
-							>
-								<a
-									href={`mailto:${
-										prefs?.find((v) => v.field === "email")
-											?.value
-									}`}
-								>
-									<Grid container className='call-us'>
-										<Email />
-										Email:{" "}
-										{
-											prefs?.find(
-												(v) => v.field === "email"
-											)?.value
-										}
+									<Grid
+										item
+										xs={12}
+										display='flex'
+										flexDirection='column'
+										className='call-button'
+										mb={2}
+									>
+										<a
+											href={`tel:${
+												prefs?.find(
+													(v) => v.field === "phone"
+												)?.value
+											}`}
+										>
+											<Grid container className='call-us'>
+												<PhoneIcon />
+												Call On:{" "}
+												{
+													prefs?.find(
+														(v) =>
+															v.field === "phone"
+													)?.value
+												}
+											</Grid>
+										</a>
 									</Grid>
-								</a>
+									<Grid
+										item
+										xs={12}
+										display='flex'
+										flexDirection='column'
+										className='call-button'
+									>
+										<a
+											href={`mailto:${
+												prefs?.find(
+													(v) => v.field === "email"
+												)?.value
+											}`}
+										>
+											<Grid container className='call-us'>
+												<Email />
+												Email:{" "}
+												{
+													prefs?.find(
+														(v) =>
+															v.field === "email"
+													)?.value
+												}
+											</Grid>
+										</a>
+									</Grid>
+								</Grid>
 							</Grid>
 						</Grid>
 					</Grid>

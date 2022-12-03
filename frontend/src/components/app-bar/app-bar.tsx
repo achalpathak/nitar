@@ -1,39 +1,27 @@
-import "./app-bar.scss";
-import { useState } from "react";
-import {
-	Grid,
-	IconButton,
-	Tooltip,
-	AppBar as MuiAppBar,
-	Toolbar,
-	Box,
-	List,
-	ListItem,
-	ListItemButton,
-	ListItemText,
-	Divider,
-	SwipeableDrawer,
-	Typography,
-} from "@mui/material";
-import AsyncSelect from "react-select/async";
-import makeAnimated from "react-select/animated";
+import api, { Routes } from "@api";
 import { AndroidLogo, AppleLogo, LogoText } from "@assets";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { SearchOutlined, Close, Menu } from "@mui/icons-material";
+import { useAlert } from "@hooks";
+import { Close, Menu, SearchOutlined } from "@mui/icons-material";
 import {
-	ICategoryItem,
-	ICustomSelectOption,
-	IRoutes,
-	ISearchResult,
-	ISuccess,
+    AppBar as MuiAppBar, Box, Divider, IconButton, List,
+    ListItem,
+    ListItemButton,
+    ListItemText, SwipeableDrawer, Toolbar, Tooltip, Typography
+} from "@mui/material";
+import Actions from "@redux/actions";
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import {
+    IRoutes,
+    ISearchResult,
+    ISuccess
 } from "@types";
 import { CustomSelectUtils } from "@utils";
-import { useAppDispatch, useAppSelector } from "@redux/hooks";
-import { components } from "react-select";
-import axios, { AxiosError } from "axios";
-import api, { Routes } from "@api";
-import Actions from "@redux/actions";
-import { useAlert } from "@hooks";
+import { AxiosError } from "axios";
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import makeAnimated from "react-select/animated";
+import AsyncSelect from "react-select/async";
+import "./app-bar.scss";
 
 const routes: IRoutes[] = [
 	{

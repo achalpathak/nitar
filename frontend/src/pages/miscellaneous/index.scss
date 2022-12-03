@@ -216,6 +216,8 @@
 	width: 20rem;
 	border: var(--website-secondary-color) 1px solid;
 	position: relative;
+	text-align: center;
+
 	&:hover {
 		box-shadow: 1px 1px 10px 1px var(--website-secondary-color);
 	}
@@ -250,6 +252,7 @@
 	align-items: center;
 	justify-content: center;
 	flex-direction: column !important;
+	text-align: center;
 }
 .call-us {
 	display: flex;
