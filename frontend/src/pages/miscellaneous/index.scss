@@ -21,7 +21,7 @@
 	height: fit-content;
 }
 .main-container {
-	height: 100vh;
+	min-height: 100vh;
 	width: 100vw;
 	display: flex;
 	align-items: center;
@@ -53,8 +53,12 @@
 
 	div {
 		&.dynamic {
+			margin-top: 2rem;
 			display: flex;
 			flex-direction: column;
+			padding-left: 2rem;
+			padding-right: 2rem;
+			text-align: center;
 
 			* {
 				width: 80vw;

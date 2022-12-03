@@ -19,7 +19,7 @@
 	// 	radial-gradient(at 0% 0%, hsla(343, 100%, 76%, 1) 0px, transparent 50%);
 }
 .main-container {
-	height: 100vh;
+	min-height: 100vh;
 	width: 100vw;
 	display: flex;
 	align-items: center;
