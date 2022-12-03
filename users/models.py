@@ -11,9 +11,11 @@ from django.utils import timezone
 from datetime import timedelta
 import json
 
-PHONE_CODE_CHOICES = [(c['code'],c['code']) for i,c in enumerate(json.loads(open(
-            "./settings/phone_code.json"
-        ).read()))]
+PHONE_CODE_CHOICES = [
+    (c["code"], c["code"])
+    for i, c in enumerate(json.loads(open("./settings/phone_code.json").read()))
+]
+
 
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
@@ -40,6 +42,7 @@ class UserManager(BaseUserManager):
         """Create and save a SuperUser with the given email and password."""
         extra_fields.setdefault("full_name", "Admin Website")
         extra_fields.setdefault("phone", "0123456789")
+        extra_fields.setdefault("phone_code", "+91")
         extra_fields.setdefault("phone_verified", True)
         extra_fields.setdefault("age_above_18", True)
         extra_fields.setdefault("terms_conditions_agreed", True)
@@ -74,7 +77,9 @@ class User(AbstractUser, TimeStampedModel):
     age_above_18 = models.BooleanField(default=False)
     terms_conditions_agreed = models.BooleanField(default=False)
     email_verified = models.BooleanField(default=False)
-    phone_code = models.CharField(max_length=10,default="+91",choices=PHONE_CODE_CHOICES)
+    phone_code = models.CharField(
+        max_length=10, default="+91", choices=PHONE_CODE_CHOICES
+    )
     phone_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
 
@@ -106,10 +111,13 @@ class LoginPhoneOtp(TimeStampedModel):
     class Meta:
         verbose_name_plural = "OTPs"
 
+
 CONTACT_US_CHOICES = [
     ("Open", "Open"),
     ("Issue Resolved", "Issue Resolved"),
 ]
+
+
 class ContactUs(TimeStampedModel):
     full_name = models.CharField(max_length=30, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)

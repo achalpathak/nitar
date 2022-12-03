@@ -72,7 +72,6 @@ class UserMembershipAdmin(admin.ModelAdmin):
         "expiry_at",
     )
     search_fields = ["user__full_name", "user__phone", "user__email"]
-    # raw_id_fields = ["user"]
     autocomplete_fields = ["user"]
 
     def get_name(self, obj):
