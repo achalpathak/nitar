@@ -355,8 +355,16 @@ const MovieDetails = (props: any) => {
 							onChange={(item) => {
 								if (item?.membership_required === false) {
 									//PLaying video for every user
-									setCurrentlyPlaying(item);
-									setPlaying(true);
+									if (item?.video_link) {
+										setCurrentlyPlaying(item);
+										setPlaying(true);
+									} else {
+										Swal.fire({
+											title: "Video is not available",
+											text: "Please contact admin",
+											icon: "warning",
+										});
+									}
 								} else {
 									if (Object.hasOwn(item, "video_link")) {
 										//Membership is available, video can be played
@@ -437,8 +445,15 @@ const MovieDetails = (props: any) => {
 									currentlyPlaying?.membership_required ===
 									false
 								) {
-									//PLaying video for every user
-									setPlaying(true);
+									if (currentlyPlaying?.video_link) {
+										setPlaying(true);
+									} else {
+										Swal.fire({
+											title: "Video is not available",
+											text: "Please contact admin",
+											icon: "warning",
+										});
+									}
 								} else {
 									if (
 										Object.hasOwn(
