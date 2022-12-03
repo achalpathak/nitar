@@ -1,4 +1,3 @@
-import { BASE_URL } from "@api";
 import LeftRightButton from "@components/left-right-button";
 import { Grid, Typography } from "@mui/material";
 import { ICategory, IEpisodes } from "@types";
@@ -125,11 +124,6 @@ const EpisodesList: FC<IEpisodes> = ({
 									className={`movie-card ${poster_type}`}
 									style={{
 										...style,
-										// backgroundImage: `url(${
-										// 	BASE_URL?.includes("localhost")
-										// 		? BASE_URL
-										// 		: ""
-										// }${img?.[poster_type]})`,
 										backgroundImage: `url(${img?.[poster_type]})`,
 									}}
 									data-episode-name={img?.name}

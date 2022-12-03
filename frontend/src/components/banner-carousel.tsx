@@ -1,4 +1,4 @@
-import api, { BASE_URL, Routes } from "@api";
+import api, { Routes } from "@api";
 import { ChevronLeftOutlined, ChevronRightOutlined } from "@mui/icons-material";
 import { Grid } from "@mui/material";
 import { IBanners, IMovieItem, ISuccess } from "@types";
@@ -62,7 +62,7 @@ const BannerCarousel: FC = () => {
 							style={{
 								width: 40,
 								height: 40,
-								color: "white",
+								color: "var(--website-secondary-color)",
 							}}
 						/>
 					}
@@ -71,7 +71,7 @@ const BannerCarousel: FC = () => {
 							style={{
 								width: 40,
 								height: 40,
-								color: "white",
+								color: "var(--website-secondary-color)",
 							}}
 						/>
 					}
@@ -79,11 +79,7 @@ const BannerCarousel: FC = () => {
 					{banner?.poster_banner?.map((item, index) => (
 						<div className='slider-content d-center'>
 							<a
-								href={
-									item?.url_type === "EXTERNAL"
-										? item?.url
-										: `/movies/${item?.url}`
-								}
+								href={item?.url}
 								style={{
 									height: "100%",
 									width: "100%",
@@ -99,19 +95,11 @@ const BannerCarousel: FC = () => {
 								>
 									<source
 										media='(max-width: 500px)'
-										src={`${
-											BASE_URL?.includes("localhost")
-												? BASE_URL
-												: ""
-										}${item?.mobile_banner}`}
+										src={`${item?.mobile_banner}`}
 									/>
 									<img
 										key={index}
-										src={`${
-											BASE_URL?.includes("localhost")
-												? BASE_URL
-												: ""
-										}${item?.website_banner}`}
+										src={`${item?.website_banner}`}
 										alt={item?.banner_type}
 										loading='lazy'
 										style={{

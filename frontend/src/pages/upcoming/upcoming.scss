@@ -10,7 +10,7 @@
 	}
 
 	a {
-		color: white;
+		color: var(--website-secondary-color);
 		height: 100%;
 		width: 100%;
 	}
@@ -75,7 +75,7 @@
 
 			.view-details {
 				border: 1px solid var(--website-primary-color);
-				color: white;
+				color: var(--website-secondary-color);
 				background-color: var(--website-primary-color);
 				padding: 5px 8px;
 				border-radius: 5px;

@@ -63,7 +63,7 @@
 	flex-direction: column;
 
 	label {
-		color: white;
+		color: var(--website-secondary-color);
 		font-weight: bold;
 		font-size: medium;
 		text-align: center;
@@ -73,7 +73,7 @@
 	input {
 		height: 2.5rem;
 		width: 20rem;
-		color: white;
+		color: var(--website-secondary-color);
 		border-radius: 5px;
 		border: 0.5px solid var(--website-primary-color);
 		margin-top: 15px;
@@ -110,7 +110,7 @@
 .cancel-btn:hover {
 	box-shadow: 1px 1px 10px 1px var(--website-primary-color);
 	svg {
-		color: white;
+		color: var(--website-secondary-color);
 	}
 }
 
@@ -181,4 +181,11 @@
 	.custom-label {
 		width: 18rem;
 	}
+}
+
+#country {
+	width: 22rem;
+	border: 0.5px solid var(--website-primary-color);
+	border-radius: 5px;
+	margin-top: 1rem;
 }

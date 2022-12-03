@@ -34,19 +34,23 @@
 	.plans-card-items {
 		h5 {
 			font-family: "Playfair Display";
+			color: var(--website-secondary-color);
 		}
 		div {
 			font-size: 2rem;
 			font-weight: bold;
 			font-family: "Inter";
+			color: var(--website-secondary-color);
 		}
 		span {
 			font-size: 1rem;
 			font-family: "Inter";
+			color: var(--website-secondary-color);
 		}
 		svg {
 			font-size: 2rem;
 			font-weight: bold;
+			color: var(--website-secondary-color);
 		}
 	}
 	.plans-card-list {
@@ -58,6 +62,7 @@
 				display: flex;
 				// align-items: center;
 				line-height: 2rem;
+				color: var(--website-secondary-color);
 				svg {
 					padding-right: 5px;
 					padding-top: 5px;
@@ -92,7 +97,7 @@ button {
 		font-family: sans-serif;
 		text-align: center;
 		transform: translateY(-100%);
-		background-color: black;
+		background-color: var(--website-alternate-color);
 		display: inline-block;
 		padding: 0px 15px;
 	}
@@ -102,7 +107,7 @@ button {
 		transform: translateY(85%);
 		background-color: var(--website-primary-color);
 		display: inline-block;
-		color: white;
+		color: var(--website-secondary-color);
 	}
 	span {
 		padding: 20px;

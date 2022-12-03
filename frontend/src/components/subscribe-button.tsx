@@ -7,9 +7,14 @@ import { ISuccess } from "@types";
 import api, { Routes } from "@api";
 import { useAlert } from "@hooks";
 import Constants from "@constants";
+import Swal from "sweetalert2";
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import Actions from "@redux/actions";
 
 const SubscribeButton = () => {
+	const dispatch = useAppDispatch();
 	const showAlert = useAlert();
+	const user = useAppSelector((state) => state.user);
 
 	const [email, setEmail] = useState<string>("");
 
@@ -35,7 +40,20 @@ const SubscribeButton = () => {
 			);
 
 			if (res.status === 200) {
-				showAlert("success", "Success", res.data?.result);
+				// showAlert("success", "Success", res.data?.result);
+				Swal.fire({
+					title: "Success",
+					text: res.data?.result,
+					icon: "success",
+				});
+
+				dispatch({
+					type: Actions.LOGIN,
+					payload: {
+						...user,
+						newsletter_subscribed: true,
+					},
+				});
 			}
 		} catch (error) {
 			const err = error as AxiosError<ISuccess>;

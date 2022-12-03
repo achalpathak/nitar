@@ -42,10 +42,10 @@
 		align-items: center;
 		justify-content: space-between;
 		width: 100%;
-		color: white;
+		color: var(--website-secondary-color);
 		cursor: pointer;
 		&:hover {
-			color: white;
+			color: var(--website-secondary-color);
 		}
 	}
 	p {
@@ -53,8 +53,12 @@
 	}
 	svg {
 		color: var(--website-primary-color);
-		background-color: white;
+		background-color: var(--website-secondary-color);
 		border-radius: 50%;
+	}
+
+	input {
+		color: var(--website-secondary-color);
 	}
 
 	.MuiGrid-container {

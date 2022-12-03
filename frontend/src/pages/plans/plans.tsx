@@ -2,7 +2,7 @@
 import Button from "@components/button";
 import { Box, Grid, Typography } from "@mui/material";
 import "./plans.scss";
-import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+import { AttachMoney, CurrencyRupee } from "@mui/icons-material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import SubscribeButton from "@components/subscribe-button";
@@ -74,8 +74,17 @@ const Plans = () => {
 									{d?.name}
 								</Typography>
 								<Box>
-									<CurrencyRupeeIcon />
-									{d?.price_in_inr}
+									{d?.price_in_inr ? (
+										<>
+											<CurrencyRupee />
+											{d?.price_in_inr}
+										</>
+									) : d?.price_in_dollar ? (
+										<>
+											<AttachMoney />
+											{d?.price_in_dollar}
+										</>
+									) : null}
 									<span> / {d?.validity_in_days} days</span>
 								</Box>
 							</Grid>
@@ -107,7 +116,13 @@ const Plans = () => {
 					<div>
 						<Typography variant='h5'>Information</Typography>
 					</div>
-					<span>{pay_description}</span>
+					<span
+						style={{
+							color: "var(--website-secondary-color)",
+						}}
+					>
+						{pay_description}
+					</span>
 					<Grid item className='contact-us-btn'>
 						<Button
 							title='Contact us'

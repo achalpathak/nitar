@@ -11,7 +11,7 @@ const customStyles = <
 	option: (provided) => ({
 		...provided,
 		borderBottom: "rgba(255, 255, 255, 0.5) 1px solid",
-		color: "white",
+		color: "var(--website-secondary-color)",
 		backgroundColor: "#2a2b36",
 		fontSize: "0.8rem",
 		":hover": {
@@ -24,28 +24,28 @@ const customStyles = <
 		display: "flex",
 		backgroundColor: "rgba(255, 255, 255, 0.05)",
 		borderRadius: 5,
-		color: "white",
+		color: "var(--website-secondary-color)",
 	}),
 	singleValue: (provided, state) => {
 		const opacity = state.isDisabled ? 0.5 : 1;
 		const transition = "opacity 300ms";
-		const color = "white";
+		const color = "var(--website-secondary-color)";
 		const fontSize = "0.8rem";
 
 		return { ...provided, opacity, transition, color, fontSize };
 	},
 	multiValue: (styles) => ({
 		...styles,
-		color: "white",
+		color: "var(--website-secondary-color)",
 		backgroundColor: "#2a2b36",
 	}),
 	multiValueLabel: (styles) => ({
 		...styles,
-		color: "white",
+		color: "var(--website-secondary-color)",
 	}),
 	input: (styles) => ({
 		...styles,
-		color: "white",
+		color: "var(--website-secondary-color)",
 	}),
 });
 

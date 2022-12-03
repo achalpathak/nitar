@@ -1,4 +1,3 @@
-import { BASE_URL } from "@api";
 import LeftRightButton from "@components/left-right-button";
 import { Grid, Typography } from "@mui/material";
 import { ICategory } from "@types";
@@ -69,6 +68,7 @@ const MovieList: FC<ICategory> = ({ name, poster_type, data }) => {
 									fontWeight='500'
 									textTransform='uppercase'
 									ml={1}
+									color='var(--website-secondary-color)'
 								>
 									{name}
 								</Typography>
@@ -113,11 +113,7 @@ const MovieList: FC<ICategory> = ({ name, poster_type, data }) => {
 									className={`movie-card ${poster_type}`}
 									style={{
 										...style,
-										backgroundImage: `url(${
-											BASE_URL?.includes("localhost")
-												? BASE_URL
-												: ""
-										}${img?.[poster_type]})`,
+										backgroundImage: `url(${img?.[poster_type]})`,
 									}}
 									data-movie-name={img?.name}
 								/>

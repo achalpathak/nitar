@@ -31,7 +31,7 @@ import { CustomSelectUtils } from "@utils";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import { components } from "react-select";
 import axios, { AxiosError } from "axios";
-import api, { BASE_URL, Routes } from "@api";
+import api, { Routes } from "@api";
 import Actions from "@redux/actions";
 import { useAlert } from "@hooks";
 
@@ -54,7 +54,7 @@ const routes: IRoutes[] = [
 	},
 ];
 
-const routesMobile = routes?.concat([
+const routesMobileUnauth = routes?.concat([
 	{
 		title: "Login",
 		path: "/login",
@@ -62,6 +62,17 @@ const routesMobile = routes?.concat([
 	{
 		title: "Register",
 		path: "/register",
+	},
+	{
+		title: "Logout",
+		path: "/logout",
+	},
+]);
+
+const routesMobileAuth = routes?.concat([
+	{
+		title: "Logout",
+		path: "/logout",
 	},
 ]);
 
@@ -145,21 +156,45 @@ const AppBar = () => {
 			<Divider />
 			<Box className='d-center'>
 				<List>
-					{routesMobile.map((item) => (
-						<ListItem key={item.title} disablePadding>
-							<ListItemButton
-								sx={{
-									textAlign: "left",
-								}}
-								onClickCapture={(e) => {
-									e.preventDefault;
-									navigate(item?.path);
-								}}
-							>
-								<ListItemText primary={item.title} />
-							</ListItemButton>
-						</ListItem>
-					))}
+					{user?.full_name
+						? routesMobileAuth.map((item) => (
+								<ListItem key={item.title} disablePadding>
+									<ListItemButton
+										sx={{
+											textAlign: "left",
+										}}
+										onClickCapture={(e) => {
+											e.preventDefault;
+											if (item?.path === "/logout") {
+												logout();
+											} else {
+												navigate(item?.path);
+											}
+										}}
+									>
+										<ListItemText primary={item.title} />
+									</ListItemButton>
+								</ListItem>
+						  ))
+						: routesMobileUnauth.map((item) => (
+								<ListItem key={item.title} disablePadding>
+									<ListItemButton
+										sx={{
+											textAlign: "left",
+										}}
+										onClickCapture={(e) => {
+											e.preventDefault;
+											if (item?.path === "/logout") {
+												logout();
+											} else {
+												navigate(item?.path);
+											}
+										}}
+									>
+										<ListItemText primary={item.title} />
+									</ListItemButton>
+								</ListItem>
+						  ))}
 				</List>
 			</Box>
 		</Box>
@@ -172,11 +207,7 @@ const AppBar = () => {
 					<Box height='100px' width='500px' mr={1}>
 						<picture>
 							<img
-								src={`${
-									BASE_URL?.includes("localhost")
-										? BASE_URL
-										: ""
-								}/media/${v?.poster_small_vertical_image}`}
+								src={`/media/${v?.poster_small_vertical_image}`}
 								style={{
 									height: "100%",
 									width: "100%",
@@ -343,6 +374,9 @@ const AppBar = () => {
 									styles={CustomSelectUtils.customStyles()}
 									formatOptionLabel={formatOptionLabel}
 									placeholder='Search...'
+									noOptionsMessage={() => (
+										<div>No results found</div>
+									)}
 									isClearable={false}
 								/>
 								<Tooltip title='Close Search'>
@@ -352,7 +386,7 @@ const AppBar = () => {
 											setSearching(false);
 										}}
 										style={{
-											color: "white",
+											color: "var(--website-secondary-color)",
 										}}
 									>
 										<Close />
@@ -370,66 +404,71 @@ const AppBar = () => {
 										setSearching(true);
 									}}
 									style={{
-										color: "white",
+										color: "var(--website-secondary-color)",
 									}}
 								>
 									<SearchOutlined />
 								</IconButton>
 							</Box>
-							{!user?.full_name ? (
-								<Box
-									mr={2}
-									sx={{
-										display: {
-											xs: "none",
-											sm: "flex",
-										},
-									}}
-								>
-									<Link to='/login' className='login-btn'>
-										Login
-									</Link>
-								</Box>
-							) : (
-								<>
+							{!isSearching ? (
+								!user?.full_name ? (
 									<Box
 										mr={2}
 										sx={{
-											display: "flex",
+											display: {
+												xs: "none",
+												sm: "flex",
+											},
 										}}
 									>
-										<Typography mr={2}>
-											Welcome
-											<Typography color='var(--website-primary-color)'>
-												{user?.full_name}
-											</Typography>
-										</Typography>
-										<a
-											href='#'
-											className='login-btn'
-											onClickCapture={(e) => {
-												e.preventDefault();
-												logout();
+										<Link to='/login' className='login-btn'>
+											Login
+										</Link>
+									</Box>
+								) : (
+									<>
+										<Box
+											mr={2}
+											sx={{
+												display: "flex",
 											}}
 										>
-											Logout
-										</a>
-									</Box>
-								</>
-							)}
-
-							{/* <Box
-								sx={{
-									display: {
-										xs: "none",
-										sm: "flex",
-									},
-								}}
-							>
-								<Link to='/register' className='login-btn'>
-									Register
-								</Link>
-							</Box> */}
+											<Typography>
+												Welcome
+												<Typography color='var(--website-primary-color)'>
+													{user?.full_name?.includes(
+														" "
+													)
+														? user?.full_name?.split(
+																" "
+														  )[0]
+														: user?.full_name}
+												</Typography>
+											</Typography>
+											<Box
+												ml={2}
+												sx={{
+													display: {
+														xs: "none",
+														sm: "flex",
+													},
+												}}
+											>
+												<a
+													href='#'
+													className='login-btn'
+													onClickCapture={(e) => {
+														e.preventDefault();
+														logout();
+													}}
+												>
+													Logout
+												</a>
+											</Box>
+										</Box>
+									</>
+								)
+							) : null}
 						</Box>
 					</Toolbar>
 				</MuiAppBar>
@@ -462,153 +501,6 @@ const AppBar = () => {
 			</Box>
 		</>
 	);
-
-	// return (
-	// 	<>
-	// 		<Grid
-	// 			container
-	// 			my={2}
-	// 			className='app-bar-container'
-	// 			display='flex'
-	// 			justifyContent='space-between'
-	// 			px={3}
-	// 		>
-	// 			<Grid item xs={12} md={2} display='flex' mb={{ xs: 2, md: 0 }}>
-	// 				<LogoText height={30} />
-	// 			</Grid>
-	// 			<Grid item xs={12} md={10} display='flex'>
-	// 				<Grid
-	// 					container
-	// 					display={{ xs: "none", md: "flex" }}
-	// 					className='routes'
-	// 				>
-	// 					{routes?.map(({ title, path }) => (
-	// 						<Grid
-	// 							key={title}
-	// 							item
-	// 							mr={4}
-	// 							className={`${
-	// 								location.pathname === path ? "active" : ""
-	// 							} nav-item`}
-	// 						>
-	// 							<Link to={path}>{title}</Link>
-	// 						</Grid>
-	// 					))}
-
-	// 					<Grid item mr={4}>
-	// 						<Grid container>
-	// 							<Grid item mr={2}>
-	// 								<a
-	// 									href='https://play.google.com/store/apps/details?id=com.netflix.mediaclient'
-	// 									target='_blank'
-	// 								>
-	// 									<AndroidLogo height={20} />
-	// 								</a>
-	// 							</Grid>
-	// 							<Grid item mr={2}>
-	// 								<a
-	// 									href='https://apps.apple.com/in/app/netflix/id363590051'
-	// 									target='_blank'
-	// 								>
-	// 									<AppleLogo height={20} color='white' />
-	// 								</a>
-	// 							</Grid>
-	// 							<Grid
-	// 								item
-	// 								className={`search-select ${
-	// 									isSearching ? "searching" : ""
-	// 								}`}
-	// 							>
-	// 								<Grid container>
-	// 									<Grid item>
-	// 										<AsyncCreatable<
-	// 											ICustomSelectOption,
-	// 											false
-	// 										>
-	// 											name='search'
-	// 											className='w-200'
-	// 											closeMenuOnSelect
-	// 											components={{
-	// 												DropdownIndicator: null,
-	// 											}}
-	// 											isSearchable
-	// 											value={
-	// 												(search ?? "") !== ""
-	// 													? CustomSelectUtils.getDefaultValue(
-	// 															search
-	// 													  )
-	// 													: undefined
-	// 											}
-	// 											onChange={(e) => {
-	// 												setSearch(e?.value ?? "");
-	// 											}}
-	// 											loadOptions={loadSuggestions}
-	// 											defaultOptions
-	// 											styles={CustomSelectUtils.customStyles()}
-	// 											placeholder='Search...'
-	// 											onKeyDown={(e) => {
-	// 												if (!search) return;
-
-	// 												if (e.key === "Enter") {
-	// 													//Search movie
-	// 													console.log(
-	// 														"Searching"
-	// 													);
-	// 												}
-	// 											}}
-	// 											menuIsOpen={false}
-	// 										/>
-	// 									</Grid>
-	// 									<Grid item>
-	// 										<Tooltip title='Close Search'>
-	// 											<IconButton
-	// 												className='custom-btn'
-	// 												onClickCapture={(e) => {
-	// 													setIsSearching(false);
-	// 												}}
-	// 												style={{
-	// 													color: "white",
-	// 												}}
-	// 											>
-	// 												<Close />
-	// 											</IconButton>
-	// 										</Tooltip>
-	// 									</Grid>
-	// 								</Grid>
-	// 							</Grid>
-	// 							<Grid
-	// 								item
-	// 								className={`search-icon ${
-	// 									isSearching ? "searching" : ""
-	// 								}`}
-	// 							>
-	// 								<a
-	// 									href='#'
-	// 									onClickCapture={(e) => {
-	// 										e.preventDefault();
-	// 										setIsSearching(true);
-	// 									}}
-	// 								>
-	// 									<SearchOutlined />
-	// 								</a>
-	// 							</Grid>
-	// 						</Grid>
-	// 					</Grid>
-	// 					<Grid item mr={2}>
-	// 						<Link to='/login' className='login-btn'>
-	// 							Login
-	// 						</Link>
-	// 					</Grid>
-	// 					<Grid item>
-	// 						<Link to='/register' className='login-btn'>
-	// 							Register
-	// 						</Link>
-	// 					</Grid>
-	// 				</Grid>
-	// 			</Grid>
-	// 		</Grid>
-	// 	</>
-	// );
 };
 
 export default AppBar;
