@@ -12,15 +12,17 @@ import { IError, IResponse, ISuccess } from "@types";
 import Constants from "@constants";
 import { Email } from "@mui/icons-material";
 import { useAppSelector } from "@redux/hooks";
+import Swal from "sweetalert2";
 
 //****************************************************************All imports ends here!***************************************************************
 
 const ContactUs = () => {
 	const showAlert = useAlert();
 	const prefs = useAppSelector((state) => state.preferences);
+	const user = useAppSelector((state) => state.user);
 
-	const [email, setEmail] = useState<string>("");
-	const [phone, setPhone] = useState<string>("");
+	const [email, setEmail] = useState<string>(user?.email ?? "");
+	const [phone, setPhone] = useState<string>(user?.phone ?? "");
 
 	const [errors, setErrors] = useState<IError>({
 		full_name: [],
@@ -59,7 +61,15 @@ const ContactUs = () => {
 			});
 
 			if (res.status === 200) {
-				showAlert("success", "Success", res.data?.message);
+				const msg =
+					prefs.find((v) => v.field === "contact_us_message")
+						?.value ?? res.data?.message;
+
+				Swal.fire({
+					title: "Success",
+					text: msg,
+					icon: "success",
+				});
 			}
 		} catch (error) {
 			const err = error as AxiosError<IResponse>;
@@ -102,6 +112,7 @@ const ContactUs = () => {
 									type='text'
 									name='full_name'
 									errors={errors?.full_name}
+									defaultValue={user?.full_name ?? ""}
 								/>
 							</Grid>
 							<Grid
