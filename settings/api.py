@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from . import models as settings_models
 from django.db.models import Q
 from . import serializers
+from django_countries import countries
 
 
 class WebsiteConfigSettingsAPI(APIView):
@@ -20,11 +21,11 @@ class WebsiteConfigSettingsAPI(APIView):
             "favicon_url",
             "play_store_link",
             "apple_store_link",
-            'pay_description',
-            'facebook',
-            'twitter',
-            'youtube',
-            'instagram',
+            "pay_description",
+            "facebook",
+            "twitter",
+            "youtube",
+            "instagram",
             "email",
             "phone",
         ]
@@ -58,3 +59,11 @@ class RefundPolicy(APIView):
     def get(self, request):
         refund_obj = settings_models.Settings.objects.get(field="refund_policy")
         return Response({"message": refund_obj.value})
+
+
+class CountriesAPI(APIView):
+    def get(self, request):
+        data = []
+        for code, name in list(countries):
+            data.append({"code": code, "name": name})
+        return Response({"result": data})

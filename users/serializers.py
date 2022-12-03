@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+
+from library import utils
 from . import models as user_models
 from django.db import transaction
 
@@ -14,6 +16,7 @@ class RegisterUserSerializer(serializers.Serializer):
     full_name = serializers.CharField(max_length=30, required=True)
     email = serializers.EmailField(required=False)
     age_above_18 = serializers.BooleanField(required=True)
+    country = serializers.CharField(required=True)
     terms_conditions_agreed = serializers.BooleanField(required=True)
 
     def validate_phone(self, phone):
@@ -89,6 +92,14 @@ class MembershipFeaturesSerializers(serializers.ModelSerializer):
 
 class PlansSerializer(serializers.ModelSerializer):
     get_membership_features = serializers.JSONField()
+
+    def to_representation(self, obj):
+        ret = super(PlansSerializer, self).to_representation(obj)
+        if utils.show_price_in_dollar(self.context.get("request", None).user, obj):
+            ret.pop("price_in_inr")
+        else:
+            ret.pop("price_in_dollar")
+        return ret
 
     class Meta:
         model = user_models.Memberships

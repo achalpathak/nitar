@@ -53,3 +53,13 @@ def check_user_logged_in_and_has_membership(user_obj, data):
             return True
     except AttributeError:  # it will be raised since Anonymous user doesnt have membership
         return False
+
+
+def show_price_in_dollar(user_obj, data):
+    try:
+        if user_obj.country.code == "IN":
+            return False
+        else:
+            return True
+    except AttributeError:  # default inr price will be shown
+        return False

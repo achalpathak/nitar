@@ -9,6 +9,7 @@ from django.dispatch import receiver
 from django.db.models import signals
 from django.utils import timezone
 from datetime import timedelta
+from django_countries.fields import CountryField
 
 
 class UserManager(BaseUserManager):
@@ -34,7 +35,11 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, password, **extra_fields):
         """Create and save a SuperUser with the given email and password."""
+        extra_fields.setdefault("full_name", "Admin Website")
+        extra_fields.setdefault("phone", "0123456789")
+        extra_fields.setdefault("phone_verified", True)
         extra_fields.setdefault("age_above_18", True)
+        extra_fields.setdefault("terms_conditions_agreed", True)
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)
@@ -66,6 +71,7 @@ class User(AbstractUser, TimeStampedModel):
     age_above_18 = models.BooleanField(default=False)
     terms_conditions_agreed = models.BooleanField(default=False)
     email_verified = models.BooleanField(default=False)
+    country = CountryField(default="IN")
     phone_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
 

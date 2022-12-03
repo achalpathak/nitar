@@ -37,13 +37,17 @@ class VerifyOTP(APIView):
             login(
                 request, user_obj, backend="django.contrib.auth.backends.ModelBackend"
             )
-            return Response({"result": {
-                "full_name": user_obj.full_name,
-                "email": user_obj.email,
-                "phone": user_obj.phone,
-                "email": user_obj.email,
-                "has_active_membership": user_obj.has_active_membership
-            }})
+            return Response(
+                {
+                    "result": {
+                        "full_name": user_obj.full_name,
+                        "email": user_obj.email,
+                        "phone": user_obj.phone,
+                        "email": user_obj.email,
+                        "has_active_membership": user_obj.has_active_membership,
+                    }
+                }
+            )
         return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -65,12 +69,14 @@ class PlansAPI(APIView):
             user_models.MembershipFeatures.objects.all().values_list("name", flat=True)
         )
         objs = user_models.Memberships.objects.filter(published=True)
-        serialized_data = self.serializer_class(objs, many=True)
+        serialized_data = self.serializer_class(
+            objs, context={"request": request}, many=True
+        )
         data = {"features": features_obj, "plans": serialized_data.data}
         return Response({"result": data})
-    
-class LogoutAPI(APIView):
 
+
+class LogoutAPI(APIView):
     def get(self, request):
         logout(request)
         return Response({"result": "User is logged out."})
