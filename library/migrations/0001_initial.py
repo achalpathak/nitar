@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
             "Shorts",
         ]
         for val in extra_category_data:
-            obj = ExtrasCategory(name=val)
+            obj = ExtrasCategory(name=val, published=True)
             obj.save()
 
     operations = [

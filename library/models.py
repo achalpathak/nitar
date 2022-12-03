@@ -27,6 +27,12 @@ URL_CHOICES = [
     (URL_DEFAULT, "EXTERNAL"),
 ]
 
+CONTENT_TYPE_CHOICES = [
+    ("MOVIES", "MOVIES"),
+    ("SERIES", "SERIES"),
+    ("EXTRAS", "EXTRAS"),
+]
+
 IMAGE_FILE_SIZE = 512  # size in kb
 ERROR_MSG = f"Max image size should be {IMAGE_FILE_SIZE} kB"
 
@@ -63,7 +69,7 @@ class Category(TimeStampedModel):
         default=POSTER_DEFAULT,
     )
     rankings = models.PositiveIntegerField(default=1)
-    published = models.BooleanField(default=False)
+    published = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -71,7 +77,12 @@ class Category(TimeStampedModel):
 
 class ExtrasCategory(TimeStampedModel):
     name = models.CharField(max_length=255, null=True, blank=True)
-    published = models.BooleanField(default=False)
+    poster_type = models.CharField(
+        max_length=50,
+        choices=POSTER_CHOICES,
+        default=POSTER_DEFAULT,
+    )
+    published = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -116,6 +127,11 @@ class Banner(TimeStampedModel):
         choices=URL_CHOICES,
         default=URL_DEFAULT,
     )
+    content_type = models.CharField(
+        max_length=25,
+        choices=CONTENT_TYPE_CHOICES,
+        default="MOVIES",
+    )
     published = models.BooleanField(default=True)
 
 
@@ -159,7 +175,7 @@ class Movies(TimeStampedModel):
     star_cast = models.CharField(max_length=255, null=True, blank=True)
     trailer_link = models.CharField(max_length=255, null=True, blank=True)
     genres = models.ManyToManyField(Geners)
-    published = models.BooleanField(default=False)
+    published = models.BooleanField(default=True)
     membership_required = models.BooleanField(default=True)
     slug = models.SlugField(null=True, unique=True)
 
@@ -211,7 +227,7 @@ class Series(TimeStampedModel):
     star_cast = models.CharField(max_length=255, null=True, blank=True)
     trailer_link = models.CharField(max_length=255, null=True, blank=True)
     genres = models.ManyToManyField(Geners)
-    published = models.BooleanField(default=False)
+    published = models.BooleanField(default=True)
     slug = models.SlugField(null=True, unique=True)
 
     @property
@@ -259,7 +275,7 @@ class Episodes(TimeStampedModel):
     membership_required = models.BooleanField(default=True)
     video_link = models.CharField(max_length=255, null=True, blank=True)
     slug = models.SlugField(null=True, unique=True)
-    published = models.BooleanField(default=False)
+    published = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.series.name} | {self.name} | Episode No={self.episode_number}"
@@ -334,7 +350,7 @@ class Extras(TimeStampedModel):
     video_link = models.CharField(max_length=255, null=True, blank=True)
     trailer_link = models.CharField(max_length=255, null=True, blank=True)
     genres = models.ManyToManyField(Geners)
-    published = models.BooleanField(default=False)
+    published = models.BooleanField(default=True)
     membership_required = models.BooleanField(default=True)
     slug = models.SlugField(null=True, unique=True)
     extras_category = models.ForeignKey(
@@ -390,7 +406,7 @@ class Upcoming(TimeStampedModel):
     trailer_link = models.CharField(max_length=255, null=True, blank=True)
     genres = models.ManyToManyField(Geners)
     slug = models.SlugField(null=True, unique=True)
-    published = models.BooleanField(default=False)
+    published = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name

@@ -16,7 +16,7 @@ class RegisterUserSerializer(serializers.Serializer):
     full_name = serializers.CharField(max_length=30, required=True)
     email = serializers.EmailField(required=False)
     age_above_18 = serializers.BooleanField(required=True)
-    country = serializers.CharField(required=True)
+    phone_code = serializers.CharField(required=True)
     terms_conditions_agreed = serializers.BooleanField(required=True)
 
     def validate_phone(self, phone):

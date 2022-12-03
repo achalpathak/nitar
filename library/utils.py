@@ -57,7 +57,7 @@ def check_user_logged_in_and_has_membership(user_obj, data):
 
 def show_price_in_dollar(user_obj, data):
     try:
-        if user_obj.country.code == "IN":
+        if user_obj.phone_code == "+91":
             return False
         else:
             return True

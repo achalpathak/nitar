@@ -9,7 +9,6 @@ from django.dispatch import receiver
 from django.db.models import signals
 from django.utils import timezone
 from datetime import timedelta
-from django_countries.fields import CountryField
 
 
 class UserManager(BaseUserManager):
@@ -71,7 +70,7 @@ class User(AbstractUser, TimeStampedModel):
     age_above_18 = models.BooleanField(default=False)
     terms_conditions_agreed = models.BooleanField(default=False)
     email_verified = models.BooleanField(default=False)
-    country = CountryField(default="IN")
+    phone_code = models.CharField(max_length=10,default="+91")
     phone_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
 

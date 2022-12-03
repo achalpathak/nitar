@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     "users",
     "settings",
     "library",
-    "django_countries",
     "django_cleanup.apps.CleanupConfig",  # should be placed as the last app
 ]
 

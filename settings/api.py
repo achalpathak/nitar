@@ -4,6 +4,7 @@ from . import models as settings_models
 from django.db.models import Q
 from . import serializers
 from django_countries import countries
+import json
 
 
 class WebsiteConfigSettingsAPI(APIView):
@@ -28,7 +29,7 @@ class WebsiteConfigSettingsAPI(APIView):
             "instagram",
             "email",
             "phone",
-            "contact_us_message"
+            "contact_us_message",
         ]
         q_objects = Q()
         for t in fields:
@@ -64,7 +65,8 @@ class RefundPolicy(APIView):
 
 class CountriesAPI(APIView):
     def get(self, request):
-        data = []
-        for code, name in list(countries):
-            data.append({"code": code, "name": name})
+        data = open(
+            "./settings/phone_code.json"
+        ).read()
+        data = json.loads(data)
         return Response({"result": data})
