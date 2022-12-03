@@ -103,7 +103,10 @@ class LoginPhoneOtp(TimeStampedModel):
     class Meta:
         verbose_name_plural = "OTPs"
 
-
+CONTACT_US_CHOICES = [
+    ("Open", "Open"),
+    ("Issue Resolved", "Issue Resolved"),
+]
 class ContactUs(TimeStampedModel):
     full_name = models.CharField(max_length=30, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
@@ -115,6 +118,11 @@ class ContactUs(TimeStampedModel):
     )
     subject = models.CharField(max_length=100, blank=True, null=True)
     message = models.TextField()
+    status = models.CharField(
+        max_length=50,
+        choices=CONTACT_US_CHOICES,
+        default="Open",
+    )
 
     def __str__(self):
         return f"{self.full_name} | {self.subject}"

@@ -64,7 +64,6 @@ class MembershipAdmin(admin.ModelAdmin):
 
 class UserMembershipAdmin(admin.ModelAdmin):
     list_display = (
-        "user",
         "get_name",
         "get_phone",
         "get_email",

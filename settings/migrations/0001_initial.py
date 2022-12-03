@@ -31,6 +31,7 @@ class Migration(migrations.Migration):
             "twitter": "https://twitter.com",
             "youtube": "https://youtube.com",
             "instagram": "https://instagram.com",
+            "contact_us_message": "Thanks for contacting us , we will get back to you within 2 working days."
         }
 
         for _, val in enumerate(data):
