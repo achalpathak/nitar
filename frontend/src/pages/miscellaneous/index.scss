@@ -92,9 +92,9 @@
 .line {
 	width: 0;
 	height: 0;
-	border-top: 1px solid white;
-	border-left: 5vw solid white;
-	border-bottom: 1px solid white;
+	border-top: 1px solid var(--website-secondary-color);
+	border-left: 5vw solid var(--website-secondary-color);
+	border-bottom: 1px solid var(--website-secondary-color);
 	// margin-right: 15px;
 }
 .line-left {
@@ -123,8 +123,8 @@
 .btn {
 	width: 20rem;
 	background-color: transparent;
-	color: white;
-	border: 1px solid white;
+	color: var(--website-secondary-color);
+	border: 1px solid var(--website-secondary-color);
 }
 .logo-container {
 	// display: flex;
@@ -134,6 +134,7 @@
 	width: 60vw;
 	text-align: center;
 	margin-bottom: 30px;
+	color: var(--website-secondary-color);
 }
 
 .social-icons {
@@ -143,9 +144,14 @@
 	margin-top: 10px;
 	border-bottom: var(--website-primary-color) solid 1px;
 	width: 100vw;
-	svg:hover {
-		color: var(--website-primary-color);
-		margin: 15px;
+	svg {
+		color: var(--website-secondary-color);
+		cursor: pointer;
+
+		&:hover {
+			color: var(--website-primary-color);
+			margin: 15px;
+		}
 	}
 	svg {
 		margin: 15px;
@@ -158,7 +164,7 @@
 	width: 80vw;
 	margin-top: 20px;
 	a {
-		color: white;
+		color: var(--website-secondary-color);
 	}
 	a:hover {
 		color: var(--website-primary-color);
@@ -184,7 +190,7 @@
 		}
 	}
 	.line {
-		border-left: 35vw solid white;
+		border-left: 35vw solid var(--website-secondary-color);
 		margin: 10px;
 	}
 	.footer-links {
@@ -198,16 +204,16 @@
 .call-button {
 	// border: 2px solid transparent;
 	background: rgba(0, 0, 0, 0.5);
-	// background-color: white;
+	// background-color: var(--website-secondary-color);
 	border-radius: 30px;
 	border-width: 0.8rem;
 	justify-content: center !important;
 	padding: 0 0 0 10px !important;
 	width: 20rem;
-	border: white 1px solid;
+	border: var(--website-secondary-color) 1px solid;
 	position: relative;
 	&:hover {
-		box-shadow: 1px 1px 10px 1px white;
+		box-shadow: 1px 1px 10px 1px var(--website-secondary-color);
 	}
 	a {
 		display: flex;
@@ -215,7 +221,7 @@
 		justify-content: space-around;
 		width: 100%;
 		// color: var(--website-primary-color);
-		color: white;
+		color: var(--website-secondary-color);
 		font-weight: bold;
 		cursor: pointer;
 		// &:hover {
@@ -227,7 +233,7 @@
 	}
 	svg {
 		// color: var(--website-primary-color);
-		// background-color: white;
+		// background-color: var(--website-secondary-color);
 		border-radius: 50%;
 		padding: 5px;
 	}

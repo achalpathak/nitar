@@ -1,5 +1,5 @@
 //*All imports go here!
-import api from "@api";
+import api, { Routes } from "@api";
 import logo from "@assets/common/logo.png";
 import { Button, CustomInput } from "@components";
 import { useAlert } from "@hooks";
@@ -11,10 +11,25 @@ import {
 	Typography,
 } from "@mui/material";
 import { useAppSelector } from "@redux/hooks";
-import { IError, IMessage, IResponse } from "@types";
-import { AxiosError } from "axios";
-import { ChangeEvent, KeyboardEvent, MouseEvent, useState } from "react";
+import {
+	ICountryList,
+	ICustomSelectOption,
+	IError,
+	IMessage,
+	IResponse,
+	ISuccess,
+} from "@types";
+import { CustomSelectUtils } from "@utils";
+import axios, { AxiosError } from "axios";
+import {
+	ChangeEvent,
+	KeyboardEvent,
+	MouseEvent,
+	useEffect,
+	useState,
+} from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Select from "react-select";
 import "../login/Login.scss";
 
 const Register = () => {
@@ -40,7 +55,8 @@ const Register = () => {
 	const [termsAndConditions, setTermsAndConditions] =
 		useState<boolean>(false);
 
-	const [message, setMessage] = useState<IMessage | null>(null);
+	const [countries, setCountries] = useState<ICountryList[]>([]);
+	const [country, setCountry] = useState<string>("India");
 
 	const [errors, setErrors] = useState<IError>({
 		full_name: [],
@@ -68,6 +84,26 @@ const Register = () => {
 	// 		setMessage(null);
 	// 	}, 4000);
 	// };
+
+	useEffect(() => {
+		(async () => {
+			try {
+				const res = await axios.get<ISuccess<ICountryList[]>>(
+					Routes.COUNTRY_LIST
+				);
+
+				if (res.status === 200) {
+					setCountries(res.data?.result);
+				} else {
+					setCountries([]);
+				}
+			} catch (error) {
+				const err = error as AxiosError<IResponse>;
+				console.error(err.response);
+				setCountries([]);
+			}
+		})();
+	}, []);
 
 	const errorHandler = () => {
 		if (!ageRequirement) {
@@ -102,6 +138,7 @@ const Register = () => {
 				phone,
 				full_name: name,
 				email,
+				country: countries?.find((c) => c.name === country)?.code,
 				age_above_18: ageRequirement,
 				terms_conditions_agreed: termsAndConditions,
 			});
@@ -188,13 +225,39 @@ const Register = () => {
 								}}
 								errors={errors?.phone}
 							/>
+							<Select<ICustomSelectOption, false>
+								name='country'
+								id='country'
+								closeMenuOnSelect={true}
+								className='w-100'
+								isMulti={false}
+								isSearchable
+								options={CustomSelectUtils.convertToSelectOption(
+									countries,
+									"name"
+								)}
+								value={CustomSelectUtils.getDefaultValue(
+									country
+								)}
+								onChange={(newValue) => {
+									if (newValue) {
+										setCountry(newValue?.value);
+									}
+								}}
+								getOptionLabel={(option) => option.label}
+								getOptionValue={(option) => option.value}
+								noOptionsMessage={() => (
+									<div>No results found</div>
+								)}
+								styles={CustomSelectUtils.customStyles()}
+							/>
 							<div className='custom-label'>
 								<FormControl error={ageError} margin='none'>
 									<FormControlLabel
 										control={
 											<Checkbox
 												sx={{
-													color: "white",
+													color: "var(--website-secondary-color)",
 													"&.Mui-checked": {
 														color: "var(--website-primary-color)",
 													},
@@ -227,7 +290,7 @@ const Register = () => {
 										control={
 											<Checkbox
 												sx={{
-													color: "white",
+													color: "var(--website-secondary-color)",
 													"&.Mui-checked": {
 														color: "var(--website-primary-color)",
 													},

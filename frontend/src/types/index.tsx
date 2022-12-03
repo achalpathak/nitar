@@ -178,6 +178,7 @@ export type IPlanItem = {
 	name: string;
 	validity_in_days: number;
 	price_in_inr: string;
+	price_in_dollar: string;
 	published: boolean;
 };
 
@@ -215,4 +216,9 @@ export type IUser = {
 	email: string;
 	phone: string;
 	has_active_membership: boolean;
+};
+
+export type ICountryList = {
+	name: string;
+	code: string;
 };

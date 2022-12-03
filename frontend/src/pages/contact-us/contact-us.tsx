@@ -11,11 +11,13 @@ import { useAlert } from "@hooks";
 import { IError, IResponse, ISuccess } from "@types";
 import Constants from "@constants";
 import { Email } from "@mui/icons-material";
+import { useAppSelector } from "@redux/hooks";
 
 //****************************************************************All imports ends here!***************************************************************
 
 const ContactUs = () => {
 	const showAlert = useAlert();
+	const prefs = useAppSelector((state) => state.preferences);
 
 	const [email, setEmail] = useState<string>("");
 	const [phone, setPhone] = useState<string>("");
@@ -199,10 +201,20 @@ const ContactUs = () => {
 								className='call-button'
 								mb={2}
 							>
-								<a href='tel:001234567890'>
+								<a
+									href={`tel:${
+										prefs?.find((v) => v.field === "phone")
+											?.value
+									}`}
+								>
 									<Grid container className='call-us'>
 										<PhoneIcon />
-										Call On: 00 1234567890
+										Call On:{" "}
+										{
+											prefs?.find(
+												(v) => v.field === "phone"
+											)?.value
+										}
 									</Grid>
 								</a>
 							</Grid>
@@ -213,10 +225,20 @@ const ContactUs = () => {
 								flexDirection='column'
 								className='call-button'
 							>
-								<a href='mailto:info@taak.in'>
+								<a
+									href={`mailto:${
+										prefs?.find((v) => v.field === "email")
+											?.value
+									}`}
+								>
 									<Grid container className='call-us'>
 										<Email />
-										Email: info@taak.in
+										Email:{" "}
+										{
+											prefs?.find(
+												(v) => v.field === "email"
+											)?.value
+										}
 									</Grid>
 								</a>
 							</Grid>

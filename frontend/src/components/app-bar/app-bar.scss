@@ -5,9 +5,10 @@
 
 	a {
 		transition: all 0.2s ease-in;
-		color: white;
+		color: var(--website-secondary-color);
 		font-family: "Barlow Condensed";
 		text-align: center;
+		color: var(--website-secondary-color);
 
 		&:hover {
 			color: var(--website-primary-color);

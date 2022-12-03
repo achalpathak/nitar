@@ -66,7 +66,13 @@ const Footer = () => {
 						></img>
 					</div>
 					<div>
-						<h2>ABOUT US</h2>
+						<h2
+							style={{
+								color: "var(--website-secondary-color)",
+							}}
+						>
+							ABOUT US
+						</h2>
 					</div>
 					<div
 						className='d-center about-us'
@@ -87,7 +93,12 @@ const Footer = () => {
 						{(playstore !== "" || appstore !== "") && (
 							<div className='flex-row'>
 								<div className='line'></div>
-								<div style={{ marginLeft: "10px" }}>
+								<div
+									style={{
+										marginLeft: "10px",
+										color: "var(--website-secondary-color)",
+									}}
+								>
 									Download App
 								</div>
 								<a href={playstore} target='_blank'>

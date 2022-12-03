@@ -1,4 +1,4 @@
-import api, { BASE_URL, Routes } from "@api";
+import api, { Routes } from "@api";
 import { DownloadApp, SubscribeButton } from "@components";
 import { MovieList } from "@components/movies";
 import { useAlert } from "@hooks";
@@ -113,15 +113,7 @@ const Upcoming = () => {
 											<picture>
 												<img
 													key={image?.id}
-													src={`${
-														BASE_URL?.includes(
-															"localhost"
-														)
-															? BASE_URL
-															: ""
-													}${
-														image.poster_large_vertical_image
-													}`}
+													src={`${image.poster_large_vertical_image}`}
 													alt={image?.name}
 													loading='lazy'
 													className='poster'

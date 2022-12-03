@@ -1,9 +1,7 @@
-import "./download-app.scss";
-import downloadApp from "@assets/home/downloadApp.png";
-import { Grid, Typography, Box } from "@mui/material";
+import { AppStore, GooglePlay } from "@assets";
+import { Box, Grid, Typography } from "@mui/material";
 import { useAppSelector } from "@redux/hooks";
-import { AndroidLogo, AppleLogo, AppStore, GooglePlay } from "@assets";
-import { BASE_URL } from "@api";
+import "./download-app.scss";
 
 const DownloadApp = () => {
 	const prefs = useAppSelector((state) => state.preferences);
@@ -98,10 +96,6 @@ const DownloadApp = () => {
 										<img
 											alt='Download App'
 											src={`${
-												BASE_URL?.includes("localhost")
-													? BASE_URL
-													: ""
-											}${
 												prefs?.find(
 													(v) =>
 														v.field ===

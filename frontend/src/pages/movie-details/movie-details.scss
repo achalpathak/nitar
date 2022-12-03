@@ -1,7 +1,7 @@
 .movie-details {
 	position: relative;
 	p {
-		color: white;
+		color: var(--website-secondary-color);
 	}
 }
 
@@ -9,4 +9,8 @@
 	color: var(--website-primary-color);
 	font-size: 5rem;
 	background-color: rgba(0, 0, 0, 0.6);
+}
+
+.MuiTypography-root {
+	color: var(--website-secondary-color);
 }

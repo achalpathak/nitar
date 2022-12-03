@@ -6,8 +6,9 @@ import { AxiosError } from "axios";
 import api, { Routes } from "@api";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IError, IAPI, ISuccess } from "@types";
-import { Grid } from '@mui/material';
+import { Grid } from "@mui/material";
 import PhoneIcon from "@mui/icons-material/Phone";
+import { useAppSelector } from "@redux/hooks";
 
 const APIS: IAPI = {
 	"privacy-policy": {
@@ -26,7 +27,8 @@ const APIS: IAPI = {
 
 const Policy = () => {
 	const location = useLocation();
-    const navigate = useNavigate();
+	const navigate = useNavigate();
+	const prefs = useAppSelector((state) => state.preferences);
 
 	const [html, setHtml] = useState<string>("");
 
@@ -125,7 +127,7 @@ const Policy = () => {
 					</div> */}
 					<h3>Didn't Get Your Answer?</h3>
 					<div className='btn-container'>
-                        <Button
+						<Button
 							title={"Contact Us Now"}
 							style={{
 								width: "20rem",
@@ -136,36 +138,35 @@ const Policy = () => {
 								e: MouseEvent<HTMLButtonElement>
 							) => {
 								e.preventDefault();
-                                navigate("/contact-us")
+								navigate("/contact-us");
 							}}
 						/>
-                        <Grid container className='privacy-call-button'>
-                        <Grid
-							item
-							xs={12}
-							sm={12}
-							mt={2}
-							className='call-button'
-						>
-
-                        <a href='tel:001234567890'>
-								<Grid container className='call-us'>
+						<Grid container className='privacy-call-button'>
+							<Grid
+								item
+								xs={12}
+								sm={12}
+								mt={2}
+								className='call-button'
+							>
+								<a
+									href={`tel:${
+										prefs?.find((v) => v.field === "phone")
+											?.value
+									}`}
+								>
+									<Grid container className='call-us'>
 										<PhoneIcon />
-                                        Call On: 00 1234567890
-								</Grid>
-							</a>
-                        </Grid>
-                        </Grid>
-						{/* <Button
-							title={"Call On: 00 1234567890"}
-							className='btn'
-							onClickCapture={async (
-								e: MouseEvent<HTMLButtonElement>
-							) => {
-								e.preventDefault();
-								// register();
-							}}
-						/> */}
+										Call On:{" "}
+										{
+											prefs?.find(
+												(v) => v.field === "phone"
+											)?.value
+										}
+									</Grid>
+								</a>
+							</Grid>
+						</Grid>
 					</div>
 				</div>
 			</div>

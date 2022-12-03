@@ -158,7 +158,7 @@ const Login = () => {
 			});
 
 			if (res.status === 200) {
-				showAlert("success", "Success", res?.data?.message);
+				showAlert("success", "Success", "Login Successful");
 				setTimeout(() => {
 					dispatch({
 						type: Actions.LOGIN,

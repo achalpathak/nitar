@@ -80,10 +80,17 @@ const MovieDetails = (props: any) => {
 					xs={12}
 					sx={{
 						backgroundImage: !isPlaying
-							? `url(${movie?.poster_large_horizontal_image})`
+							? {
+									xs: `url(${movie?.poster_large_vertical_image})`,
+									sm: `url(${movie?.poster_large_horizontal_image})`,
+							  }
 							: "none",
 						backgroundRepeat: "no-repeat",
 						backgroundSize: "cover",
+						backgroundPosition: {
+							xs: "center center",
+							md: "inherit",
+						},
 						height: {
 							md: "100vh",
 							xs: !isPlaying ? "100vh" : "15rem",
@@ -132,16 +139,22 @@ const MovieDetails = (props: any) => {
 					) : (
 						<Grid
 							container
+							display='flex'
 							sx={{
 								paddingLeft: {
 									md: "10rem",
+								},
+								justifyContent: {
+									xs: "center",
+									md: "flex-start",
 								},
 							}}
 						>
 							<Grid
 								item
-								xs={12}
-								md={4}
+								xs={11}
+								sm={8}
+								md={6}
 								sx={{
 									backgroundColor: "rgba(0,0,0,0.5)",
 									maxHeight: "600px",
@@ -291,7 +304,7 @@ const MovieDetails = (props: any) => {
 								<Grid item xs={12} my={1}>
 									<a
 										style={{
-											color: "white",
+											color: "var(--website-secondary-color)",
 											cursor: "pointer",
 										}}
 										onClickCapture={(e) => {
@@ -353,7 +366,6 @@ const MovieDetails = (props: any) => {
 							console.log("Playing");
 
 							//Checking for membership
-							//1. If video is for anonymous users
 							if (movie) {
 								if (movie?.membership_required === false) {
 									//PLaying video for every user
@@ -366,11 +378,6 @@ const MovieDetails = (props: any) => {
 											setPlaying(true);
 										} else {
 											//Video is not available for members
-											// showAlert(
-											// 	"warning",
-											// 	"Video is not available",
-											// 	"Please contact admin"
-											// );
 											Swal.fire({
 												title: "Video is not available",
 												text: "Please contact admin",
@@ -378,12 +385,7 @@ const MovieDetails = (props: any) => {
 											});
 										}
 									} else {
-										// showAlert(
-										// 	"warning",
-										// 	"Membership Required",
-										// 	"This video requires membership. Please subscribe to continue watching"
-										// );
-
+										//video_link is not available, check if user is logged in or not
 										if (user?.full_name) {
 											Swal.fire({
 												title: "Membership Required",
@@ -413,10 +415,6 @@ const MovieDetails = (props: any) => {
 												}
 											});
 										}
-
-										// setTimeout(() => {
-										// 	navigate("/plans");
-										// }, 3000);
 									}
 								}
 							}

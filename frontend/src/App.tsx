@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Layout } from "@container";
 import { Alert, Loader } from "@components";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
-import api, { BASE_URL, Routes } from "@api";
+import api, { Routes } from "@api";
 import { IBanners, IPreferences, ISuccess, IWelcomeBanner } from "@types";
 import { AxiosError } from "axios";
 import Actions from "@redux/actions";
@@ -81,21 +81,17 @@ const App = () => {
 	useLayoutEffect(() => {
 		(async () => {
 			try {
-				if (preferences?.length === 0) {
-					const res = await api.get<ISuccess<IPreferences[]>>(
-						Routes.WEBSITE_CONFIG
-					);
+				const res = await api.get<ISuccess<IPreferences[]>>(
+					Routes.WEBSITE_CONFIG
+				);
 
-					setCSSVariables(res.data?.result);
+				setCSSVariables(res.data?.result);
 
-					if (res.status === 200) {
-						dispatch({
-							type: Actions.SAVE_PREFERENCES,
-							payload: res.data?.result,
-						});
-					}
-				} else {
-					setCSSVariables(preferences);
+				if (res.status === 200) {
+					dispatch({
+						type: Actions.SAVE_PREFERENCES,
+						payload: res.data?.result,
+					});
 				}
 			} catch (error) {
 				const err = error as AxiosError<ISuccess>;
@@ -168,11 +164,7 @@ const App = () => {
 							>
 								<picture>
 									<img
-										src={`${
-											BASE_URL?.includes("localhost")
-												? BASE_URL
-												: ""
-										}${welcomeBanner?.website_banner}`}
+										src={`${welcomeBanner?.website_banner}`}
 										style={{
 											height: "100%",
 											width: "100%",

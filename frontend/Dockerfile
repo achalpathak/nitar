@@ -8,11 +8,11 @@ ENV NODE_ENV production
 WORKDIR /app
 
 # Installing dependencies
-COPY ./package.json ./
+# COPY ./package.json ./
 # RUN yarn install
 
 # # Copying all the files in our project
-COPY . .
+COPY dist/ .
 
 # # Building our application
 # RUN yarn run build
@@ -21,7 +21,7 @@ COPY . .
 FROM nginx
 
 # Copying built assets from builder
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app /usr/share/nginx/html
 
 # Copying our nginx.conf
 COPY nginx.conf /etc/nginx/conf.d/default.conf
