@@ -31,12 +31,6 @@ type ILocationProps = {
 
 const Login = () => {
 	const navigate = useNavigate();
-	const user = useAppSelector((state) => state.user);
-
-	if (user?.full_name) {
-		navigate("/");
-		return null;
-	}
 
 	const location: ILocationProps = useLocation();
 	const showAlert = useAlert();

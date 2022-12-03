@@ -6,16 +6,16 @@ const customStyles = <
 >(): StylesConfig<T> => ({
 	menu: (provided) => ({
 		...provided,
-		backgroundColor: "#2a2b36",
+		backgroundColor: "var(--website-alternate-color)",
 	}),
 	option: (provided) => ({
 		...provided,
 		borderBottom: "rgba(255, 255, 255, 0.5) 1px solid",
 		color: "var(--website-secondary-color)",
-		backgroundColor: "#2a2b36",
+		backgroundColor: "var(--website-alternate-color)",
 		fontSize: "0.8rem",
 		":hover": {
-			color: "var(--info)",
+			color: "var(--website-primary-color)",
 		},
 	}),
 	control: () => ({
@@ -37,7 +37,7 @@ const customStyles = <
 	multiValue: (styles) => ({
 		...styles,
 		color: "var(--website-secondary-color)",
-		backgroundColor: "#2a2b36",
+		backgroundColor: "var(--website-alternate-color)",
 	}),
 	multiValueLabel: (styles) => ({
 		...styles,

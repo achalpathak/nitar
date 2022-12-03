@@ -4,18 +4,17 @@ import logo from "@assets/common/logo.png";
 import { Button, CustomInput } from "@components";
 import { useAlert } from "@hooks";
 import {
+	Box,
 	Checkbox,
 	FormControl,
 	FormControlLabel,
 	FormHelperText,
 	Typography,
 } from "@mui/material";
-import { useAppSelector } from "@redux/hooks";
 import {
 	ICountryList,
 	ICustomSelectOption,
 	IError,
-	IMessage,
 	IResponse,
 	ISuccess,
 } from "@types";
@@ -30,27 +29,21 @@ import {
 } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Select from "react-select";
+import makeAnimated from "react-select/animated";
 import "../login/Login.scss";
+
+const animatedComponents = makeAnimated();
 
 const Register = () => {
 	const navigate = useNavigate();
 	const showAlert = useAlert();
 
-	const user = useAppSelector((state) => state.user);
-
-	if (user?.full_name) {
-		navigate("/");
-	}
-
 	// * --- states start here ----------////
-
-	const [otp, setOtp] = useState<string>("");
 	const [phone, setPhone] = useState<string>("");
 
 	//Register
 	const [name, setName] = useState<string>("");
 	const [email, setEmail] = useState<string>("");
-	const [dob, setDob] = useState<string>("");
 	const [ageRequirement, setAgeRequirement] = useState<boolean>(false);
 	const [termsAndConditions, setTermsAndConditions] =
 		useState<boolean>(false);
@@ -167,17 +160,17 @@ const Register = () => {
 
 	return (
 		<>
-			<div className='main-container'>
-				<div className='login-container'>
-					<div className='logo-container'>
+			<Box className='main-container'>
+				<Box className='login-container'>
+					<Box className='logo-container' my={1}>
 						<img
 							alt='logo'
 							src={logo}
 							width='100%'
 							height='100%'
 						></img>
-					</div>
-					<div className='input-container'>
+					</Box>
+					<Box className='input-container' my={1}>
 						<>
 							<label>Fill your details to register</label>
 							<CustomInput
@@ -230,6 +223,7 @@ const Register = () => {
 								id='country'
 								closeMenuOnSelect={true}
 								className='w-100'
+								components={animatedComponents}
 								isMulti={false}
 								isSearchable
 								options={CustomSelectUtils.convertToSelectOption(
@@ -247,11 +241,11 @@ const Register = () => {
 								getOptionLabel={(option) => option.label}
 								getOptionValue={(option) => option.value}
 								noOptionsMessage={() => (
-									<div>No results found</div>
+									<Box>No results found</Box>
 								)}
 								styles={CustomSelectUtils.customStyles()}
 							/>
-							<div className='custom-label'>
+							<Box className='custom-label' my={1}>
 								<FormControl error={ageError} margin='none'>
 									<FormControlLabel
 										control={
@@ -330,10 +324,10 @@ const Register = () => {
 										</FormHelperText>
 									)}
 								</FormControl>
-							</div>
+							</Box>
 						</>
-					</div>
-					<div className='btn-container'>
+					</Box>
+					<Box className='btn-container' my={1}>
 						<Button
 							title={"REGISTER"}
 							onClickCapture={async (
@@ -378,176 +372,10 @@ const Register = () => {
 								/>
 							</svg>
 						</button>
-					</div>
-				</div>
-			</div>
+					</Box>
+				</Box>
+			</Box>
 		</>
 	);
-
-	// return (
-	// 	<>
-	// 		<Grid container alignItems='center' justifyContent='center'>
-	// 			<Grid
-	// 				item
-	// 				xs={8}
-	// 				height='72vh'
-	// 				display='flex'
-	// 				className='login-container'
-	// 			>
-	// 				<Grid container>
-	// 					<Grid item mt={4} xs={12}>
-	// 						<Grid item xs={4}>
-	// 							<img alt='logo' src={logo} className='logo' />
-	// 						</Grid>
-	// 					</Grid>
-	// 					<Grid
-	// 						item
-	// 						xs={12}
-	// 						display='flex'
-	// 						direction='column'
-	// 						alignItems='center'
-	// 						mt={2}
-	// 						className='input-container'
-	// 					>
-	// 						<Grid item xs={12}>
-	// 							<Grid>
-	// 								<Typography
-	// 									sx={{
-	// 										typography: {
-	// 											md: "h4",
-	// 											sm: "h5",
-	// 											xs: "h6",
-	// 										},
-	// 									}}
-	// 									component='label'
-	// 									textAlign='center'
-	// 								>
-	// 									Fill your details to register
-	// 								</Typography>
-	// 							</Grid>
-	// 							<Grid>
-	// 								<Grid
-	// 									component='input'
-	// 									mt={4}
-	// 									type='text'
-	// 									id='full-name'
-	// 									name='full-name'
-	// 									placeholder='Enter Your Full Name'
-	// 									value={name}
-	// 									onChangeCapture={(
-	// 										e: ChangeEvent<HTMLInputElement>
-	// 									) => {
-	// 										setName(e.target.value);
-	// 									}}
-	// 								/>
-	// 							</Grid>
-	// 							<Grid>
-	// 								<Grid
-	// 									component='input'
-	// 									mt={4}
-	// 									type='email'
-	// 									id='email-address'
-	// 									name='email-address'
-	// 									placeholder='Enter your Email Address'
-	// 									value={email}
-	// 									onChangeCapture={(
-	// 										e: ChangeEvent<HTMLInputElement>
-	// 									) => {
-	// 										setEmail(e.target.value);
-	// 									}}
-	// 								/>
-	// 							</Grid>
-	// 							<Grid
-	// 								component='input'
-	// 								mt={4}
-	// 								type='number'
-	// 								id='phone'
-	// 								name='phone'
-	// 								placeholder='Enter your Phone Number'
-	// 								value={phone}
-	// 								onChangeCapture={(
-	// 									e: ChangeEvent<HTMLInputElement>
-	// 								) => {
-	// 									const phoneNum = e.target.value;
-	// 									console.log("Phone", phoneNum);
-	// 									if (phoneNum.length <= 10) {
-	// 										setPhone(e.target.value);
-	// 									}
-	// 								}}
-	// 							/>
-	// 							<Grid
-	// 								component='input'
-	// 								mt={4}
-	// 								type='date'
-	// 								id='dob'
-	// 								name='dob'
-	// 								placeholder='Enter Date Of Birth (DD/MM/YYYY)'
-	// 								onChangeCapture={(
-	// 									e: ChangeEvent<HTMLInputElement>
-	// 								) => {
-	// 									setDob(e.target.value);
-	// 								}}
-	// 							/>
-	// 						</Grid>
-	// 					</Grid>
-	// 					{/* <Grid
-	// 						className='btn-container'
-	// 						display='flex'
-	// 						flexDirection='column'
-	// 						mt={4}
-	// 					>
-	// 						<Button
-	// 							title={"REGISTER"}
-	// 							onClickCapture={async (e) => {
-	// 								e.preventDefault();
-	// 								register();
-	// 							}}
-	// 						/>
-	// 						<button
-	// 							className='cancel-btn'
-	// 							onClickCapture={(e) => {
-	// 								e.preventDefault();
-	// 								// alert("alert");
-	// 							}}
-	// 						>
-	// 							<svg
-	// 								xmlns='http://www.w3.org/2000/svg'
-	// 								fill='none'
-	// 								viewBox='0 0 24 24'
-	// 								strokeWidth='1.5'
-	// 								stroke='currentColor'
-	// 								className='w-6 h-6'
-	// 							>
-	// 								<path
-	// 									strokeLinecap='round'
-	// 									strokeLinejoin='round'
-	// 									d='M6 18L18 6M6 6l12 12'
-	// 								/>
-	// 							</svg>
-	// 						</button>
-	// 					</Grid> */}
-	// 				</Grid>
-	// 			</Grid>
-	// 		</Grid>
-	// 		<Grid
-	// 			width='fit-content'
-	// 			position='absolute'
-	// 			top={0}
-	// 			right={0}
-	// 			mt={3}
-	// 			mr={3}
-	// 			className={`alert-container ${
-	// 				message !== null ? "show" : "hide"
-	// 			}`}
-	// 		>
-	// 			{message?.severity && (
-	// 				<Alert severity={message?.severity}>
-	// 					<AlertTitle>{message?.title}</AlertTitle>
-	// 					{message?.description}
-	// 				</Alert>
-	// 			)}
-	// 		</Grid>
-	// 	</>
-	// );
 };
 export default Register;
