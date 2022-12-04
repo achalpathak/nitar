@@ -29,7 +29,10 @@ const CustomInput: FC<ICustomInputProps> = ({ errors, ...props }) => {
 						return checkIfNumber(e);
 					}
 				}}
-				style={{ paddingLeft: 20, ...props?.style }}
+				style={{
+					paddingLeft: 20,
+					...props?.style,
+				}}
 				{...props}
 			/>
 			{errors &&

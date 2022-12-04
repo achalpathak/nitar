@@ -474,6 +474,11 @@ const ExtraDetails = (props: any) => {
 							width='100%'
 							height='100%'
 							playing={showTrailer}
+							config={{
+								file: {
+									forceHLS: true,
+								},
+							}}
 						/>
 					</Box>
 				</Box>

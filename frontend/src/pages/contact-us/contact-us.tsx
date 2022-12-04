@@ -60,6 +60,11 @@ const ContactUs = () => {
 			});
 
 			if (res.status === 200) {
+				//Resetting form
+				e.target.reset();
+				setEmail("");
+				setPhone("");
+
 				const msg =
 					prefs.find((v) => v.field === "contact_us_message")
 						?.value ?? res.data?.message;
@@ -112,7 +117,9 @@ const ContactUs = () => {
 								flexDirection='column'
 								className='w-100'
 							>
-								<Typography>Full Name</Typography>
+								<Typography color='var(--website-secondary-color)'>
+									Full Name
+								</Typography>
 								<CustomInput
 									required
 									placeholder='Enter Your Full Name'
@@ -130,7 +137,9 @@ const ContactUs = () => {
 								flexDirection='column'
 								className='w-100'
 							>
-								<Typography>Email Address</Typography>
+								<Typography color='var(--website-secondary-color)'>
+									Email Address
+								</Typography>
 								<CustomInput
 									placeholder='Enter Your Email Address'
 									className='no-outline input-area'
@@ -151,7 +160,9 @@ const ContactUs = () => {
 								flexDirection='column'
 								className='w-100'
 							>
-								<Typography>Phone Number</Typography>
+								<Typography color='var(--website-secondary-color)'>
+									Phone Number
+								</Typography>
 								<CustomInput
 									placeholder='Enter Your Phone Number'
 									className='no-outline input-area'
@@ -175,7 +186,9 @@ const ContactUs = () => {
 								flexDirection='column'
 								className='w-100'
 							>
-								<Typography>Subject</Typography>
+								<Typography color='var(--website-secondary-color)'>
+									Subject
+								</Typography>
 								<CustomInput
 									required
 									placeholder='Enter Subject'
@@ -192,7 +205,9 @@ const ContactUs = () => {
 								flexDirection='column'
 								className='w-100'
 							>
-								<Typography>Your Message</Typography>
+								<Typography color='var(--website-secondary-color)'>
+									Your Message
+								</Typography>
 								<textarea
 									required
 									placeholder='Describe Your Issue'

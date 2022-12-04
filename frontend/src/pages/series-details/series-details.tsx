@@ -136,6 +136,11 @@ const ExtraDetails = (props: any) => {
 										onReady={(e) => {
 											console.log("Player ready", e);
 										}}
+										config={{
+											file: {
+												forceHLS: true,
+											},
+										}}
 									/>
 								) : null}
 							</Box>
@@ -552,6 +557,11 @@ const ExtraDetails = (props: any) => {
 							width='100%'
 							height='100%'
 							playing={showTrailer}
+							config={{
+								file: {
+									forceHLS: true,
+								},
+							}}
 						/>
 					</Box>
 				</Box>

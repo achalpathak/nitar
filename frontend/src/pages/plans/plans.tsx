@@ -76,7 +76,12 @@ const Plans = () => {
 		<Grid container>
 			<Grid container className='plans-container'>
 				<Grid item xs={12} sm={12} md={6} mb={2}>
-					<Typography variant='h2'>Our Subscription Plans</Typography>
+					<Typography
+						variant='h2'
+						color='var(--website-secondary-color)'
+					>
+						Our Subscription Plans
+					</Typography>
 				</Grid>
 			</Grid>
 			<Grid container className='plans-card'>
