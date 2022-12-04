@@ -120,6 +120,11 @@ const ExtraDetails = (props: any) => {
 										onReady={(e) => {
 											console.log("Player ready", e);
 										}}
+										config={{
+											file: {
+												forceHLS: true,
+											},
+										}}
 									/>
 								) : null}
 							</Box>
