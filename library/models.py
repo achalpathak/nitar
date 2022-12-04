@@ -38,27 +38,31 @@ ERROR_MSG = f"Max image size should be {IMAGE_FILE_SIZE} kB"
 
 
 def validate_poster_small_vertical_image(fieldfile_obj):
-    filesize = fieldfile_obj.file.size
-    if filesize > 512 * 1024:
-        raise ValidationError(f"{ERROR_MSG}. Current Size={(filesize//1024)} kB")
+    if fieldfile_obj:
+        filesize = fieldfile_obj.file.size
+        if filesize > 512 * 1024:
+            raise ValidationError(f"{ERROR_MSG}. Current Size={(filesize//1024)} kB")
 
 
 def validate_poster_large_vertical_image(fieldfile_obj):
-    filesize = fieldfile_obj.file.size
-    if filesize > 512 * 1024:
-        raise ValidationError(f"{ERROR_MSG}. Current Size={(filesize//1024)} kB")
+    if fieldfile_obj:
+        filesize = fieldfile_obj.file.size
+        if filesize > 512 * 1024:
+            raise ValidationError(f"{ERROR_MSG}. Current Size={(filesize//1024)} kB")
 
 
 def validate_poster_small_horizontal_image(fieldfile_obj):
-    filesize = fieldfile_obj.file.size
-    if filesize > 512 * 1024:
-        raise ValidationError(f"{ERROR_MSG}. Current Size={(filesize//1024)} kB")
+    if fieldfile_obj:
+        filesize = fieldfile_obj.file.size
+        if filesize > 512 * 1024:
+            raise ValidationError(f"{ERROR_MSG}. Current Size={(filesize//1024)} kB")
 
 
 def validate_poster_large_horizontal_image(fieldfile_obj):
-    filesize = fieldfile_obj.file.size
-    if filesize > 512 * 1024:
-        raise ValidationError(f"{ERROR_MSG}. Current Size={(filesize//1024)} kB")
+    if fieldfile_obj:
+        filesize = fieldfile_obj.file.size
+        if filesize > 512 * 1024:
+            raise ValidationError(f"{ERROR_MSG}. Current Size={(filesize//1024)} kB")
 
 
 class Category(TimeStampedModel):
@@ -101,15 +105,11 @@ class Geners(TimeStampedModel):
 class Banner(TimeStampedModel):
     website_banner = models.ImageField(
         upload_to=utils.image_path,
-        null=True,
-        blank=True,
         validators=[validate_poster_small_vertical_image],
         help_text=ERROR_MSG,
     )
     mobile_banner = models.ImageField(
         upload_to=utils.image_path,
-        null=True,
-        blank=True,
         validators=[validate_poster_small_vertical_image],
         help_text=ERROR_MSG,
     )

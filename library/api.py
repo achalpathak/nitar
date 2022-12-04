@@ -62,7 +62,6 @@ class HomePageAPI(APIView):
             library_models.ExtrasCategory.objects.filter(published=True)
             .values("name", "poster_type")
         )
-        print(extra_categories)
         for ec in extra_categories:
             _dto = {
                 "name": ec.get("name"),
@@ -210,7 +209,6 @@ class EpisodesAPI(APIView):
         data = []
         episodes_results = library_models.Episodes.objects.filter(slug=slug).first()
         if episodes_results:
-            print("hello world")
             data = self.serializer(episodes_results, context={"request": request}).data
             all_episodes_results = library_models.Episodes.objects.filter(
                 series=episodes_results.series

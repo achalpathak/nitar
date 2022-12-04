@@ -18,14 +18,10 @@ class Migration(migrations.Migration):
         logo_url = urllib.request.urlretrieve(
             "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png"
         )
-        favicon_url = urllib.request.urlretrieve(
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png"
-        )
 
         Settings = apps.get_model("settings", "Settings")
         data = {
             "logo_url": File(open(logo_url[0], "rb")),
-            "favicon_url": File(open(favicon_url[0], "rb")),
         }
 
         for _, val in enumerate(data):

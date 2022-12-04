@@ -23,16 +23,24 @@ class ReadOnlySlug(admin.ModelAdmin):
 
 class BannerAdmin(admin.ModelAdmin):
     def website_banner_tag(self, obj):
-        return format_html(
-            '<img src="{}" width="auto" height="150px" />'.format(
-                obj.website_banner.url
+        if obj.website_banner:
+            return format_html(
+                '<img src="{}" width="auto" height="150px" />'.format(
+                    obj.website_banner.url
+                )
             )
-        )
+        else:
+            return None
 
     def mobile_banner_tag(self, obj):
-        return format_html(
-            '<img src="{}" width="auto" height="150px" />'.format(obj.mobile_banner.url)
-        )
+        if obj.mobile_banner:
+            return format_html(
+                '<img src="{}" width="auto" height="150px" />'.format(
+                    obj.mobile_banner.url
+                )
+            )
+        else:
+            return None
 
     website_banner_tag.short_description = "Website Banner"
     mobile_banner_tag.short_description = "Mobile Banner"

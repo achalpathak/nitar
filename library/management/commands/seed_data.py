@@ -19,6 +19,7 @@ class Command(BaseCommand):
         from django.core.files import File
         from django.utils import timezone
         from datetime import timedelta
+        hls_link="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
 
         language_obj = LanguageChoices.objects.all().first()
         age_obj = AgeChoices.objects.all().first()
@@ -56,6 +57,8 @@ class Command(BaseCommand):
                     poster_large_horizontal_image=File(
                         open(die_hard_poster_horizontal_large_url[0], "rb")
                     ),
+                    trailer_link=hls_link,
+                    video_link=hls_link,
                     published=True,
                     membership_required=True,
                     slug="hot-wheels",
@@ -77,6 +80,8 @@ class Command(BaseCommand):
                     poster_large_horizontal_image=File(
                         open(die_hard_poster_horizontal_large_url[0], "rb")
                     ),
+                    trailer_link=hls_link,
+                    video_link=hls_link,
                     published=True,
                     membership_required=True,
                     slug="die-hard",
@@ -98,6 +103,8 @@ class Command(BaseCommand):
                     poster_large_horizontal_image=File(
                         open(die_hard_poster_horizontal_large_url[0], "rb")
                     ),
+                    trailer_link=hls_link,
+                    video_link=hls_link,
                     published=True,
                     membership_required=False,
                     slug="avengers",
@@ -139,6 +146,7 @@ class Command(BaseCommand):
                     poster_large_horizontal_image=File(
                         open(die_hard_poster_horizontal_large_url[0], "rb")
                     ),
+                    trailer_link=hls_link,
                     release_date_time=timezone.now() + timedelta(days=5),
                     coming_soon_flag=True,
                     show_trailer_flag=True,
@@ -183,6 +191,7 @@ class Command(BaseCommand):
                     poster_large_horizontal_image=File(
                         open(die_hard_poster_horizontal_large_url[0], "rb")
                     ),
+                    trailer_link=hls_link,
                     release_date_time=timezone.now() + timedelta(days=12),
                     coming_soon_flag=False,
                     show_trailer_flag=True,
@@ -215,6 +224,7 @@ class Command(BaseCommand):
                     poster_large_horizontal_image=File(
                         open(die_hard_poster_horizontal_large_url[0], "rb")
                     ),
+                    trailer_link=hls_link,
                     published=True,
                 ),
                 Series(
@@ -234,6 +244,7 @@ class Command(BaseCommand):
                     poster_large_horizontal_image=File(
                         open(die_hard_poster_horizontal_large_url[0], "rb")
                     ),
+                    trailer_link=hls_link,
                     published=True,
                 ),
                 Series(
@@ -253,6 +264,7 @@ class Command(BaseCommand):
                     poster_large_horizontal_image=File(
                         open(die_hard_poster_horizontal_large_url[0], "rb")
                     ),
+                    trailer_link=hls_link,
                     published=True,
                 ),
             ]
@@ -290,6 +302,7 @@ class Command(BaseCommand):
                         poster_large_horizontal_image=File(
                             open(die_hard_poster_horizontal_large_url[0], "rb")
                         ),
+                        video_link=hls_link,
                         membership_required=False,
                     ),
                     Episodes(
@@ -310,6 +323,7 @@ class Command(BaseCommand):
                         poster_large_horizontal_image=File(
                             open(die_hard_poster_horizontal_large_url[0], "rb")
                         ),
+                        video_link=hls_link,
                         membership_required=True,
                     ),
                     Episodes(
@@ -330,6 +344,7 @@ class Command(BaseCommand):
                         poster_large_horizontal_image=File(
                             open(die_hard_poster_horizontal_large_url[0], "rb")
                         ),
+                        video_link=hls_link,
                         membership_required=True,
                     ),
                 ]

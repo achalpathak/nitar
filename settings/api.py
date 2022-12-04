@@ -18,7 +18,6 @@ class WebsiteConfigSettingsAPI(APIView):
             "logo_url",
             "qr_code_image_url",
             "app_banner_image",
-            "favicon_url",
             "play_store_link",
             "apple_store_link",
             "pay_description",
