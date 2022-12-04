@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Box, Grid, Modal, Typography } from "@mui/material";
 import api, { Routes } from "@api";
@@ -98,10 +98,11 @@ const ExtraDetails = (props: any) => {
 						backgroundSize: "cover",
 						backgroundPosition: {
 							xs: "center center",
-							md: "inherit",
+							sm: "top",
 						},
 						height: {
-							md: "100vh",
+							md: "35rem",
+							sm: "25rem",
 							xs: !isPlaying ? "100vh" : "15rem",
 						},
 						display: "flex",
@@ -176,14 +177,6 @@ const ExtraDetails = (props: any) => {
 								}}
 								p={4}
 							>
-								<Grid item xs={12}>
-									<Typography
-										fontFamily='Barlow Condensed'
-										fontSize={25}
-									>
-										Gullar Original
-									</Typography>
-								</Grid>
 								<Grid item xs={12}>
 									<Typography
 										fontFamily='Playfair Display'

@@ -91,7 +91,12 @@ const ContactUs = () => {
 		<Grid container className='d-center'>
 			<Grid container className='contact-us-container'>
 				<Grid item xs={12} sm={12} md={6}>
-					<Typography variant='h2'>Contact Us</Typography>
+					<Typography
+						variant='h2'
+						color='var(--website-secondary-color)'
+					>
+						Contact Us
+					</Typography>
 				</Grid>
 			</Grid>
 			<form
@@ -117,7 +122,10 @@ const ContactUs = () => {
 								flexDirection='column'
 								className='w-100'
 							>
-								<Typography color='var(--website-secondary-color)'>
+								<Typography
+									color='var(--website-secondary-color)'
+									mb={1}
+								>
 									Full Name
 								</Typography>
 								<CustomInput
@@ -137,7 +145,10 @@ const ContactUs = () => {
 								flexDirection='column'
 								className='w-100'
 							>
-								<Typography color='var(--website-secondary-color)'>
+								<Typography
+									color='var(--website-secondary-color)'
+									mb={1}
+								>
 									Email Address
 								</Typography>
 								<CustomInput
@@ -160,7 +171,10 @@ const ContactUs = () => {
 								flexDirection='column'
 								className='w-100'
 							>
-								<Typography color='var(--website-secondary-color)'>
+								<Typography
+									color='var(--website-secondary-color)'
+									mb={1}
+								>
 									Phone Number
 								</Typography>
 								<CustomInput
@@ -186,7 +200,10 @@ const ContactUs = () => {
 								flexDirection='column'
 								className='w-100'
 							>
-								<Typography color='var(--website-secondary-color)'>
+								<Typography
+									color='var(--website-secondary-color)'
+									mb={1}
+								>
 									Subject
 								</Typography>
 								<CustomInput
@@ -205,7 +222,10 @@ const ContactUs = () => {
 								flexDirection='column'
 								className='w-100'
 							>
-								<Typography color='var(--website-secondary-color)'>
+								<Typography
+									color='var(--website-secondary-color)'
+									mb={1}
+								>
 									Your Message
 								</Typography>
 								<textarea

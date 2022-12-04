@@ -6,6 +6,7 @@ import { AxiosError } from "axios";
 import { FC, useEffect, useState } from "react";
 import AnimatedSlider from "react-animated-slider";
 import "react-animated-slider/build/horizontal.css";
+import { Link } from "react-router-dom";
 
 //* Fix for Element type is Invalid in Production Build
 //* https://stackoverflow.com/questions/71000577/react-application-has-element-type-is-invalid-error-on-production-but-is-work
@@ -78,8 +79,14 @@ const BannerCarousel: FC = () => {
 				>
 					{banner?.poster_banner?.map((item, index) => (
 						<div className='slider-content d-center'>
-							<a
-								href={item?.url}
+							<Link
+								to={`${
+									item?.url_type === "EXTERNAL"
+										? item?.url
+										: `/${item?.content_type?.toLowerCase()}/${
+												item?.url
+										  }`
+								}`}
 								style={{
 									height: "100%",
 									width: "100%",
@@ -110,7 +117,7 @@ const BannerCarousel: FC = () => {
 										}}
 									/>
 								</picture>
-							</a>
+							</Link>
 						</div>
 					))}
 				</Slider>

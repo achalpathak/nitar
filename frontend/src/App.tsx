@@ -92,7 +92,7 @@ const App = () => {
 
 		//Setting Favicon
 		favicon.href = `${
-			prefs?.find((v) => v.field === "favicon_url")?.image ?? ""
+			prefs?.find((v) => v.field === "logo_url")?.image ?? ""
 		}`;
 
 		//Setting Title of App

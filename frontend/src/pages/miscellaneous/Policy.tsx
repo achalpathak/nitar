@@ -1,7 +1,7 @@
 //*All imports go here!
 import "../miscellaneous/index.scss";
 import { Button } from "@components";
-import { MouseEvent, useEffect, useMemo, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import api, { Routes } from "@api";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -32,11 +32,7 @@ const Policy = () => {
 
 	const [html, setHtml] = useState<string>("");
 
-	const currentPath = useMemo(
-		() => APIS[location.pathname?.substring(1)],
-		[location.pathname]
-	);
-
+	const currentPath = APIS[location.pathname?.substring(1)];
 	useEffect(() => {
 		(async () => {
 			try {

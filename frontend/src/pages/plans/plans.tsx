@@ -7,7 +7,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import SubscribeButton from "@components/subscribe-button";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import { IPlans, ISuccess } from "@types";
 import api, { Routes } from "@api";
@@ -19,10 +19,9 @@ import Swal from "sweetalert2";
 const Plans = () => {
 	const prefs = useAppSelector((state) => state.preferences);
 
-	const pay_description = useMemo(
-		() => prefs?.find((v) => v.field === "pay_description")?.value,
-		[]
-	);
+	const pay_description = prefs?.find(
+		(v) => v.field === "pay_description"
+	)?.value;
 
 	const [plans, setPlans] = useState<IPlans>();
 

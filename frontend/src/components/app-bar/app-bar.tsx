@@ -136,7 +136,8 @@ const AppBar = () => {
 				<Box
 					sx={{
 						my: 2,
-						height: 90,
+						height: 70,
+						width: 70,
 					}}
 				>
 					<img
@@ -144,6 +145,9 @@ const AppBar = () => {
 						src={prefs?.find((v) => v.field === "logo_url")?.image}
 						height='100%'
 						width='100%'
+						style={{
+							objectFit: "contain",
+						}}
 					/>
 				</Box>
 			</Link>
@@ -234,7 +238,7 @@ const AppBar = () => {
 
 	return (
 		<>
-			<Box sx={{ display: "flex" }} className='app-bar-container'>
+			<Box sx={{ display: "flex" }} className='app-bar-container' py={2}>
 				<MuiAppBar
 					component='nav'
 					sx={{
@@ -276,10 +280,10 @@ const AppBar = () => {
 								<Link
 									to='/'
 									style={{
-										width: 70,
+										width: 50,
+										height: 50,
 									}}
 								>
-									{/* <LogoText width={100} /> */}
 									<img
 										alt='logo'
 										src={
@@ -289,6 +293,9 @@ const AppBar = () => {
 										}
 										height='100%'
 										width='100%'
+										style={{
+											objectFit: "contain",
+										}}
 									/>
 								</Link>
 							</Box>
@@ -306,7 +313,8 @@ const AppBar = () => {
 							<Link
 								to='/'
 								style={{
-									width: 70,
+									width: 50,
+									height: 50,
 								}}
 							>
 								{/* <LogoText width={60} height={30} /> */}

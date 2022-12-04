@@ -10,7 +10,7 @@ import { Box } from "@mui/material";
 import { useAppSelector } from "@redux/hooks";
 import { IError, ISuccess } from "@types";
 import { AxiosError } from "axios";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../miscellaneous/index.scss";
 
@@ -26,19 +26,15 @@ const Footer = () => {
 		twitter,
 		youtube,
 		instagram,
-	] = useMemo(
-		() => [
-			prefs?.find((v) => v.field === "name_of_the_app")?.value,
-			prefs?.find((v) => v.field === "play_store_link")?.value,
-			prefs?.find((v) => v.field === "apple_store_link")?.value,
-			prefs?.find((v) => v.field === "facebook")?.value,
-			prefs?.find((v) => v.field === "twitter")?.value,
-			prefs?.find((v) => v.field === "youtube")?.value,
-			prefs?.find((v) => v.field === "instagram")?.value,
-		],
-		[]
-	);
-
+	] = [
+		prefs?.find((v) => v.field === "name_of_the_app")?.value,
+		prefs?.find((v) => v.field === "play_store_link")?.value,
+		prefs?.find((v) => v.field === "apple_store_link")?.value,
+		prefs?.find((v) => v.field === "facebook")?.value,
+		prefs?.find((v) => v.field === "twitter")?.value,
+		prefs?.find((v) => v.field === "youtube")?.value,
+		prefs?.find((v) => v.field === "instagram")?.value,
+	];
 	useEffect(() => {
 		(async () => {
 			try {
@@ -61,7 +57,8 @@ const Footer = () => {
 					<div className='logo-container flex-row'>
 						<Box
 							sx={{
-								height: 100,
+								height: 70,
+								width: 70,
 								mt: 2,
 							}}
 							className='d-center'
@@ -73,6 +70,9 @@ const Footer = () => {
 									prefs?.find((v) => v.field === "logo_url")
 										?.image
 								}
+								style={{
+									objectFit: "contain",
+								}}
 								width='100%'
 								height='100%'
 							/>
