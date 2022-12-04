@@ -57,6 +57,7 @@ export type IReducer<T = any> = {
 
 export type ICategories = {
 	categories: ICategory[];
+	extra_categories: ICategory[];
 };
 
 export type ICategory = {

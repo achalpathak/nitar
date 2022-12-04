@@ -87,9 +87,12 @@ const Register = () => {
 
 				if (res.status === 200) {
 					setCountries(res.data?.result);
-					setCountry(
-						res.data?.result?.find((v) => v.name === "India")
+					const india = res.data?.result?.find(
+						(v) => v.name === "India"
 					);
+					if (india) {
+						setCountry(india);
+					}
 				} else {
 					setCountries([]);
 				}

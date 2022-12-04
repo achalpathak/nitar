@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-	baseURL: "backend",
+	baseURL: "/backend",
 	withCredentials: true,
 	xsrfCookieName: "csrftoken",
 	xsrfHeaderName: "x-csrftoken",

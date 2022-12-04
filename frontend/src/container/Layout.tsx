@@ -9,6 +9,7 @@ import {
 	ContactUs,
 	Upcoming,
 	MovieDetails,
+	ExtrasDetails,
 } from "@pages";
 import SeriesDetails from "@pages/series-details";
 
@@ -45,6 +46,10 @@ const TheContent = () => {
 							<Route
 								path='/series/:slug'
 								element={<SeriesDetails />}
+							/>
+							<Route
+								path='/extras/:slug'
+								element={<ExtrasDetails />}
 							/>
 							<Route path='/plans' element={<Plans />} />
 							<Route path='/contact-us' element={<ContactUs />} />

@@ -1,24 +1,16 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Box, Grid, Modal, Typography } from "@mui/material";
 import api, { Routes } from "@api";
-import {
-	IBanners,
-	ICategories,
-	ICategory,
-	ICategoryItem,
-	IEpisodesSet,
-	ISeriesItem,
-	ISuccess,
-} from "@types";
+import { ICategories, ICategory, ICategoryItem, ISuccess } from "@types";
 import { AxiosError } from "axios";
 import { EpisodeList, MovieList } from "@components/movies";
 import { useAlert } from "@hooks";
 import "../movie-details/movie-details.scss";
 import { PlayCircleOutlineOutlined } from "@mui/icons-material";
 import ReactPlayer from "react-player";
-import Swal from "sweetalert2";
 import { useAppSelector } from "@redux/hooks";
+import Swal from "sweetalert2";
 
 const ExtraDetails = (props: any) => {
 	const { slug } = useParams();
@@ -28,17 +20,11 @@ const ExtraDetails = (props: any) => {
 	const showAlert = useAlert();
 	const user = useAppSelector((state) => state.user);
 
-	const [movie, setMovie] = useState<ISeriesItem>();
+	const [movie, setMovie] = useState<ICategoryItem>();
 	const [similarMovies, setSimilarMovies] = useState<ICategory>();
 
 	const [showTrailer, setShowTrailer] = useState<boolean>(false);
 	const [isPlaying, setPlaying] = useState<boolean>(false);
-
-	const [currentlyPlaying, setCurrentlyPlaying] = useState<IEpisodesSet>();
-
-	useEffect(() => {
-		console.log("Currently Playing", currentlyPlaying);
-	}, [currentlyPlaying]);
 
 	useEffect(() => {
 		(async () => {
@@ -53,7 +39,6 @@ const ExtraDetails = (props: any) => {
 							(v) => v.name?.toLowerCase() === "trending now"
 						)
 					);
-					console.log("Movies", res.data?.result);
 				}
 			} catch (error) {
 				const err = error as AxiosError<ISuccess>;
@@ -67,12 +52,11 @@ const ExtraDetails = (props: any) => {
 		(async () => {
 			try {
 				const res = await api.get<ISuccess<ICategoryItem>>(
-					`${Routes.SERIES}/${slug}/`
+					`${Routes.EXTRAS}/${slug}/`
 				);
 
 				if (res.status === 200) {
 					setMovie(res.data?.result);
-					setCurrentlyPlaying(res.data?.result?.episodes_set[0]);
 				}
 			} catch (error) {
 				const err = error as AxiosError<ISuccess>;
@@ -127,10 +111,10 @@ const ExtraDetails = (props: any) => {
 									},
 								}}
 							>
-								{(currentlyPlaying?.video_link ?? "") !== "" ? (
+								{(movie?.video_link ?? "") !== "" ? (
 									<ReactPlayer
 										controls
-										url={`${currentlyPlaying?.video_link}`}
+										url={`${movie?.video_link}`}
 										width='100%'
 										height='100%'
 										onReady={(e) => {
@@ -141,7 +125,7 @@ const ExtraDetails = (props: any) => {
 							</Box>
 							<Box m={2}>
 								<Typography fontFamily='inter' fontSize={25}>
-									{movie?.name} - {currentlyPlaying?.name}
+									{movie?.name}
 								</Typography>
 							</Box>
 						</>
@@ -212,9 +196,9 @@ const ExtraDetails = (props: any) => {
 												{movie?.age_rating}
 											</Typography>
 										</Box>
-										{movie?.genres?.map((g, i) => (
+										{movie?.get_genres?.map((g, i) => (
 											<Box
-												key={g.id}
+												key={g}
 												mr={2}
 												className='genre'
 												sx={{
@@ -226,7 +210,7 @@ const ExtraDetails = (props: any) => {
 													fontFamily='Barlow Condensed'
 													fontSize={16}
 												>
-													{g.name}
+													{g}
 												</Typography>
 											</Box>
 										))}
@@ -323,7 +307,7 @@ const ExtraDetails = (props: any) => {
 												setShowTrailer(true);
 											} else {
 												Swal.fire({
-													title: "Trailer is not available",
+													title: "Trailer not available",
 													text: "Please contact admin",
 													icon: "warning",
 													allowOutsideClick: () =>
@@ -348,80 +332,6 @@ const ExtraDetails = (props: any) => {
 						</Grid>
 					)}
 				</Grid>
-				{movie ? (
-					<Grid item xs={12}>
-						<EpisodeList
-							name='Episodes'
-							series={movie}
-							poster_type={"poster_small_vertical_image"}
-							onChange={(item) => {
-								if (item?.membership_required === false) {
-									//PLaying video for every user
-									if (item?.video_link) {
-										setCurrentlyPlaying(item);
-										setPlaying(true);
-									} else {
-										Swal.fire({
-											title: "Video is not available",
-											text: "Please contact admin",
-											icon: "warning",
-											allowOutsideClick: () => true,
-										});
-									}
-								} else {
-									if (Object.hasOwn(item, "video_link")) {
-										//Membership is available, video can be played
-										if (item?.video_link) {
-											//Video link is available for members
-											setCurrentlyPlaying(item);
-											setPlaying(true);
-										} else {
-											//Video is not available for members
-											Swal.fire({
-												title: "Video is not available",
-												text: "Please contact admin",
-												icon: "warning",
-												allowOutsideClick: () => true,
-											});
-										}
-									} else {
-										if (user?.full_name) {
-											Swal.fire({
-												title: "Membership Required",
-												text: "Please subscribe to continue",
-												icon: "warning",
-												showConfirmButton: true,
-												showCancelButton: true,
-												confirmButtonText: "Subscribe",
-												cancelButtonText: "Cancel",
-												allowOutsideClick: () => true,
-											}).then((res) => {
-												if (res.isConfirmed) {
-													navigate("/plans");
-												}
-											});
-										} else {
-											Swal.fire({
-												title: "Sign in",
-												text: "Please sign in to continue",
-												icon: "warning",
-												showConfirmButton: true,
-												showCancelButton: true,
-												confirmButtonText: "Sign in",
-												cancelButtonText: "Cancel",
-												allowOutsideClick: () => true,
-											}).then((res) => {
-												if (res.isConfirmed) {
-													navigate("/login");
-												}
-											});
-										}
-									}
-								}
-							}}
-						/>
-					</Grid>
-				) : null}
 				<Grid item xs={12}>
 					{similarMovies ? (
 						<MovieList
@@ -441,18 +351,16 @@ const ExtraDetails = (props: any) => {
 					}}
 				>
 					<a
-						href='#'
+						href=''
 						onClickCapture={(e) => {
 							e.preventDefault();
 							console.log("Playing");
 
 							//Checking for membership
-							if (currentlyPlaying) {
-								if (
-									currentlyPlaying?.membership_required ===
-									false
-								) {
-									if (currentlyPlaying?.video_link) {
+							if (movie) {
+								if (movie?.membership_required === false) {
+									//PLaying video for every user
+									if (movie?.video_link) {
 										setPlaying(true);
 									} else {
 										Swal.fire({
@@ -463,16 +371,21 @@ const ExtraDetails = (props: any) => {
 										});
 									}
 								} else {
-									if (
-										Object.hasOwn(
-											currentlyPlaying,
-											"video_link"
-										)
-									) {
+									if (Object.hasOwn(movie, "video_link")) {
 										//Membership is available, video can be played
-										if (currentlyPlaying?.video_link) {
+										if (movie?.video_link) {
 											//Video link is available for members
-											setPlaying(true);
+											if (movie?.video_link) {
+												setPlaying(true);
+											} else {
+												Swal.fire({
+													title: "Video is not available",
+													text: "Please contact admin",
+													icon: "warning",
+													allowOutsideClick: () =>
+														true,
+												});
+											}
 										} else {
 											//Video is not available for members
 											Swal.fire({
@@ -545,7 +458,16 @@ const ExtraDetails = (props: any) => {
 						setShowTrailer(false);
 					}}
 				>
-					<Box width='90vw' height='70vw'>
+					<Box
+						sx={{
+							width: "90vw",
+							height: {
+								xs: "25vh",
+								sm: "50vh",
+								md: "95vh",
+							},
+						}}
+					>
 						<ReactPlayer
 							controls
 							url={`${movie?.trailer_link}`}

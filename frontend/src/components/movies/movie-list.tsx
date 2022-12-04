@@ -7,10 +7,20 @@ import { Link } from "react-router-dom";
 import { animated, useSpring } from "react-spring";
 import "./movies.scss";
 
-const MovieList: FC<ICategory> = ({ name, poster_type, data }) => {
+type IMovieListProps = ICategory & {
+	type?: "movies" | "extras";
+};
+
+const MovieList: FC<IMovieListProps> = ({
+	name,
+	poster_type,
+	data,
+	type = "movies",
+}) => {
 	if ((data?.length ?? 0) === 0) {
 		return null;
 	}
+
 	const moviesRef = useRef<HTMLDivElement>(null);
 
 	const [style, set] = useSpring(() => ({
@@ -105,7 +115,11 @@ const MovieList: FC<ICategory> = ({ name, poster_type, data }) => {
 					>
 						{data?.map((img) => (
 							<Link
-								to={`/${img?.content_type}/${img?.slug ?? ""}`}
+								to={`/${
+									type === "movies"
+										? img?.content_type
+										: "extras"
+								}/${img?.slug ?? ""}`}
 								state={img}
 								key={img.rankings}
 							>

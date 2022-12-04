@@ -16,6 +16,7 @@ export const Routes = {
 	BANNER: "/api/library/banner/",
 	MOVIES: "/api/library/movies",
 	SERIES: "/api/library/series",
+	EXTRAS: "/api/library/extras",
 	COUNTRY_LIST: "/api/settings/country/",
 	PAYMENT: "/api/payments/initiate_payments/",
 };

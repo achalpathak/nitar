@@ -13,6 +13,7 @@ const Home = () => {
 	const user = useAppSelector((state) => state.user);
 
 	const [movies, setMovies] = useState<ICategory[]>([]);
+	const [extras, setExtras] = useState<ICategory[]>([]);
 
 	useEffect(() => {
 		(async () => {
@@ -23,7 +24,7 @@ const Home = () => {
 
 				if (res.status === 200) {
 					setMovies(res.data?.result?.categories);
-					console.log("Movies", res.data?.result);
+					setExtras(res.data?.result?.extra_categories);
 				}
 			} catch (error) {
 				const err = error as AxiosError<ISuccess>;
@@ -51,6 +52,9 @@ const Home = () => {
 				) : null
 			) : null}
 			{movies?.slice(2)?.map((m) => (
+				<MovieList key={m?.name} {...m} />
+			))}
+			{extras?.map((m) => (
 				<MovieList key={m?.name} {...m} />
 			))}
 		</div>
