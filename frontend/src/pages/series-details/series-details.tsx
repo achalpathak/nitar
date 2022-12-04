@@ -140,6 +140,7 @@ const ExtraDetails = (props: any) => {
 										config={{
 											file: {
 												forceHLS: true,
+												hlsVersion: "1.2.8",
 											},
 										}}
 									/>
@@ -528,37 +529,40 @@ const ExtraDetails = (props: any) => {
 					</a>
 				</Box>
 			) : null}
-			<Modal
-				open={showTrailer}
-				keepMounted
-				closeAfterTransition
-				onClose={() => setShowTrailer(false)}
-			>
-				<Box
-					width='100%'
-					height='100%'
-					className='d-center'
-					onClickCapture={(e) => {
-						e.preventDefault();
-						setShowTrailer(false);
-					}}
+			{movie?.trailer_link ? (
+				<Modal
+					open={showTrailer}
+					keepMounted
+					closeAfterTransition
+					onClose={() => setShowTrailer(false)}
 				>
-					<Box width='90vw' height='70vw'>
-						<ReactPlayer
-							controls
-							url={`${movie?.trailer_link}`}
-							width='100%'
-							height='100%'
-							playing={showTrailer}
-							config={{
-								file: {
-									forceHLS: true,
-								},
-							}}
-						/>
+					<Box
+						width='100%'
+						height='100%'
+						className='d-center'
+						onClickCapture={(e) => {
+							e.preventDefault();
+							setShowTrailer(false);
+						}}
+					>
+						<Box width='90vw' height='70vw'>
+							<ReactPlayer
+								controls
+								url={`${movie?.trailer_link}`}
+								width='100%'
+								height='100%'
+								playing={showTrailer}
+								config={{
+									file: {
+										forceHLS: true,
+										hlsVersion: "1.2.8",
+									},
+								}}
+							/>
+						</Box>
 					</Box>
-				</Box>
-			</Modal>
+				</Modal>
+			) : null}
 		</>
 	);
 };
