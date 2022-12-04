@@ -3,7 +3,6 @@ from rest_framework.views import APIView
 from . import models as settings_models
 from django.db.models import Q
 from . import serializers
-from django_countries import countries
 import json
 
 
@@ -65,8 +64,6 @@ class RefundPolicy(APIView):
 
 class CountriesAPI(APIView):
     def get(self, request):
-        data = open(
-            "./settings/phone_code.json"
-        ).read()
+        data = open("./settings/phone_code.json").read()
         data = json.loads(data)
         return Response({"result": data})
