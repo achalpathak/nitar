@@ -57,9 +57,10 @@ def check_user_logged_in_and_has_membership(user_obj, data):
 
 def show_price_in_dollar(user_obj, data):
     try:
-        if user_obj.phone_code == "+91":
+        currency = user_obj.currency_mode
+        if currency == "INR":
             return False
         else:
             return True
-    except AttributeError:  # default inr price will be shown
+    except AttributeError:  # default inr price will be shown for non-logged in users
         return False

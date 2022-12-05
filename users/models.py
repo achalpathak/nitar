@@ -92,6 +92,13 @@ class User(AbstractUser, TimeStampedModel):
             return True
         else:
             return False
+        
+    @property
+    def currency_mode(self):
+        if self.phone_code == "+91":
+            return "INR"
+        else:
+            return "USD"
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
