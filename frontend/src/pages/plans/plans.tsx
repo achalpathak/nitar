@@ -84,6 +84,7 @@ const Plans = () => {
 				key: data?.razorpay_merchant_key,
 				amount: data?.razorpay_amount?.toString(),
 				currency: data?.currency,
+				redirect: true,
 				name: prefs?.name_of_the_app?.value ?? "",
 				description: `${user?.full_name} Purchasing ${
 					plans?.plans?.find((v) => v.id === plan_id)?.name ?? ""
