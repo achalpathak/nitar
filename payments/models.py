@@ -2,7 +2,10 @@ from django.db import models
 from django.db.models.fields import CharField
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
+
 User = get_user_model()
+from users.models import Memberships, UserMemberships
+
 
 class PaymentStatus:
     SUCCESS = "Success"
@@ -12,8 +15,14 @@ class PaymentStatus:
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    membership_plan = models.CharField(_("Membership Name"),max_length=30, blank=True, null=True)
-    currency = models.CharField(_("Currency"),max_length=10, blank=True, null=True)
+    membership = models.ForeignKey(Memberships, on_delete=models.CASCADE)
+    user_membership = models.ForeignKey(
+        UserMemberships, blank=True, null=True, on_delete=models.CASCADE
+    )
+    membership_plan = models.CharField(
+        _("Membership Name"), max_length=30, blank=True, null=True
+    )
+    currency = models.CharField(_("Currency"), max_length=10, blank=True, null=True)
     amount = models.FloatField(_("Amount"), null=False, blank=False)
     status = CharField(
         _("Payment Status"),
