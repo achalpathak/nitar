@@ -59,11 +59,8 @@ const DownloadApp = () => {
 											<Box>
 												<a
 													href={
-														prefs?.find(
-															(v) =>
-																v.field ===
-																"play_store_link"
-														)?.value
+														prefs?.play_store_link
+															?.value
 													}
 													target='_blank'
 												>
@@ -76,11 +73,8 @@ const DownloadApp = () => {
 											<Box>
 												<a
 													href={
-														prefs?.find(
-															(v) =>
-																v.field ===
-																"apple_store_link"
-														)?.value
+														prefs?.apple_store_link
+															?.value
 													}
 													target='_blank'
 												>
@@ -95,13 +89,7 @@ const DownloadApp = () => {
 									<Grid item xs={6} className='d-center'>
 										<img
 											alt='Download App'
-											src={`${
-												prefs?.find(
-													(v) =>
-														v.field ===
-														"qr_code_image_url"
-												)?.image
-											}`}
+											src={`${prefs?.qr_code_image_url?.image}`}
 											width='80%'
 											// height='50%'
 										></img>

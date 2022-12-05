@@ -4,7 +4,13 @@ import { Layout } from "@container";
 import { Alert, Loader } from "@components";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import api, { Routes } from "@api";
-import { IBanners, IPreferences, ISuccess, IWelcomeBanner } from "@types";
+import {
+	IBanners,
+	IPreferences,
+	IPrefs,
+	ISuccess,
+	IWelcomeBanner,
+} from "@types";
 import { AxiosError } from "axios";
 import Actions from "@redux/actions";
 import "react-carousel-animated/dist/style.css";
@@ -66,7 +72,7 @@ const App = () => {
 		return "";
 	};
 
-	const setCSSVariables = (prefs: IPreferences[]) => {
+	const setCSSVariables = (prefs: IPreferences) => {
 		const htmlElement = document.documentElement;
 		const favicon = document.head.querySelector(
 			"#favicon"
@@ -75,44 +81,45 @@ const App = () => {
 
 		htmlElement.style.setProperty(
 			"--website-primary-color",
-			prefs?.find((v) => v.field === "color_primary")?.value ?? ""
+			prefs?.color_primary?.value ?? ""
 		);
 
 		htmlElement.style.setProperty(
 			"--website-secondary-color",
 
-			prefs?.find((v) => v.field === "color_secondary")?.value ?? ""
+			prefs?.color_secondary?.value ?? ""
 		);
 
 		htmlElement.style.setProperty(
 			"--website-alternate-color",
 
-			prefs?.find((v) => v.field === "color_alternate")?.value ?? ""
+			prefs?.color_alternate?.value ?? ""
 		);
 
 		//Setting Favicon
-		favicon.href = `${
-			prefs?.find((v) => v.field === "logo_url")?.image ?? ""
-		}`;
+		favicon.href = `${prefs?.logo_url?.image ?? ""}`;
 
 		//Setting Title of App
-		title.innerText =
-			prefs?.find((v) => v.field === "name_of_the_app")?.value ?? "";
+		title.innerText = prefs?.name_of_the_app?.value ?? "";
 	};
 
 	useLayoutEffect(() => {
 		(async () => {
 			try {
-				const res = await api.get<ISuccess<IPreferences[]>>(
+				const res = await api.get<ISuccess<IPrefs[]>>(
 					Routes.WEBSITE_CONFIG
 				);
 
-				setCSSVariables(res.data?.result);
+				const prefsObj: IPreferences = res.data?.result
+					.map((v) => ({ [v.field]: v }))
+					.reduce((c, acc) => ({ ...acc, ...c }));
+
+				setCSSVariables(prefsObj);
 
 				if (res.status === 200) {
 					dispatch({
 						type: Actions.SAVE_PREFERENCES,
-						payload: res.data?.result,
+						payload: prefsObj,
 					});
 				}
 			} catch (error) {

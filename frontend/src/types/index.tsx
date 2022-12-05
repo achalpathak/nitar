@@ -150,12 +150,16 @@ export type IGenre = {
 	name: string;
 };
 
-export type IPreferences = {
+export type IPrefs = {
 	field: string;
 	value: string;
 	toggle_value: boolean;
 	image: string;
 	field_description: string;
+};
+
+export type IPreferences = {
+	[x: string]: IPrefs;
 };
 
 export type ISearchResult = {
@@ -225,4 +229,12 @@ export type IUser = {
 export type ICountryList = {
 	name: string;
 	code: string;
+};
+
+export type IPaymentConfig = {
+	razorpay_order_id: string;
+	razorpay_merchant_key?: any;
+	razorpay_amount: number;
+	currency: string;
+	callback_url: string;
 };

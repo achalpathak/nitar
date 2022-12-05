@@ -142,7 +142,7 @@ const AppBar = () => {
 				>
 					<img
 						alt='logo'
-						src={prefs?.find((v) => v.field === "logo_url")?.image}
+						src={prefs?.logo_url?.image}
 						height='100%'
 						width='100%'
 						style={{
@@ -286,11 +286,7 @@ const AppBar = () => {
 								>
 									<img
 										alt='logo'
-										src={
-											prefs?.find(
-												(v) => v.field === "logo_url"
-											)?.image
-										}
+										src={prefs?.logo_url?.image}
 										height='100%'
 										width='100%'
 										style={{
@@ -320,11 +316,7 @@ const AppBar = () => {
 								{/* <LogoText width={60} height={30} /> */}
 								<img
 									alt='logo'
-									src={
-										prefs?.find(
-											(v) => v.field === "logo_url"
-										)?.image
-									}
+									src={prefs?.logo_url?.image}
 									height='100%'
 									width='100%'
 								/>
@@ -366,13 +358,7 @@ const AppBar = () => {
 							>
 								<Box mr={2} className='d-center'>
 									<a
-										href={
-											prefs?.find(
-												(v) =>
-													v.field ===
-													"play_store_link"
-											)?.value
-										}
+										href={prefs?.play_store_link?.value}
 										target='_blank'
 									>
 										<AndroidLogo height={20} />
@@ -380,13 +366,7 @@ const AppBar = () => {
 								</Box>
 								<Box className='d-center'>
 									<a
-										href={
-											prefs?.find(
-												(v) =>
-													v.field ===
-													"apple_store_link"
-											)?.value
-										}
+										href={prefs?.apple_store_link?.value}
 										target='_blank'
 									>
 										<AppleLogo height={20} />

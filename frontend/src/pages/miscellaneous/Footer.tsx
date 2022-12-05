@@ -27,13 +27,13 @@ const Footer = () => {
 		youtube,
 		instagram,
 	] = [
-		prefs?.find((v) => v.field === "name_of_the_app")?.value,
-		prefs?.find((v) => v.field === "play_store_link")?.value,
-		prefs?.find((v) => v.field === "apple_store_link")?.value,
-		prefs?.find((v) => v.field === "facebook")?.value,
-		prefs?.find((v) => v.field === "twitter")?.value,
-		prefs?.find((v) => v.field === "youtube")?.value,
-		prefs?.find((v) => v.field === "instagram")?.value,
+		prefs?.name_of_the_app?.value,
+		prefs?.play_store_link?.value,
+		prefs?.apple_store_link?.value,
+		prefs?.facebook?.value,
+		prefs?.twitter?.value,
+		prefs?.youtube?.value,
+		prefs?.instagram?.value,
 	];
 	useEffect(() => {
 		(async () => {
@@ -66,10 +66,7 @@ const Footer = () => {
 							{/* <LogoText height={30} /> */}
 							<img
 								alt='logo'
-								src={
-									prefs?.find((v) => v.field === "logo_url")
-										?.image
-								}
+								src={prefs?.logo_url?.image}
 								style={{
 									objectFit: "contain",
 								}}

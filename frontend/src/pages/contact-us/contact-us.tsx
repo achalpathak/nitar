@@ -262,22 +262,10 @@ const ContactUs = () => {
 										className='call-button'
 										mb={2}
 									>
-										<a
-											href={`tel:${
-												prefs?.find(
-													(v) => v.field === "phone"
-												)?.value
-											}`}
-										>
+										<a href={`tel:${prefs?.phone?.value}`}>
 											<Grid container className='call-us'>
 												<PhoneIcon />
-												Call On:{" "}
-												{
-													prefs?.find(
-														(v) =>
-															v.field === "phone"
-													)?.value
-												}
+												Call On: {prefs?.phone?.value}
 											</Grid>
 										</a>
 									</Grid>
@@ -289,21 +277,11 @@ const ContactUs = () => {
 										className='call-button'
 									>
 										<a
-											href={`mailto:${
-												prefs?.find(
-													(v) => v.field === "email"
-												)?.value
-											}`}
+											href={`mailto:${prefs?.email?.value}`}
 										>
 											<Grid container className='call-us'>
 												<Email />
-												Email:{" "}
-												{
-													prefs?.find(
-														(v) =>
-															v.field === "email"
-													)?.value
-												}
+												Email: {prefs?.email?.value}
 											</Grid>
 										</a>
 									</Grid>

@@ -54,7 +54,7 @@ const persistor = persistStore(store);
 
 export type RootState = {
 	alert: IMessage;
-	preferences: IPreferences[];
+	preferences: IPreferences;
 	user: IUser;
 };
 

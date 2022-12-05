@@ -145,20 +145,10 @@ const Policy = () => {
 								mt={2}
 								className='call-button'
 							>
-								<a
-									href={`tel:${
-										prefs?.find((v) => v.field === "phone")
-											?.value
-									}`}
-								>
+								<a href={`tel:${prefs?.phone?.value}`}>
 									<Grid container className='call-us'>
 										<PhoneIcon />
-										Call On:{" "}
-										{
-											prefs?.find(
-												(v) => v.field === "phone"
-											)?.value
-										}
+										Call On: {prefs?.phone?.value ?? ""}
 									</Grid>
 								</a>
 							</Grid>

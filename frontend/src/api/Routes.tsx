@@ -19,4 +19,5 @@ export const Routes = {
 	EXTRAS: "/api/library/extras",
 	COUNTRY_LIST: "/api/settings/country/",
 	PAYMENT: "/api/payments/initiate_payments/",
+	RAZORPAY: "/api/payments/paymenthandler/",
 };

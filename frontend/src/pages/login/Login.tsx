@@ -244,12 +244,10 @@ const Login = () => {
 									inputStyle={{
 										width: "2rem",
 										height: "2rem",
-										// background: "transparent",
 										padding: 5,
-										// backgroundImage:
-										// 	'url("src/assets/common/otp.png")',
 										backgroundSize: "cover",
 									}}
+									className='otp-container'
 									isInputNum
 								/>
 							</>
