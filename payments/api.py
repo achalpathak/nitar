@@ -17,10 +17,7 @@ class InitiatePayments(APIView):
 
     def post(self, request):
         try:
-            # # current_url="{0}://{1}{2}".format(request.scheme, request.get_host(), request.path)
-            # print(request.build_absolute_uri(reverse('view_name', args=(1, ))))
-            # return None
-            callback_url = "https://www.google.com"
+            callback_url = request.build_absolute_uri(reverse('payment_handler'))
             membership_id = request.data["membership_id"]
             user = request.user
             memberhip_obj = Memberships.objects.get(id=membership_id)
@@ -31,7 +28,7 @@ class InitiatePayments(APIView):
                 amount = memberhip_obj.price_in_inr
             else:
                 amount = memberhip_obj.price_in_dollar
-
+            amount=1
             razorpay_order = razorpay_client.order.create(
                 {
                     "amount": int(amount) * 100,
