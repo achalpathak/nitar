@@ -116,7 +116,7 @@ const Plans = () => {
 			};
 
 			const rzpay = new Razorpay(config);
-			rzpay.on("payment.failed", function (response) {
+			rzpay.on("payment.failed", function (response: any) {
 				console.log("Payment Unsuccessful", response);
 				Swal.fire({
 					title: "Payment Failed",

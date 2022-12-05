@@ -66,8 +66,7 @@ const ContactUs = () => {
 				setPhone("");
 
 				const msg =
-					prefs.find((v) => v.field === "contact_us_message")
-						?.value ?? res.data?.message;
+					prefs?.contact_us_message?.value ?? res.data?.message;
 
 				Swal.fire({
 					title: "Success",
