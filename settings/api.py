@@ -28,6 +28,9 @@ class WebsiteConfigSettingsAPI(APIView):
             "email",
             "phone",
             "contact_us_message",
+            "razor_pay",
+            "stripe",
+            "paytm"
         ]
         q_objects = Q()
         for t in fields:
