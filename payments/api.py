@@ -54,7 +54,7 @@ class InitiatePayments(APIView):
             context["razorpay_amount"] = amount
             context["currency"] = currency
             context["callback_url"] = callback_url
-            return Response({"message": context})
+            return Response({"result": context})
         except KeyError as e:
             return Response(
                 {"message": f"{e} field is required."},
