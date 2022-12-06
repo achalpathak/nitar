@@ -65,8 +65,8 @@ class InitiatePayments(APIView):
 
 
 class RazorPayCallback(APIView):
-    permission_classes = ()
-    authentication_classes = ()
+    # permission_classes = ()
+    # authentication_classes = ()
 
     def post(self, request):
         try:
