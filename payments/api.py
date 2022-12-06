@@ -7,7 +7,6 @@ import razorpay
 from .models import Order, PaymentStatus
 from users.models import Memberships
 from django.conf import settings
-from django.views.decorators.csrf import csrf_exempt
 from users.models import UserMemberships
 
 razorpay_client = razorpay.Client(
@@ -31,7 +30,7 @@ class InitiatePayments(APIView):
                 amount = memberhip_obj.price_in_inr
             else:
                 amount = memberhip_obj.price_in_dollar
-            amount = 1
+            amount = 1.99
             razorpay_order = razorpay_client.order.create(
                 {
                     "amount": int(amount) * 100,
@@ -65,45 +64,74 @@ class InitiatePayments(APIView):
             )
 
 
-@csrf_exempt
-def razor_pay_callback(request):
-    print("hello")
+class RazorPayCallback(APIView):
+    # permission_classes = ()
+    # authentication_classes = ()
 
-    def verify_signature(response_data):
-        client = razorpay_client
-        return client.utility.verify_payment_signature(response_data)
+    def post(self, request):
+        try:
+            if "razorpay_signature" in request.data:
+                payment_id = request.data.get("razorpay_payment_id", "")
+                provider_order_id = request.data.get("razorpay_order_id", "")
+                signature_id = request.data.get("razorpay_signature", "")
+                print(payment_id, provider_order_id, signature_id)
+                params_dict = {
+                    "razorpay_order_id": provider_order_id,
+                    "razorpay_payment_id": payment_id,
+                    "razorpay_signature": signature_id,
+                }
+                order = Order.objects.get(provider_order_id=provider_order_id)
+                order.payment_id = payment_id
+                order.signature_id = signature_id
+                order.save()
+                result = razorpay_client.utility.verify_payment_signature(params_dict)
+                if result is not None:
+                    try:
+                        # capture the payemt
+                        razorpay_client.payment.capture(
+                            payment_id, int(order.amount) * 100
+                        )
 
-    if "razorpay_signature" in request.POST:
-        payment_id = request.POST.get("razorpay_payment_id", "")
-        provider_order_id = request.POST.get("razorpay_order_id", "")
-        signature_id = request.POST.get("razorpay_signature", "")
-        order = Order.objects.get(provider_order_id=provider_order_id)
-        order.payment_id = payment_id
-        order.signature_id = signature_id
-        order.save()
-        if not verify_signature(request.POST):
-            order.status = PaymentStatus.SUCCESS
-            obj = UserMemberships.objects.create(
-                user=order.user,
-                membership=order.membership,
-            )
-            order.user_membership = obj
-            order.save()
+                        order.status = PaymentStatus.SUCCESS
+                        obj = UserMemberships.objects.create(
+                            user=order.user,
+                            membership=order.membership,
+                        )
+                        order.user_membership = obj
+                        order.save()
 
-            # return render(request, "callback.html", context={"status": order.status})
-            return Response({"result": "Success"})
-        else:
-            order.status = PaymentStatus.FAILURE
-            order.save()
-            # return render(request, "callback.html", context={"status": order.status})
+                        # return render(request, "callback.html", context={"status": order.status})
+                        return Response({"result": "Success"})
+                    except:
+                        # if there is an error while capturing payment.
+                        print("[x] Payment capture failed")
+                        order.status = PaymentStatus.FAILURE
+                        order.save()
+                        return Response(
+                            {"result": "Failed"}, status=status.HTTP_400_BAD_REQUEST
+                        )
+                else:
+                    print("[x] Signature verification failed.")
+                    order.status = PaymentStatus.FAILURE
+                    order.save()
+                    # return render(request, "callback.html", context={"status": order.status})
+                    return Response(
+                        {"result": "Failed"}, status=status.HTTP_400_BAD_REQUEST
+                    )
+            else:
+                payment_id = json.loads(request.data.get("error[metadata]")).get(
+                    "payment_id"
+                )
+                provider_order_id = json.loads(request.data.get("error[metadata]")).get(
+                    "order_id"
+                )
+                order = Order.objects.get(provider_order_id=provider_order_id)
+                order.payment_id = payment_id
+                order.status = PaymentStatus.FAILURE
+                order.save()
+                return Response(
+                    {"result": "Failed"}, status=status.HTTP_400_BAD_REQUEST
+                )
+        except:
+            # for any error
             return Response({"result": "Failed"}, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        payment_id = json.loads(request.POST.get("error[metadata]")).get("payment_id")
-        provider_order_id = json.loads(request.POST.get("error[metadata]")).get(
-            "order_id"
-        )
-        order = Order.objects.get(provider_order_id=provider_order_id)
-        order.payment_id = payment_id
-        order.status = PaymentStatus.FAILURE
-        order.save()
-        return Response({"result": "Failed"}, status=status.HTTP_400_BAD_REQUEST)
