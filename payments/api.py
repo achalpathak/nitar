@@ -74,7 +74,6 @@ class RazorPayCallback(APIView):
                 payment_id = request.data.get("razorpay_payment_id", "")
                 provider_order_id = request.data.get("razorpay_order_id", "")
                 signature_id = request.data.get("razorpay_signature", "")
-                print(payment_id, provider_order_id, signature_id)
                 params_dict = {
                     "razorpay_order_id": provider_order_id,
                     "razorpay_payment_id": payment_id,
@@ -119,12 +118,9 @@ class RazorPayCallback(APIView):
                         {"result": "Failed"}, status=status.HTTP_400_BAD_REQUEST
                     )
             else:
-                payment_id = json.loads(request.data.get("error[metadata]")).get(
-                    "payment_id"
-                )
-                provider_order_id = json.loads(request.data.get("error[metadata]")).get(
-                    "order_id"
-                )
+                print("[x] Payment Failed")
+                payment_id = request.data["metadata"]["payment_id"]
+                provider_order_id = request.data["metadata"]["order_id"]
                 order = Order.objects.get(provider_order_id=provider_order_id)
                 order.payment_id = payment_id
                 order.status = PaymentStatus.FAILURE
@@ -132,6 +128,7 @@ class RazorPayCallback(APIView):
                 return Response(
                     {"result": "Failed"}, status=status.HTTP_400_BAD_REQUEST
                 )
-        except:
+        except Exception as e:
             # for any error
+            print("[x] Some other error", str(e))
             return Response({"result": "Failed"}, status=status.HTTP_400_BAD_REQUEST)
