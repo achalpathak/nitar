@@ -3,7 +3,12 @@ import Actions from "@redux/actions";
 import { useAppDispatch } from "@redux/hooks";
 import { IMessage } from "@types";
 
-type IAlert = (icon: AlertColor, title: string, description?: string) => void;
+type IAlert = (
+	icon: AlertColor,
+	title: string,
+	description?: string,
+	time?: number
+) => void;
 
 const UseAlert = () => {
 	const dispatch = useAppDispatch();
@@ -11,7 +16,8 @@ const UseAlert = () => {
 	const showAlert: IAlert = (
 		icon: AlertColor,
 		title: string,
-		description: string = ""
+		description: string = "",
+		time: number = 4
 	) => {
 		dispatch({
 			type: Actions.SHOW_ALERT,
@@ -26,7 +32,7 @@ const UseAlert = () => {
 			dispatch({
 				type: Actions.HIDE_ALERT,
 			});
-		}, 4000);
+		}, time * 1000);
 	};
 
 	return showAlert;

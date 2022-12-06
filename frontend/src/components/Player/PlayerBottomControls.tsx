@@ -1,11 +1,20 @@
 import * as React from "react";
 import PauseRounded from "@mui/icons-material/PauseRounded";
 import PlayArrowRounded from "@mui/icons-material/PlayArrowRounded";
-import { IconButton, Slider, Stack, styled, Typography } from "@mui/material";
-import { ReactPlayerProps } from "react-player";
+import {
+	IconButton,
+	List,
+	ListItem,
+	Slider,
+	Stack,
+	styled,
+	Typography,
+} from "@mui/material";
+import ReactPlayer, { ReactPlayerProps } from "react-player";
 import { intervalToDuration } from "date-fns";
 import {
 	FullscreenRounded,
+	Settings,
 	VolumeDownRounded,
 	VolumeMuteRounded,
 	VolumeOffRounded,
@@ -63,7 +72,9 @@ const StyledPlayerControls = styled("div")`
 	}
 `;
 
-const PlayerTopControls: React.FC<ReactPlayerProps> = (props) => {
+const PlayerTopControls: React.FC<
+	ReactPlayerProps & { playerRef: React.RefObject<ReactPlayer> }
+> = (props) => {
 	const { state, dispatch, wrapperRef, playerRef } = props;
 	const prefs = useAppSelector((state) => state.preferences);
 
@@ -76,7 +87,11 @@ const PlayerTopControls: React.FC<ReactPlayerProps> = (props) => {
 	};
 
 	const handleSeek = (_event: Event, newValue: number | number[]) => {
-		playerRef.current.seekTo(newValue as number);
+		playerRef.current?.seekTo(newValue as number);
+	};
+
+	const toggleLevels = () => {
+		dispatch({ type: "TOGGLE_LEVELS" });
 	};
 
 	const renderSeekSlider = () => {
@@ -198,6 +213,61 @@ const PlayerTopControls: React.FC<ReactPlayerProps> = (props) => {
 		);
 	};
 
+	const renderQualityControl = () => {
+		const hlsPlayer = playerRef.current?.getInternalPlayer("hls");
+		return (
+			<IconButton
+				className='custom-btn'
+				sx={{
+					position: "relative",
+				}}
+				onClick={() => toggleLevels()}
+			>
+				<Settings
+					sx={{
+						fontSize: "2rem",
+						color: "white",
+						transition: "all 0.3s",
+						transform: state?.levelsShowing
+							? "rotate(60deg)"
+							: "rotate(0deg)",
+					}}
+				/>
+				{state?.levelsShowing ? (
+					<List
+						sx={{
+							position: "absolute",
+							bottom: "2.5rem",
+							backgroundColor: "rgba(0,0,0,0.5)",
+							borderRadius: 2,
+						}}
+					>
+						{hlsPlayer?.levels?.map(
+							(level: any, lvlIndex: number) => (
+								<ListItem
+									key={level?.name}
+									disablePadding
+									sx={{
+										padding: "5px 15px",
+										"&:hover": {
+											backgroundColor:
+												"rgba(255,255,255,0.2)",
+										},
+									}}
+									onClick={() => {
+										hlsPlayer.currentLevel = lvlIndex;
+									}}
+								>
+									<Typography color='white'>{`${level?.name}p`}</Typography>
+								</ListItem>
+							)
+						)}
+					</List>
+				) : null}
+			</IconButton>
+		);
+	};
+
 	return (
 		<StyledPlayerControls className={"video-player__controls"}>
 			<Stack direction='row' alignItems='center'>
@@ -213,6 +283,7 @@ const PlayerTopControls: React.FC<ReactPlayerProps> = (props) => {
 					{renderDurationText()}
 				</Stack>
 				<Stack direction='row' alignItems='center' spacing={2}>
+					{renderQualityControl()}
 					{renderFullscreenButton()}
 				</Stack>
 			</Stack>

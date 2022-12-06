@@ -12,9 +12,14 @@ import { AxiosError } from "axios";
 import { IPaymentConfig, IPlans, ISuccess } from "@types";
 import api, { Routes } from "@api";
 import { useAppSelector } from "@redux/hooks";
-import Swal from "sweetalert2";
+import OldSwal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import useRazorpay, { RazorpayOptions } from "react-razorpay";
 import { useAlert } from "@hooks";
+import { Loader } from "@components";
+import { CustomLoader } from "@components/loader";
+
+const Swal = withReactContent(OldSwal);
 
 //****************************************************************All imports ends here!***************************************************************
 
@@ -30,6 +35,24 @@ const Plans = () => {
 	const user = useAppSelector((state) => state.user);
 
 	const Razorpay = useRazorpay();
+
+	// const loadScript = (src: any) => {
+	// 	return new Promise((resolve) => {
+	// 		const script = document.createElement("script");
+	// 		script.src = src;
+	// 		script.onload = () => {
+	// 			resolve(true);
+	// 		};
+	// 		script.onerror = () => {
+	// 			resolve(false);
+	// 		};
+	// 		document.body.appendChild(script);
+	// 	});
+	// };
+
+	// useEffect(() => {
+	// 	loadScript("https://checkout.razorpay.com/v1/checkout.js");
+	// }, []);
 
 	useEffect(() => {
 		(async () => {
@@ -74,11 +97,31 @@ const Plans = () => {
 		type: "success" | "failure"
 	) => {
 		try {
-			showAlert(
-				"warning",
-				"Waiting for confirmation",
-				"Please wait while we confirm the payment. Do not refresh the page or press back button"
-			);
+			// showAlert(
+			// 	"warning",
+			// 	"Waiting for confirmation",
+			// 	"Please wait while we confirm the payment. Do not refresh the page or press back button",
+			// 	3
+			// );
+
+			// Swal.fire({
+			// 	title: "Waiting for Confirmation",
+			// 	text: "Please wait while we confirm your payment",
+			// 	// iconHtml: <CustomLoader />,
+			// }).then((res) => {
+			// 	if (res.isConfirmed) {
+			// 		// navigate("/");
+			// 	}
+			// });
+
+			// Swal.showLoading(Swal.getConfirmButton());
+			// Swal.getIconContent();
+
+			Swal.fire({
+				title: "Waiting for Confirmation",
+				text: "Please wait while we confirm your payment",
+				iconHtml: <CustomLoader />,
+			});
 
 			const res = await api.post<ISuccess<IPaymentConfig>>(
 				Routes.PAYMENT_CONFIRM,
@@ -88,16 +131,17 @@ const Plans = () => {
 			if (res.status === 200) {
 				console.log("Response", res.data);
 				if (type === "success") {
-					Swal.fire({
-						title: "Success",
-						text: "Payment Successful",
-						icon: "success",
-						confirmButtonText: "Continue to Home",
-					}).then((res) => {
-						navigate("/");
-					});
+					// Swal.hideLoading();
+					setTimeout(() => {
+						Swal.fire({
+							title: "Success",
+							text: "Payment Successful",
+							icon: "success",
+							confirmButtonText: "Continue to Home",
+						});
+					}, 1500);
 				} else {
-					Swal.fire({
+					Swal.update({
 						title: "Payment Failed",
 						text: response?.description ?? "Something went wrong!",
 						icon: "error",

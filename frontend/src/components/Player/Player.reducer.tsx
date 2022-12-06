@@ -10,6 +10,7 @@ const INITIAL_STATE: ReactPlayerProps = {
 	},
 	duration: 0,
 	mouseMoving: true,
+	levelsShowing: false,
 };
 
 const reducer = (state: ReactPlayerProps, action: ReactPlayerProps) => {
@@ -32,6 +33,8 @@ const reducer = (state: ReactPlayerProps, action: ReactPlayerProps) => {
 			return { ...state, mouseMoving: true };
 		case "MOUSE_DEACTIVE":
 			return { ...state, mouseMoving: false };
+		case "TOGGLE_LEVELS":
+			return { ...state, levelsShowing: !state?.levelsShowing };
 		case "RESET":
 			return INITIAL_STATE;
 		default:

@@ -41,6 +41,7 @@
 		"sass": "^1.56.1",
 		"screenfull": "^6.0.2",
 		"sweetalert2": "^11.6.15",
+		"sweetalert2-react-content": "^5.0.7",
 		"vite-plugin-svgr": "^2.2.2"
 	},
 	"devDependencies": {
