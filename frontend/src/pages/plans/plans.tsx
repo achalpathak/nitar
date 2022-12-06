@@ -84,6 +84,7 @@ const Plans = () => {
 				key: data?.razorpay_merchant_key,
 				amount: data?.razorpay_amount?.toString(),
 				currency: data?.currency,
+				callback_url: data?.callback_url,
 				redirect: true,
 				name: prefs?.name_of_the_app?.value ?? "",
 				description: `${user?.full_name} Purchasing ${
