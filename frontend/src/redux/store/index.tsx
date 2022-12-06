@@ -56,6 +56,7 @@ export type RootState = {
 	alert: IMessage;
 	preferences: IPreferences;
 	user: IUser;
+	loading: boolean;
 };
 
 export type AppDispatch = typeof store.dispatch;

@@ -1,6 +1,5 @@
 //*All imports go here!
 import api, { Routes } from "@api";
-import logo from "@assets/common/logo.png";
 import { Button, CustomInput } from "@components";
 import { useAlert } from "@hooks";
 import {
@@ -11,13 +10,8 @@ import {
 	FormHelperText,
 	Typography,
 } from "@mui/material";
-import {
-	ICountryList,
-	ICustomSelectOption,
-	IError,
-	IResponse,
-	ISuccess,
-} from "@types";
+import { useAppSelector } from "@redux/hooks";
+import { ICountryList, IError, IResponse, ISuccess } from "@types";
 import { CustomSelectUtils } from "@utils";
 import axios, { AxiosError } from "axios";
 import {
@@ -37,6 +31,7 @@ const animatedComponents = makeAnimated();
 const Register = () => {
 	const navigate = useNavigate();
 	const showAlert = useAlert();
+	const prefs = useAppSelector((state) => state.preferences);
 
 	// * --- states start here ----------////
 	const [phone, setPhone] = useState<string>("");
@@ -62,22 +57,6 @@ const Register = () => {
 	const [termsError, setTermsError] = useState<boolean>(false);
 
 	// * --- states ends here ----------////
-
-	// const addMessage = (
-	// 	severity: AlertColor,
-	// 	title: string,
-	// 	description: string = ""
-	// ) => {
-	// 	setMessage({
-	// 		severity,
-	// 		title,
-	// 		description,
-	// 	});
-	// 	setTimeout(() => {
-	// 		setMessage(null);
-	// 	}, 4000);
-	// };
-
 	useEffect(() => {
 		(async () => {
 			try {
@@ -171,7 +150,7 @@ const Register = () => {
 					<Box className='logo-container' my={1}>
 						<img
 							alt='logo'
-							src={logo}
+							src={prefs?.logo_url?.image}
 							width='100%'
 							height='100%'
 						></img>

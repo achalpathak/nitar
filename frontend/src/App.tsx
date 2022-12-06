@@ -52,6 +52,8 @@ const router = createBrowserRouter([
 const App = () => {
 	const dispatch = useAppDispatch();
 	const preferences = useAppSelector((state) => state.preferences);
+	const loading = useAppSelector((state) => state.loading);
+
 	const [welcomeBanner, setWelcomeBanner] = useState<IWelcomeBanner>();
 	const [isOpen, setOpen] = useState<boolean>(false);
 
@@ -71,6 +73,32 @@ const App = () => {
 		}
 		return "";
 	};
+
+	useEffect(() => {
+		api.interceptors.request.use(
+			(config) => {
+				dispatch({ type: Actions.SET_LOADING });
+
+				return config;
+			},
+			(error) => {
+				const e = error as AxiosError<ISuccess>;
+				return Promise.reject(e);
+			}
+		);
+
+		api.interceptors.response.use(
+			(response) => {
+				dispatch({ type: Actions.REMOVE_LOADING });
+				return response;
+			},
+			(error) => {
+				dispatch({ type: Actions.REMOVE_LOADING });
+				const e = error as AxiosError<ISuccess>;
+				return Promise.reject(e);
+			}
+		);
+	}, []);
 
 	const setCSSVariables = (prefs: IPreferences) => {
 		const htmlElement = document.documentElement;
@@ -148,20 +176,20 @@ const App = () => {
 		})();
 	}, []);
 
-	useEffect(() => {
-		if (welcomeBanner) {
-			setTimeout(() => {
-				setOpen(true);
-			}, 2000);
-		}
-	}, [welcomeBanner]);
+	// useEffect(() => {
+	// 	if (welcomeBanner) {
+	// 		setTimeout(() => {
+	// 			setOpen(true);
+	// 		}, 2000);
+	// 	}
+	// }, [welcomeBanner]);
 
 	return (
 		<Suspense fallback={<Loader />}>
 			<RouterProvider router={router} />
-			{false ? <Loader /> : null}
+			{loading ? <Loader /> : null}
 			<Alert />
-			{welcomeBanner && false ? (
+			{/* {welcomeBanner && ? (
 				<Modal
 					keepMounted
 					closeAfterTransition
@@ -229,7 +257,7 @@ const App = () => {
 						</Box>
 					</Box>
 				</Modal>
-			) : null}
+			) : null} */}
 		</Suspense>
 	);
 };

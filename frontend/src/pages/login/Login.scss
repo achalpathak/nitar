@@ -49,8 +49,13 @@
 }
 
 .logo-container {
-	// display: flex;
-	// padding: 10px;
+	width: 100px;
+	height: 100px;
+	margin-bottom: 1rem;
+
+	img {
+		object-fit: contain;
+	}
 }
 
 .input-container {

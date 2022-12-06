@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { Box, Grid, Modal, Typography } from "@mui/material";
 import api, { Routes } from "@api";
+import { EpisodeList, MovieList } from "@components/movies";
+import Player from "@components/Player";
+import { useAlert } from "@hooks";
+import { PlayCircleOutlineOutlined } from "@mui/icons-material";
+import { Box, Grid, Modal, Typography } from "@mui/material";
+import { useAppSelector } from "@redux/hooks";
 import {
-	IBanners,
 	ICategories,
 	ICategory,
 	ICategoryItem,
@@ -12,13 +14,10 @@ import {
 	ISuccess,
 } from "@types";
 import { AxiosError } from "axios";
-import { EpisodeList, MovieList } from "@components/movies";
-import { useAlert } from "@hooks";
-import "../movie-details/movie-details.scss";
-import { PlayCircleOutlineOutlined } from "@mui/icons-material";
-import ReactPlayer from "react-player";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-import { useAppSelector } from "@redux/hooks";
+import "../movie-details/movie-details.scss";
 
 const ExtraDetails = (props: any) => {
 	const { slug } = useParams();
@@ -32,7 +31,9 @@ const ExtraDetails = (props: any) => {
 	const [similarMovies, setSimilarMovies] = useState<ICategory>();
 
 	const [showTrailer, setShowTrailer] = useState<boolean>(false);
-	const [isPlaying, setPlaying] = useState<boolean>(false);
+	const [showMovie, setShowMovie] = useState<boolean>(false);
+
+	// const [isPlaying, setPlaying] = useState<boolean>(false);
 
 	const [currentlyPlaying, setCurrentlyPlaying] = useState<IEpisodesSet>();
 
@@ -88,12 +89,11 @@ const ExtraDetails = (props: any) => {
 					item
 					xs={12}
 					sx={{
-						backgroundImage: !isPlaying
-							? {
-									xs: `url(${movie?.poster_large_vertical_image})`,
-									sm: `url(${movie?.poster_large_horizontal_image})`,
-							  }
-							: "none",
+						position: "relative",
+						backgroundImage: {
+							xs: `url(${movie?.poster_large_vertical_image})`,
+							sm: `url(${movie?.poster_large_horizontal_image})`,
+						},
 						backgroundRepeat: "no-repeat",
 						backgroundSize: "cover",
 						backgroundPosition: {
@@ -103,100 +103,72 @@ const ExtraDetails = (props: any) => {
 						height: {
 							md: "35rem",
 							sm: "25rem",
-							xs: !isPlaying ? "100vh" : "15rem",
+							xs: "100vh",
 						},
 						display: "flex",
 						flexDirection: "column",
-						alignItems: {
-							xs: "center",
-							md: !isPlaying ? "center" : "flex-start",
-						},
-						justifyContent: {
-							xs: "center",
-							md: !isPlaying ? "center" : "flex-start",
-						},
+						alignItems: "center",
+						justifyContent: "center",
 					}}
 				>
-					{isPlaying ? (
-						<>
-							<Box
-								sx={{
-									width: "100%",
-									height: {
-										xs: "100%",
-										md: "90%",
-									},
-								}}
-							>
-								{(currentlyPlaying?.video_link ?? "") !== "" ? (
-									<ReactPlayer
-										controls
-										url={`${currentlyPlaying?.video_link}`}
-										width='100%'
-										height='100%'
-										onReady={(e) => {
-											console.log("Player ready", e);
-										}}
-										config={{
-											file: {
-												forceHLS: true,
-												hlsVersion: "1.2.8",
-											},
-										}}
-									/>
-								) : null}
-							</Box>
-							<Box m={2}>
-								<Typography fontFamily='inter' fontSize={25}>
-									{movie?.name} - {currentlyPlaying?.name}
-								</Typography>
-							</Box>
-						</>
-					) : (
+					<Grid
+						container
+						display='flex'
+						sx={{
+							paddingLeft: {
+								md: "10rem",
+							},
+							justifyContent: {
+								xs: "center",
+								md: "flex-start",
+							},
+						}}
+					>
 						<Grid
-							container
-							display='flex'
+							item
+							xs={11}
+							sm={8}
+							md={6}
 							sx={{
-								paddingLeft: {
-									md: "10rem",
-								},
-								justifyContent: {
-									xs: "center",
-									md: "flex-start",
-								},
+								backgroundColor: "rgba(0,0,0,0.5)",
+								maxHeight: "600px",
+								maxWidth: "550px",
 							}}
+							p={4}
 						>
-							<Grid
-								item
-								xs={11}
-								sm={8}
-								md={6}
-								sx={{
-									backgroundColor: "rgba(0,0,0,0.5)",
-									maxHeight: "600px",
-									maxWidth: "550px",
-								}}
-								p={4}
-							>
-								<Grid item xs={12}>
-									<Typography
-										fontFamily='Playfair Display'
-										fontSize={40}
+							<Grid item xs={12}>
+								<Typography
+									fontFamily='Playfair Display'
+									fontSize={40}
+								>
+									{movie?.name}
+								</Typography>
+							</Grid>
+							<Grid item xs={12} my={1}>
+								<Typography fontFamily='inter' fontSize={16}>
+									{movie?.description}
+								</Typography>
+							</Grid>
+							<Grid item xs={12} my={1}>
+								<Box display='flex'>
+									<Box
+										mr={2}
+										className='genre'
+										sx={{
+											backgroundColor: "black",
+										}}
+										p={1}
 									>
-										{movie?.name}
-									</Typography>
-								</Grid>
-								<Grid item xs={12} my={1}>
-									<Typography
-										fontFamily='inter'
-										fontSize={16}
-									>
-										{movie?.description}
-									</Typography>
-								</Grid>
-								<Grid item xs={12} my={1}>
-									<Box display='flex'>
+										<Typography
+											fontFamily='Barlow Condensed'
+											fontSize={16}
+										>
+											{movie?.age_rating}
+										</Typography>
+									</Box>
+									{movie?.genres?.map((g, i) => (
 										<Box
+											key={g.id}
 											mr={2}
 											className='genre'
 											sx={{
@@ -208,144 +180,223 @@ const ExtraDetails = (props: any) => {
 												fontFamily='Barlow Condensed'
 												fontSize={16}
 											>
-												{movie?.age_rating}
+												{g.name}
 											</Typography>
 										</Box>
-										{movie?.genres?.map((g, i) => (
-											<Box
-												key={g.id}
-												mr={2}
-												className='genre'
-												sx={{
-													backgroundColor: "black",
-												}}
-												p={1}
-											>
-												<Typography
-													fontFamily='Barlow Condensed'
-													fontSize={16}
-												>
-													{g.name}
-												</Typography>
-											</Box>
-										))}
-									</Box>
-								</Grid>
-								<Grid item xs={12}>
-									<Grid container>
-										<Grid item xs={4}>
-											<Box
-												display='flex'
-												flexDirection='column'
-											>
-												<Typography
-													variant='h5'
-													fontFamily='Barlow Condensed'
-												>
-													Director
-												</Typography>
-												<Typography>
-													{movie?.director_name ?? ""}
-												</Typography>
-											</Box>
-										</Grid>
-										<Grid item xs={4}>
-											<Box
-												display='flex'
-												flexDirection='column'
-											>
-												<Typography
-													variant='h5'
-													fontFamily='Barlow Condensed'
-												>
-													Production
-												</Typography>
-												<Typography>
-													{movie?.director_name ?? ""}
-												</Typography>
-											</Box>
-										</Grid>
-										<Grid item xs={4}>
-											<Box
-												display='flex'
-												flexDirection='column'
-											>
-												<Typography
-													variant='h5'
-													fontFamily='Barlow Condensed'
-												>
-													Language
-												</Typography>
-												<Typography>
-													{movie?.language ?? ""}
-												</Typography>
-											</Box>
-										</Grid>
-									</Grid>
-								</Grid>
-								<Grid item xs={12} my={1}>
-									<Grid container>
-										<Typography
-											variant='h5'
-											fontFamily='Barlow Condensed'
-											mb={1}
+									))}
+								</Box>
+							</Grid>
+							<Grid item xs={12}>
+								<Grid container>
+									<Grid item xs={4}>
+										<Box
+											display='flex'
+											flexDirection='column'
 										>
-											Star Cast
-										</Typography>
-										<Grid item xs={12}>
-											<Grid container>
-												{movie?.star_cast
-													?.split(",")
-													?.map((sc, sc_i) => (
-														<Grid item xs={6}>
-															<Typography
-																key={sc_i}
-															>
-																{sc?.trim()}
-															</Typography>
-														</Grid>
-													))}
-											</Grid>
+											<Typography
+												variant='h5'
+												fontFamily='Barlow Condensed'
+											>
+												Director
+											</Typography>
+											<Typography>
+												{movie?.director_name ?? ""}
+											</Typography>
+										</Box>
+									</Grid>
+									<Grid item xs={4}>
+										<Box
+											display='flex'
+											flexDirection='column'
+										>
+											<Typography
+												variant='h5'
+												fontFamily='Barlow Condensed'
+											>
+												Production
+											</Typography>
+											<Typography>
+												{movie?.director_name ?? ""}
+											</Typography>
+										</Box>
+									</Grid>
+									<Grid item xs={4}>
+										<Box
+											display='flex'
+											flexDirection='column'
+										>
+											<Typography
+												variant='h5'
+												fontFamily='Barlow Condensed'
+											>
+												Language
+											</Typography>
+											<Typography>
+												{movie?.language ?? ""}
+											</Typography>
+										</Box>
+									</Grid>
+								</Grid>
+							</Grid>
+							<Grid item xs={12} my={1}>
+								<Grid container>
+									<Typography
+										variant='h5'
+										fontFamily='Barlow Condensed'
+										mb={1}
+									>
+										Star Cast
+									</Typography>
+									<Grid item xs={12}>
+										<Grid container>
+											{movie?.star_cast
+												?.split(",")
+												?.map((sc, sc_i) => (
+													<Grid item xs={6}>
+														<Typography key={sc_i}>
+															{sc?.trim()}
+														</Typography>
+													</Grid>
+												))}
 										</Grid>
 									</Grid>
 								</Grid>
-								<Grid item xs={12} my={1}>
-									<a
-										style={{
-											color: "var(--website-secondary-color)",
-											cursor: "pointer",
-										}}
-										onClickCapture={(e) => {
-											e.preventDefault();
-											if (movie?.trailer_link) {
-												console.log("Watching Trailer");
-												setShowTrailer(true);
+							</Grid>
+							<Grid item xs={12} my={1}>
+								<a
+									style={{
+										color: "var(--website-secondary-color)",
+										cursor: "pointer",
+									}}
+									onClickCapture={(e) => {
+										e.preventDefault();
+										if (movie?.trailer_link) {
+											console.log("Watching Trailer");
+											setShowTrailer(true);
+										} else {
+											Swal.fire({
+												title: "Trailer is not available",
+												text: "Please contact admin",
+												icon: "warning",
+												allowOutsideClick: () => true,
+											});
+										}
+									}}
+								>
+									<Grid container>
+										<Grid item mr={1}>
+											<PlayCircleOutlineOutlined />
+										</Grid>
+										<Grid item>
+											<Typography fontFamily='Barlow Condensed'>
+												Watch Trailer
+											</Typography>
+										</Grid>
+									</Grid>
+								</a>
+							</Grid>
+						</Grid>
+					</Grid>
+					<Box
+						sx={{
+							position: "absolute",
+							transform: "translate(50%, -50%)",
+						}}
+					>
+						<a
+							href='#'
+							onClickCapture={(e) => {
+								e.preventDefault();
+								console.log("Playing");
+
+								//Checking for membership
+								if (currentlyPlaying) {
+									if (
+										currentlyPlaying?.membership_required ===
+										false
+									) {
+										if (currentlyPlaying?.video_link) {
+											setShowMovie(true);
+										} else {
+											Swal.fire({
+												title: "Video is not available",
+												text: "Please contact admin",
+												icon: "warning",
+												allowOutsideClick: () => true,
+											});
+										}
+									} else {
+										if (
+											Object.hasOwn(
+												currentlyPlaying,
+												"video_link"
+											)
+										) {
+											//Membership is available, video can be played
+											if (currentlyPlaying?.video_link) {
+												//Video link is available for members
+												setShowMovie(true);
 											} else {
+												//Video is not available for members
 												Swal.fire({
-													title: "Trailer is not available",
+													title: "Video is not available",
 													text: "Please contact admin",
 													icon: "warning",
 													allowOutsideClick: () =>
 														true,
 												});
 											}
-										}}
-									>
-										<Grid container>
-											<Grid item mr={1}>
-												<PlayCircleOutlineOutlined />
-											</Grid>
-											<Grid item>
-												<Typography fontFamily='Barlow Condensed'>
-													Watch Trailer
-												</Typography>
-											</Grid>
-										</Grid>
-									</a>
-								</Grid>
-							</Grid>
-						</Grid>
-					)}
+										} else {
+											//video_link is not available, check if user is logged in or not
+											if (user?.full_name) {
+												Swal.fire({
+													title: "Membership Required",
+													text: "Please subscribe to continue",
+													icon: "warning",
+													showConfirmButton: true,
+													showCancelButton: true,
+													confirmButtonText:
+														"Subscribe",
+													cancelButtonText: "Cancel",
+													allowOutsideClick: () =>
+														true,
+												}).then((res) => {
+													if (res.isConfirmed) {
+														navigate("/plans");
+													}
+												});
+											} else {
+												Swal.fire({
+													title: "Login",
+													text: "Please sign in to continue",
+													icon: "warning",
+													showConfirmButton: true,
+													showCancelButton: true,
+													confirmButtonText:
+														"Sign in",
+													cancelButtonText: "Cancel",
+													allowOutsideClick: () =>
+														true,
+												}).then((res) => {
+													if (res.isConfirmed) {
+														navigate("/login");
+													}
+												});
+											}
+										}
+									}
+								}
+							}}
+						>
+							<PlayCircleOutlineOutlined
+								className='main-play-button'
+								style={{
+									height: 60,
+									width: 60,
+								}}
+							/>
+						</a>
+					</Box>
 				</Grid>
 				{movie ? (
 					<Grid item xs={12}>
@@ -358,7 +409,7 @@ const ExtraDetails = (props: any) => {
 									//PLaying video for every user
 									if (item?.video_link) {
 										setCurrentlyPlaying(item);
-										setPlaying(true);
+										setShowMovie(true);
 									} else {
 										Swal.fire({
 											title: "Video is not available",
@@ -373,7 +424,7 @@ const ExtraDetails = (props: any) => {
 										if (item?.video_link) {
 											//Video link is available for members
 											setCurrentlyPlaying(item);
-											setPlaying(true);
+											setShowMovie(true);
 										} else {
 											//Video is not available for members
 											Swal.fire({
@@ -430,105 +481,6 @@ const ExtraDetails = (props: any) => {
 					) : null}
 				</Grid>
 			</Grid>
-			{!isPlaying ? (
-				<Box
-					sx={{
-						position: "absolute",
-						top: "50vh",
-						right: "50vw",
-						transform: "translate(50%, -50%)",
-					}}
-				>
-					<a
-						href='#'
-						onClickCapture={(e) => {
-							e.preventDefault();
-							console.log("Playing");
-
-							//Checking for membership
-							if (currentlyPlaying) {
-								if (
-									currentlyPlaying?.membership_required ===
-									false
-								) {
-									if (currentlyPlaying?.video_link) {
-										setPlaying(true);
-									} else {
-										Swal.fire({
-											title: "Video is not available",
-											text: "Please contact admin",
-											icon: "warning",
-											allowOutsideClick: () => true,
-										});
-									}
-								} else {
-									if (
-										Object.hasOwn(
-											currentlyPlaying,
-											"video_link"
-										)
-									) {
-										//Membership is available, video can be played
-										if (currentlyPlaying?.video_link) {
-											//Video link is available for members
-											setPlaying(true);
-										} else {
-											//Video is not available for members
-											Swal.fire({
-												title: "Video is not available",
-												text: "Please contact admin",
-												icon: "warning",
-												allowOutsideClick: () => true,
-											});
-										}
-									} else {
-										//video_link is not available, check if user is logged in or not
-										if (user?.full_name) {
-											Swal.fire({
-												title: "Membership Required",
-												text: "Please subscribe to continue",
-												icon: "warning",
-												showConfirmButton: true,
-												showCancelButton: true,
-												confirmButtonText: "Subscribe",
-												cancelButtonText: "Cancel",
-												allowOutsideClick: () => true,
-											}).then((res) => {
-												if (res.isConfirmed) {
-													navigate("/plans");
-												}
-											});
-										} else {
-											Swal.fire({
-												title: "Login",
-												text: "Please sign in to continue",
-												icon: "warning",
-												showConfirmButton: true,
-												showCancelButton: true,
-												confirmButtonText: "Sign in",
-												cancelButtonText: "Cancel",
-												allowOutsideClick: () => true,
-											}).then((res) => {
-												if (res.isConfirmed) {
-													navigate("/login");
-												}
-											});
-										}
-									}
-								}
-							}
-						}}
-					>
-						<PlayCircleOutlineOutlined
-							className='main-play-button'
-							style={{
-								height: 60,
-								width: 60,
-							}}
-						/>
-					</a>
-				</Box>
-			) : null}
 			{movie?.trailer_link ? (
 				<Modal
 					open={showTrailer}
@@ -546,19 +498,43 @@ const ExtraDetails = (props: any) => {
 						}}
 					>
 						<Box width='90vw' height='70vw'>
-							<ReactPlayer
-								controls
-								url={`${movie?.trailer_link}`}
-								width='100%'
-								height='100%'
-								playing={showTrailer}
-								config={{
-									file: {
-										forceHLS: true,
-										hlsVersion: "1.2.8",
-									},
-								}}
-							/>
+							{movie?.trailer_link ? (
+								<Player
+									url={movie?.trailer_link}
+									name={movie?.name ?? ""}
+									description={movie?.description ?? ""}
+									closePlayer={() => setShowMovie(false)}
+								/>
+							) : null}
+						</Box>
+					</Box>
+				</Modal>
+			) : null}
+			{currentlyPlaying?.video_link ? (
+				<Modal
+					open={showMovie}
+					keepMounted
+					closeAfterTransition
+					onClose={() => setShowMovie(false)}
+				>
+					<Box width='100%' height='100%' className='d-center'>
+						<Box
+							sx={{
+								width: "100%",
+								height: "100%",
+							}}
+							className='d-center'
+						>
+							{showMovie ? (
+								<Player
+									url={currentlyPlaying?.video_link}
+									name={currentlyPlaying?.name ?? ""}
+									description={
+										currentlyPlaying?.description ?? ""
+									}
+									closePlayer={() => setShowMovie(false)}
+								/>
+							) : null}
 						</Box>
 					</Box>
 				</Modal>

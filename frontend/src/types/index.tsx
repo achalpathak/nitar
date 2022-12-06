@@ -124,17 +124,13 @@ export type IEpisodesSet = {
 	name: string;
 	description: string;
 	episode_number: number;
-	poster_small_vertical_image: string;
-	poster_large_vertical_image: string;
-	poster_small_horizontal_image: string;
-	poster_large_horizontal_image: string;
 	duration: string;
 	membership_required: boolean;
 	video_link: string;
 	slug: string;
 	published: boolean;
 	series: number;
-};
+} & IImageType;
 
 export type IImageType = {
 	poster_small_vertical_image: string;

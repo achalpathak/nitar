@@ -1,26 +1,17 @@
 //*All imports go here!
 import "./Login.scss";
-import logo from "@assets/common/logo.png";
-import { Button, CustomInput } from "@components";
-import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
-import OtpInput from "react-otp-input";
-import { AxiosError } from "axios";
+// import logo from "@assets/common/logo.png";
 import api, { Routes } from "@api";
-import {
-	Alert,
-	AlertColor,
-	AlertTitle,
-	Grid,
-	Paper,
-	Typography,
-} from "@mui/material";
-import { Box } from "@mui/system";
-import { Link, redirect, useNavigate } from "react-router-dom";
-import { IMessage, IResponse, IError, IUser } from "@types";
-import { useLocation } from "react-router-dom";
+import { Button, CustomInput } from "@components";
 import { useAlert } from "@hooks";
-import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import { Alert, AlertTitle, Typography } from "@mui/material";
 import Actions from "@redux/actions";
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import { IError, IMessage, IResponse, IUser } from "@types";
+import { AxiosError } from "axios";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import OtpInput from "react-otp-input";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 type ILocationProps = {
 	pathname: string;
@@ -34,6 +25,7 @@ const Login = () => {
 
 	const location: ILocationProps = useLocation();
 	const showAlert = useAlert();
+	const prefs = useAppSelector((state) => state.preferences);
 
 	const dispatch = useAppDispatch();
 
@@ -56,22 +48,9 @@ const Login = () => {
 	const interval = useRef<NodeJS.Timer>();
 	const [timer, setTimer] = useState<number>(60);
 
-	// * --- states ends here ----------////
+	const loading = useAppSelector((state) => state.loading);
 
-	// const addMessage = (
-	// 	severity: AlertColor,
-	// 	title: string,
-	// 	description: string = ""
-	// ) => {
-	// 	setMessage({
-	// 		severity,
-	// 		title,
-	// 		description,
-	// 	});
-	// 	setTimeout(() => {
-	// 		setMessage(null);
-	// 	}, 4000);
-	// };
+	// * --- states ends here ----------////
 
 	const startTimer = () => {
 		setTimer(60);
@@ -96,25 +75,6 @@ const Login = () => {
 			stopTimer();
 		}
 	}, [timer]);
-
-	// const errorHandler = () => {
-	// 	const tError: IError = {
-	// 		full_name: [],
-	// 		email: [],
-	// 		phone: [],
-	// 		age: [],
-	// 	};
-
-	// 	if (!phone) {
-	// 		tError.phone?.push("Phone cannot be blank");
-	// 	} else if (phone.length !== 10 || isNaN(parseInt(phone))) {
-	// 		tError.phone?.push("Phone number should be 10 digits");
-	// 	}
-
-	// 	setErrors(tError);
-
-	// 	return Object.values(tError).every((e) => e.length === 0);
-	// };
 
 	const sendOtp = async (phoneNum: string = phone) => {
 		try {
@@ -153,13 +113,11 @@ const Login = () => {
 
 			if (res.status === 200) {
 				showAlert("success", "Success", "Login Successful");
-				setTimeout(() => {
-					dispatch({
-						type: Actions.LOGIN,
-						payload: res.data?.result,
-					});
-					navigate("/");
-				}, 3000);
+				dispatch({
+					type: Actions.LOGIN,
+					payload: res.data?.result,
+				});
+				navigate("/");
 			}
 		} catch (error) {
 			const err = error as AxiosError<IResponse>;
@@ -188,7 +146,7 @@ const Login = () => {
 					<div className='logo-container'>
 						<img
 							alt='logo'
-							src={logo}
+							src={prefs?.logo_url?.image}
 							width='100%'
 							height='100%'
 						></img>
@@ -267,6 +225,7 @@ const Login = () => {
 									verifyOtp();
 								}
 							}}
+							disabled={loading}
 						/>
 						{process === "otp" && (
 							<>
