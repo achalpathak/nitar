@@ -3,12 +3,12 @@ import PauseRounded from "@mui/icons-material/PauseRounded";
 import PlayArrowRounded from "@mui/icons-material/PlayArrowRounded";
 import { IconButton, Slider, Stack, styled, Typography } from "@mui/material";
 import { ReactPlayerProps } from "react-player";
-import { format } from "date-fns";
+import { intervalToDuration } from "date-fns";
 import {
-	ArrowBack,
-	ArrowLeft,
 	FullscreenRounded,
 	VolumeDownRounded,
+	VolumeMuteRounded,
+	VolumeOffRounded,
 	VolumeUpRounded,
 } from "@mui/icons-material";
 import screenfull from "screenfull";
@@ -118,9 +118,36 @@ const PlayerTopControls: React.FC<ReactPlayerProps> = (props) => {
 				sx={{ mb: 1, px: 1 }}
 				alignItems='center'
 			>
-				<VolumeDownRounded
-					sx={{ fontSize: "1.5rem", color: "white" }}
-				/>
+				{state?.volume > 0.5 ? (
+					<IconButton
+						className='custom-btn'
+						onClick={() => dispatch({ type: "VOLUME", payload: 0 })}
+					>
+						<VolumeUpRounded
+							sx={{ fontSize: "1.5rem", color: "white" }}
+						/>
+					</IconButton>
+				) : state?.volume === 0 ? (
+					<IconButton
+						className='custom-btn'
+						onClick={() =>
+							dispatch({ type: "VOLUME", payload: 0.5 })
+						}
+					>
+						<VolumeOffRounded
+							sx={{ fontSize: "1.5rem", color: "white" }}
+						/>
+					</IconButton>
+				) : (
+					<IconButton
+						className='custom-btn'
+						onClick={() => dispatch({ type: "VOLUME", payload: 0 })}
+					>
+						<VolumeDownRounded
+							sx={{ fontSize: "1.5rem", color: "white" }}
+						/>
+					</IconButton>
+				)}
 				<Slider
 					aria-label='Volume'
 					className={
@@ -131,12 +158,20 @@ const PlayerTopControls: React.FC<ReactPlayerProps> = (props) => {
 					value={state.volume}
 					onChange={handleSound}
 				/>
-				<VolumeUpRounded sx={{ fontSize: "1.5rem", color: "white" }} />
 			</Stack>
 		);
 	};
 
 	const renderDurationText = () => {
+		const duration = intervalToDuration({
+			start: 0,
+			end: state.progress.playedSeconds * 1000,
+		});
+		const totalDuration = intervalToDuration({
+			start: 0,
+			end: state.duration * 1000,
+		});
+
 		return (
 			<Stack
 				spacing={2}
@@ -145,12 +180,11 @@ const PlayerTopControls: React.FC<ReactPlayerProps> = (props) => {
 				alignItems='center'
 			>
 				<Typography variant='body2' color='white'>
-					{format(
-						new Date(state.progress.playedSeconds * 1000),
-						"mm:ss"
-					)}
+					{duration.minutes?.toString()?.padStart(2, "0")}:
+					{duration.seconds?.toString()?.padStart(2, "0")}
 					{" / "}
-					{format(new Date(state.duration * 1000), "mm:ss")}
+					{totalDuration.minutes?.toString()?.padStart(2, "0")}:
+					{totalDuration.seconds?.toString()?.padStart(2, "0")}
 				</Typography>
 			</Stack>
 		);

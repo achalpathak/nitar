@@ -178,79 +178,71 @@ const MovieDetails = (props: any) => {
 							</Grid>
 							<Grid item xs={12}>
 								<Grid container>
-									<Grid item xs={4}>
-										<Box
-											display='flex'
-											flexDirection='column'
-										>
-											<Typography
-												variant='h5'
-												fontFamily='Barlow Condensed'
+									{movie?.director_name ? (
+										<Grid item xs={4}>
+											<Box
+												display='flex'
+												flexDirection='column'
 											>
-												Director
-											</Typography>
-											<Typography>
-												{movie?.director_name ?? ""}
-											</Typography>
-										</Box>
-									</Grid>
-									<Grid item xs={4}>
-										<Box
-											display='flex'
-											flexDirection='column'
-										>
-											<Typography
-												variant='h5'
-												fontFamily='Barlow Condensed'
+												<Typography
+													variant='h5'
+													fontFamily='Barlow Condensed'
+												>
+													Director
+												</Typography>
+												<Typography>
+													{movie?.director_name ?? ""}
+												</Typography>
+											</Box>
+										</Grid>
+									) : null}
+									{movie?.language ? (
+										<Grid item xs={4}>
+											<Box
+												display='flex'
+												flexDirection='column'
 											>
-												Production
-											</Typography>
-											<Typography>
-												{movie?.director_name ?? ""}
-											</Typography>
-										</Box>
-									</Grid>
-									<Grid item xs={4}>
-										<Box
-											display='flex'
-											flexDirection='column'
-										>
-											<Typography
-												variant='h5'
-												fontFamily='Barlow Condensed'
-											>
-												Language
-											</Typography>
-											<Typography>
-												{movie?.language ?? ""}
-											</Typography>
-										</Box>
-									</Grid>
+												<Typography
+													variant='h5'
+													fontFamily='Barlow Condensed'
+												>
+													Language
+												</Typography>
+												<Typography>
+													{movie?.language ?? ""}
+												</Typography>
+											</Box>
+										</Grid>
+									) : null}
 								</Grid>
 							</Grid>
 							<Grid item xs={12} my={1}>
-								<Grid container>
-									<Typography
-										variant='h5'
-										fontFamily='Barlow Condensed'
-										mb={1}
-									>
-										Star Cast
-									</Typography>
-									<Grid item xs={12}>
-										<Grid container>
-											{movie?.star_cast
-												?.split(",")
-												?.map((sc, sc_i) => (
-													<Grid item xs={6}>
-														<Typography key={sc_i}>
-															{sc?.trim()}
-														</Typography>
-													</Grid>
-												))}
+								{movie?.star_cast ? (
+									<Grid container>
+										<Typography
+											variant='h5'
+											fontFamily='Barlow Condensed'
+											mb={1}
+										>
+											Star Cast
+										</Typography>
+										<Grid item xs={12}>
+											<Grid container>
+												{movie?.star_cast
+													?.split(",")
+													?.map((sc, sc_i) => (
+														<Grid item xs={6}>
+															<Typography
+																key={sc_i}
+															>
+																{sc?.trim()}
+															</Typography>
+														</Grid>
+													))}
+											</Grid>
 										</Grid>
 									</Grid>
-								</Grid>
+								) : null}
 							</Grid>
 							<Grid item xs={12} my={1}>
 								<a

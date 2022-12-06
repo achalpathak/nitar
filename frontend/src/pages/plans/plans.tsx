@@ -14,10 +14,12 @@ import api, { Routes } from "@api";
 import { useAppSelector } from "@redux/hooks";
 import Swal from "sweetalert2";
 import useRazorpay, { RazorpayOptions } from "react-razorpay";
+import { useAlert } from "@hooks";
 
 //****************************************************************All imports ends here!***************************************************************
 
 const Plans = () => {
+	const showAlert = useAlert();
 	const prefs = useAppSelector((state) => state.preferences);
 
 	const pay_description = prefs?.pay_description?.value;
@@ -54,18 +56,53 @@ const Plans = () => {
 			);
 
 			if (res.status === 200) {
-				// setPlans(res.data?.result);
-				// Swal.fire({
-				// 	title: "Success",
-				// 	text: res.data?.message ?? "Payment Successful",
-				// 	icon: "success",
-				// 	confirmButtonText: "Continue to Home",
-				// }).then((res) => {
-				// 	if (res.isConfirmed) {
-				// 		navigate("/");
-				// 	}
-				// });
 				initiateRazorpay(res.data?.result, plan_id);
+			}
+		} catch (error) {
+			const err = error as AxiosError<ISuccess>;
+			console.error(err.response);
+			Swal.fire({
+				title: "Error",
+				text: err?.response?.data?.message ?? "Payment Unsuccessful",
+				icon: "error",
+			});
+		}
+	};
+
+	const handlePaymentConfirmation = async (
+		response: any,
+		type: "success" | "failure"
+	) => {
+		try {
+			showAlert(
+				"warning",
+				"Waiting for confirmation",
+				"Please wait while we confirm the payment. Do not refresh the page or press back button"
+			);
+
+			const res = await api.post<ISuccess<IPaymentConfig>>(
+				Routes.PAYMENT_CONFIRM,
+				response
+			);
+
+			if (res.status === 200) {
+				console.log("Response", res.data);
+				if (type === "success") {
+					Swal.fire({
+						title: "Success",
+						text: "Payment Successful",
+						icon: "success",
+						confirmButtonText: "Continue to Home",
+					}).then((res) => {
+						navigate("/");
+					});
+				} else {
+					Swal.fire({
+						title: "Payment Failed",
+						text: response?.description ?? "Something went wrong!",
+						icon: "error",
+					});
+				}
 			}
 		} catch (error) {
 			const err = error as AxiosError<ISuccess>;
@@ -84,24 +121,16 @@ const Plans = () => {
 				key: data?.razorpay_merchant_key,
 				amount: data?.razorpay_amount?.toString(),
 				currency: data?.currency,
-				callback_url: data?.callback_url,
-				redirect: true,
+				// callback_url: data?.callback_url,
+				// redirect: true,
 				name: prefs?.name_of_the_app?.value ?? "",
 				description: `${user?.full_name} Purchasing ${
 					plans?.plans?.find((v) => v.id === plan_id)?.name ?? ""
 				} Plan`,
 				image: prefs?.logo_url?.image ?? "",
 				order_id: data?.razorpay_order_id,
-				handler: (res) => {
-					console.log("Payment Successful", res);
-					Swal.fire({
-						title: "Success",
-						text: "Payment Successful",
-						icon: "success",
-						confirmButtonText: "Continue to Home",
-					}).then((res) => {
-						navigate("/");
-					});
+				handler: async (res) => {
+					handlePaymentConfirmation(res, "success");
 				},
 				prefill: {
 					name: user?.full_name,
@@ -120,12 +149,13 @@ const Plans = () => {
 			const rzpay = new Razorpay(config);
 			rzpay.on("payment.failed", function (response: any) {
 				console.log("Payment Unsuccessful", response);
-				Swal.fire({
-					title: "Payment Failed",
-					text:
-						response?.error?.description ?? "Something went wrong!",
-					icon: "error",
-				});
+				// Swal.fire({
+				// 	title: "Payment Failed",
+				// 	text:
+				// 		response?.error?.description ?? "Something went wrong!",
+				// 	icon: "error",
+				// });
+				handlePaymentConfirmation(response.error, "failure");
 			});
 
 			rzpay.open();

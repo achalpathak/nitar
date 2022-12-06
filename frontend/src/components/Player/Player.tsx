@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useReducer, useRef } from "react";
 import { Box, IconButton, styled } from "@mui/material";
 import PlayArrowRounded from "@mui/icons-material/PlayArrowRounded";
 import ReactPlayer, { ReactPlayerProps } from "react-player";
@@ -7,6 +7,7 @@ import PlayerBottomControls from "./PlayerBottomControls";
 import PlayerOverlay from "./PlayerOverlay";
 import { INITIAL_STATE, reducer } from "./Player.reducer";
 import { ArrowBack } from "@mui/icons-material";
+import { format } from "date-fns";
 
 const StyledPlayer = styled("div")<ReactPlayerProps>`
 	position: relative;
@@ -43,8 +44,14 @@ const StyledPlayer = styled("div")<ReactPlayerProps>`
 	}
 
 	.video-player__controls {
-		opacity: ${({ state }) =>
-			state.light ? "0" : state.playing ? "0" : "1"};
+		opacity: ${({ state }) => {
+			// console.log("Opacity", state);
+			return state.light
+				? "0"
+				: !state.mouseMoving || state.playing
+				? "0"
+				: "1";
+		}};
 	}
 `;
 
@@ -56,9 +63,11 @@ const Player: React.FC<
 	}
 > = (props) => {
 	const { url, light, closePlayer } = props;
-	const [state, dispatch] = React.useReducer(reducer, INITIAL_STATE);
-	const playerRef = React.useRef<ReactPlayer>(null);
-	const wrapperRef = React.useRef<HTMLDivElement>(null);
+	const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+	const playerRef = useRef<ReactPlayer>(null);
+	const wrapperRef = useRef<HTMLDivElement>(null);
+
+	const timeout = useRef<NodeJS.Timeout>();
 
 	const handlePreview = () => {
 		dispatch({ type: "PLAY" });
@@ -86,6 +95,46 @@ const Player: React.FC<
 	const handleDuration = (duration: number) => {
 		dispatch({ type: "DURATION", payload: duration });
 	};
+
+	const handleReset = () => {
+		dispatch({ type: "RESET" });
+	};
+
+	const handleMouse = () => {
+		dispatch({ type: "RESET" });
+	};
+
+	useEffect(() => {
+		handleReset();
+		handlePlay();
+
+		() => handleReset();
+	}, []);
+
+	useEffect(() => {
+		const handleMove = (e: MouseEvent) => {
+			// console.log("MOuse", e);
+			if (!(state as any).mouseMoving) {
+				dispatch({ type: "MOUSE_ACTIVE" });
+			}
+
+			if (timeout.current) {
+				clearTimeout(timeout.current);
+			}
+			timeout.current = setTimeout(() => {
+				console.log("Removing mouse");
+				dispatch({ type: "MOUSE_DEACTIVE" });
+			}, 3000);
+		};
+
+		window.addEventListener("mousemove", handleMove);
+
+		() => window.removeEventListener("mousemove", handleMove);
+	}, []);
+
+	// useEffect(() => {
+	// 	console.log("MOuse Moving", state);
+	// }, [(state as any).mouseMoving]);
 
 	return (
 		<StyledPlayer state={state} ref={wrapperRef}>

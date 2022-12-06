@@ -9,6 +9,7 @@ const INITIAL_STATE: ReactPlayerProps = {
 		playedSeconds: 0,
 	},
 	duration: 0,
+	mouseMoving: true,
 };
 
 const reducer = (state: ReactPlayerProps, action: ReactPlayerProps) => {
@@ -27,6 +28,12 @@ const reducer = (state: ReactPlayerProps, action: ReactPlayerProps) => {
 			return { ...state, volume: action.payload };
 		case "LIGHT":
 			return { ...state, light: action.payload };
+		case "MOUSE_ACTIVE":
+			return { ...state, mouseMoving: true };
+		case "MOUSE_DEACTIVE":
+			return { ...state, mouseMoving: false };
+		case "RESET":
+			return INITIAL_STATE;
 		default:
 			return state;
 	}
