@@ -19,6 +19,7 @@ const StyledPlayer = styled("div")<ReactPlayerProps>`
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	cursor: none;
 
 	video,
 	.react-player__preview {
@@ -38,21 +39,14 @@ const StyledPlayer = styled("div")<ReactPlayerProps>`
 	}
 
 	&:hover {
+		cursor: default;
 		.video-player__controls {
 			opacity: 1;
 		}
 	}
 
 	.video-player__controls {
-		opacity: ${({ state }) => {
-			// console.log("Opacity", state);
-			return state.light
-				? "0"
-				: !state.mouseMoving || state.playing
-				? "0"
-				: "1";
-		}};
-	}
+		opacity: ${({ state }) => (state.light ? "0" : state.playing ? "0" : "1")}
 `;
 
 const Player: React.FC<
@@ -137,7 +131,17 @@ const Player: React.FC<
 	// }, [(state as any).mouseMoving]);
 
 	return (
-		<StyledPlayer state={state} ref={wrapperRef}>
+		<StyledPlayer
+			state={state}
+			ref={wrapperRef}
+			style={{
+				cursor: (state as any)?.mouseMoving
+					? "default"
+					: !(state as any)?.playing
+					? "default"
+					: "none",
+			}}
+		>
 			<ReactPlayer
 				ref={playerRef}
 				url={url}
@@ -182,7 +186,16 @@ const Player: React.FC<
 				isTrailer={props?.isTrailer}
 			/>
 			{!state.controls && (
-				<>
+				<div
+					className='controls__container'
+					style={{
+						opacity: (state as any)?.mouseMoving
+							? 1
+							: !(state as any)?.playing
+							? 1
+							: 0,
+					}}
+				>
 					<PlayerTopControls
 						state={state}
 						dispatch={dispatch}
@@ -196,7 +209,7 @@ const Player: React.FC<
 						playerRef={playerRef}
 						wrapperRef={wrapperRef}
 					/>
-				</>
+				</div>
 			)}
 		</StyledPlayer>
 	);

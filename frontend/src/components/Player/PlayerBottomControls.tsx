@@ -31,7 +31,7 @@ const StyledPlayerControls = styled("div")`
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	background-color: rgba(0, 0, 0, 0.6);
+	background-color: rgba(0, 0, 0, 0.4);
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
 	opacity: 0;
@@ -73,7 +73,10 @@ const StyledPlayerControls = styled("div")`
 `;
 
 const PlayerTopControls: React.FC<
-	ReactPlayerProps & { playerRef: React.RefObject<ReactPlayer> }
+	ReactPlayerProps & {
+		playerRef: React.RefObject<ReactPlayer>;
+		state: ReactPlayerProps;
+	}
 > = (props) => {
 	const { state, dispatch, wrapperRef, playerRef } = props;
 	const prefs = useAppSelector((state) => state.preferences);
@@ -133,7 +136,7 @@ const PlayerTopControls: React.FC<
 				sx={{ mb: 1, px: 1 }}
 				alignItems='center'
 			>
-				{state?.volume > 0.5 ? (
+				{state?.volume ?? 0 > 0.5 ? (
 					<IconButton
 						className='custom-btn'
 						onClick={() => dispatch({ type: "VOLUME", payload: 0 })}
