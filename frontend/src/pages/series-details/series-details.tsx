@@ -481,64 +481,52 @@ const ExtraDetails = (props: any) => {
 					) : null}
 				</Grid>
 			</Grid>
-			{movie?.trailer_link ? (
-				<Modal
-					open={showTrailer}
-					keepMounted
-					closeAfterTransition
-					onClose={() => setShowTrailer(false)}
+			<Modal
+				open={showTrailer}
+				closeAfterTransition
+				onClose={() => setShowTrailer(false)}
+			>
+				<Box
+					width='100%'
+					height='100%'
+					className='d-center'
+					onClickCapture={(e) => {
+						e.preventDefault();
+						setShowTrailer(false);
+					}}
 				>
+					<Box width='90vw' height='70vw'>
+						<Player
+							url={movie?.trailer_link}
+							name={movie?.name ?? ""}
+							description={movie?.description ?? ""}
+							closePlayer={() => setShowMovie(false)}
+						/>
+					</Box>
+				</Box>
+			</Modal>
+			<Modal
+				open={showMovie}
+				closeAfterTransition
+				onClose={() => setShowMovie(false)}
+			>
+				<Box width='100%' height='100%' className='d-center'>
 					<Box
-						width='100%'
-						height='100%'
-						className='d-center'
-						onClickCapture={(e) => {
-							e.preventDefault();
-							setShowTrailer(false);
+						sx={{
+							width: "100%",
+							height: "100%",
 						}}
+						className='d-center'
 					>
-						<Box width='90vw' height='70vw'>
-							{movie?.trailer_link ? (
-								<Player
-									url={movie?.trailer_link}
-									name={movie?.name ?? ""}
-									description={movie?.description ?? ""}
-									closePlayer={() => setShowMovie(false)}
-								/>
-							) : null}
-						</Box>
+						<Player
+							url={currentlyPlaying?.video_link}
+							name={currentlyPlaying?.name ?? ""}
+							description={currentlyPlaying?.description ?? ""}
+							closePlayer={() => setShowMovie(false)}
+						/>
 					</Box>
-				</Modal>
-			) : null}
-			{currentlyPlaying?.video_link ? (
-				<Modal
-					open={showMovie}
-					keepMounted
-					closeAfterTransition
-					onClose={() => setShowMovie(false)}
-				>
-					<Box width='100%' height='100%' className='d-center'>
-						<Box
-							sx={{
-								width: "100%",
-								height: "100%",
-							}}
-							className='d-center'
-						>
-							{showMovie ? (
-								<Player
-									url={currentlyPlaying?.video_link}
-									name={currentlyPlaying?.name ?? ""}
-									description={
-										currentlyPlaying?.description ?? ""
-									}
-									closePlayer={() => setShowMovie(false)}
-								/>
-							) : null}
-						</Box>
-					</Box>
-				</Modal>
-			) : null}
+				</Box>
+			</Modal>
 		</>
 	);
 };

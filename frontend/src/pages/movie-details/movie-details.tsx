@@ -423,33 +423,28 @@ const MovieDetails = (props: any) => {
 					</Box>
 				</Modal>
 			) : null}
-			{movie?.video_link ? (
-				<Modal
-					open={showMovie}
-					keepMounted
-					closeAfterTransition
-					onClose={() => setShowMovie(false)}
-				>
-					<Box width='100%' height='100%' className='d-center'>
-						<Box
-							sx={{
-								width: "100%",
-								height: "100%",
-							}}
-							className='d-center'
-						>
-							{showMovie ? (
-								<Player
-									url={movie?.video_link}
-									name={movie?.name}
-									description={movie?.description}
-									closePlayer={() => setShowMovie(false)}
-								/>
-							) : null}
-						</Box>
+			<Modal
+				open={showMovie}
+				closeAfterTransition
+				onClose={() => setShowMovie(false)}
+			>
+				<Box width='100%' height='100%' className='d-center'>
+					<Box
+						sx={{
+							width: "100%",
+							height: "100%",
+						}}
+						className='d-center'
+					>
+						<Player
+							url={movie?.video_link}
+							name={movie?.name ?? ""}
+							description={movie?.description ?? ""}
+							closePlayer={() => setShowMovie(false)}
+						/>
 					</Box>
-				</Modal>
-			) : null}
+				</Box>
+			</Modal>
 		</>
 	);
 };
