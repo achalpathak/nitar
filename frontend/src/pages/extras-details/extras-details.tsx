@@ -410,8 +410,8 @@ const ExtraDetails = (props: any) => {
 					>
 						<Player
 							url={movie?.trailer_link}
-							name={movie?.name}
-							description={movie?.description}
+							name={movie?.name ?? ""}
+							description={movie?.description ?? ""}
 							closePlayer={() => setShowTrailer(false)}
 						/>
 					</Box>
@@ -432,8 +432,8 @@ const ExtraDetails = (props: any) => {
 					>
 						<Player
 							url={movie?.video_link}
-							name={movie?.name}
-							description={movie?.description}
+							name={movie?.name ?? ""}
+							description={movie?.description ?? ""}
 							closePlayer={() => setShowMovie(false)}
 						/>
 					</Box>

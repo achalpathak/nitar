@@ -411,8 +411,8 @@ const MovieDetails = (props: any) => {
 					>
 						<Player
 							url={movie?.trailer_link}
-							name={movie?.name}
-							description={movie?.description}
+							name={movie?.name ?? ""}
+							description={movie?.description ?? ""}
 							closePlayer={() => setShowTrailer(false)}
 						/>
 					</Box>
