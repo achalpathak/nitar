@@ -29,6 +29,8 @@ const Plans = () => {
 
 	const [plans, setPlans] = useState<IPlans>();
 	const [paymentGateways, showPaymentGateways] = useState<boolean>(false);
+	const [renderingGateway, showRenderingGateway] = useState<boolean>(false);
+
 	const [currentPlan, setCurrentPlan] = useState<IPlanItem>();
 
 	const navigate = useNavigate();
@@ -53,7 +55,8 @@ const Plans = () => {
 
 	const initiatePayment = async (type: string) => {
 		try {
-			showPaymentGateways(false);
+			// showPaymentGateways(false);
+			showRenderingGateway(true);
 			if (type === "razorpay") {
 				const res = await api.post<ISuccess<IPaymentConfig>>(
 					Routes.PAYMENT,
@@ -63,7 +66,10 @@ const Plans = () => {
 				);
 
 				if (res.status === 200) {
-					initiateRazorpay(res.data?.result);
+					setTimeout(() => {
+						showRenderingGateway(false);
+						initiateRazorpay(res.data?.result);
+					}, 1500);
 				}
 			} else {
 				Swal.fire({
@@ -71,54 +77,6 @@ const Plans = () => {
 					text: "Payment gateway not available",
 					icon: "warning",
 				});
-			}
-		} catch (error) {
-			const err = error as AxiosError<ISuccess>;
-			console.error(err.response);
-			Swal.fire({
-				title: "Error",
-				text: err?.response?.data?.message ?? "Payment Unsuccessful",
-				icon: "error",
-			});
-		}
-	};
-
-	const handlePaymentConfirmation = async (
-		response: any,
-		type: "success" | "failure"
-	) => {
-		try {
-			Swal.fire({
-				title: "Waiting for Confirmation",
-				text: "Please wait while we confirm your payment",
-				iconHtml: <CustomLoader />,
-			});
-
-			const res = await api.post<ISuccess<IPaymentConfig>>(
-				Routes.PAYMENT_CONFIRM,
-				response
-			);
-
-			if (res.status === 200) {
-				if (type === "success") {
-					// Swal.hideLoading();
-					setTimeout(() => {
-						Swal.fire({
-							title: "Success",
-							text: "Payment Successful",
-							icon: "success",
-							confirmButtonText: "Continue to Home",
-						}).then((res) => {
-							navigate("/");
-						});
-					}, 1500);
-				} else {
-					Swal.fire({
-						title: "Payment Failed",
-						text: response?.description ?? "Something went wrong!",
-						icon: "error",
-					});
-				}
 			}
 		} catch (error) {
 			const err = error as AxiosError<ISuccess>;
@@ -169,6 +127,56 @@ const Plans = () => {
 			rzpay.open();
 		} catch (error) {
 			console.error(error);
+		}
+	};
+
+	const handlePaymentConfirmation = async (
+		response: any,
+		type: "success" | "failure"
+	) => {
+		try {
+			Swal.fire({
+				title: "Waiting for Confirmation",
+				text: "Please wait while we confirm your payment",
+				iconHtml: <CustomLoader />,
+			});
+
+			const res = await api.post<ISuccess<IPaymentConfig>>(
+				Routes.PAYMENT_CONFIRM,
+				response
+			);
+
+			if (res.status === 200) {
+				showPaymentGateways(false);
+				if (type === "success") {
+					// Swal.hideLoading();
+					setTimeout(() => {
+						Swal.fire({
+							title: "Success",
+							text: "Payment Successful",
+							icon: "success",
+							confirmButtonText: "Continue to Home",
+						}).then((res) => {
+							navigate("/");
+						});
+					}, 1500);
+				} else {
+					Swal.fire({
+						title: "Payment Failed",
+						text: response?.description ?? "Something went wrong!",
+						icon: "error",
+					});
+				}
+			}
+		} catch (error) {
+			const err = error as AxiosError<ISuccess>;
+			console.error(err.response);
+			showPaymentGateways(false);
+			Swal.fire({
+				title: "Error",
+				text: err?.response?.data?.message ?? "Payment Unsuccessful",
+				icon: "error",
+			});
 		}
 	};
 
@@ -352,16 +360,20 @@ const Plans = () => {
 								}}
 								alignItems='center'
 							>
-								<Typography
-									variant='h6'
-									color='var(--website-primary-color)'
-									textAlign='center'
-								>
-									Rendering Payment Gateways for You
-								</Typography>
-								<Box className='d-center'>
-									<CustomLoader />
-								</Box>
+								{renderingGateway ? (
+									<>
+										<Typography
+											variant='h6'
+											color='var(--website-primary-color)'
+											textAlign='center'
+										>
+											Rendering Payment Gateways for You
+										</Typography>
+										<Box className='d-center'>
+											<CustomLoader />
+										</Box>
+									</>
+								) : null}
 								<Stack
 									direction='column'
 									spacing={1.5}
