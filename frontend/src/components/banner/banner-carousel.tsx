@@ -1,12 +1,13 @@
 import api, { Routes } from "@api";
 import { ChevronLeftOutlined, ChevronRightOutlined } from "@mui/icons-material";
 import { Grid } from "@mui/material";
-import { IBanners, IMovieItem, ISuccess } from "@types";
+import { IBanners, ISuccess } from "@types";
 import { AxiosError } from "axios";
 import { FC, useEffect, useState } from "react";
 import AnimatedSlider from "react-animated-slider";
 import "react-animated-slider/build/horizontal.css";
 import { Link } from "react-router-dom";
+import "./banner.scss";
 
 //* Fix for Element type is Invalid in Production Build
 //* https://stackoverflow.com/questions/71000577/react-application-has-element-type-is-invalid-error-on-production-but-is-work
@@ -56,7 +57,7 @@ const BannerCarousel: FC = () => {
 				className='banner-container'
 			>
 				<Slider
-					autoplay={2000}
+					// autoplay={2000}
 					infinite
 					previousButton={
 						<ChevronLeftOutlined
