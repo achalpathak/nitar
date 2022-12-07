@@ -3,7 +3,7 @@ import api, { Routes } from "@api";
 import { Paytm, RazorpayWhite, Stripe } from "@assets";
 import Button from "@components/button";
 import { CustomLoader } from "@components/loader";
-import { AttachMoney, CurrencyRupee } from "@mui/icons-material";
+import { AttachMoney, Close, CurrencyRupee } from "@mui/icons-material";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { Box, Grid, IconButton, Modal, Typography } from "@mui/material";
@@ -305,103 +305,142 @@ const Plans = () => {
 				onClose={() => showPaymentGateways(false)}
 			>
 				<Box width='100%' height='100%' className='d-center'>
-					<Stack
-						direction='column'
-						spacing={3}
-						sx={{
-							backgroundColor: "rgba(0,0,0,0.8)",
-							width: "50vw",
-							padding: "2rem",
-							borderRadius: "0.5rem",
-						}}
-						alignItems='center'
-					>
-						<Typography
-							variant='h6'
-							color='var(--website-primary-color)'
+					<Grid container className='d-center'>
+						<Grid
+							item
+							xs={11}
+							sm={8}
+							md={5}
+							xl={4}
+							sx={{
+								position: "relative",
+							}}
 						>
-							Rendering Payment Gateways for You
-						</Typography>
-						<Box className='d-center'>
-							<CustomLoader />
-						</Box>
-						<Stack
-							direction='column'
-							spacing={1.5}
-							width='100%'
-							alignItems='center'
-						>
-							<Typography
-								variant='body1'
-								color='var(--website-primary-color)'
-							>
-								Select a payment gateway to continue
-							</Typography>
 							<IconButton
 								onClickCapture={(e) => {
 									e.preventDefault;
-									initiatePayment("razorpay");
+									showPaymentGateways(false);
+									setCurrentPlan(undefined);
 								}}
-								className='custom-btn d-flex w-100'
+								className='custom-btn'
 								sx={{
-									borderRadius: 2,
-									border: "1px solid var(--website-primary-color)",
-									backgroundColor:
-										"var(--website-alternate-color)",
-									"&:hover": {
-										boxShadow:
-											"0px 0px 5px 2px var(--website-primary-color)",
-										backgroundColor:
-											"var(--website-alternate-color)",
-									},
+									position: "absolute",
+									top: 10,
+									right: 10,
+									// "&:hover": {
+									// 	boxShadow:
+									// 		"0px 0px 5px 2px var(--website-primary-color)",
+									// 	backgroundColor:
+									// 		"var(--website-alternate-color)",
+									// },
 								}}
 							>
-								<RazorpayWhite height={30} />
+								<Close
+									height={30}
+									sx={{
+										color: "var(--website-secondary-color)",
+									}}
+								/>
 							</IconButton>
-							<IconButton
-								onClickCapture={(e) => {
-									e.preventDefault;
-									initiatePayment("paytm");
-								}}
-								className='custom-btn d-flex w-100'
+							<Stack
+								direction='column'
+								spacing={3}
 								sx={{
-									borderRadius: 2,
-									border: "1px solid var(--website-primary-color)",
-									backgroundColor:
-										"var(--website-alternate-color)",
-									"&:hover": {
-										boxShadow:
-											"0px 0px 5px 2px var(--website-primary-color)",
-										backgroundColor:
-											"var(--website-alternate-color)",
-									},
+									backgroundColor: "rgba(0,0,0,0.8)",
+									borderRadius: "0.5rem",
+									padding: "1rem",
 								}}
+								alignItems='center'
 							>
-								<Paytm height={30} />
-							</IconButton>
-							<IconButton
-								onClickCapture={(e) => {
-									e.preventDefault;
-									initiatePayment("stripe");
-								}}
-								className='custom-btn d-flex w-100'
-								sx={{
-									borderRadius: 2,
-									border: "1px solid var(--website-primary-color)",
-									backgroundColor:
-										"var(--website-alternate-color)",
-									"&:hover": {
-										boxShadow:
-											"0px 0px 5px 2px var(--website-primary-color)",
-										backgroundColor:
-											"var(--website-alternate-color)",
-									},
-								}}
-							>
-								<Stripe height={40} />
-							</IconButton>
-						</Stack>
-					</Stack>
+								<Typography
+									variant='h6'
+									color='var(--website-primary-color)'
+									textAlign='center'
+								>
+									Rendering Payment Gateways for You
+								</Typography>
+								<Box className='d-center'>
+									<CustomLoader />
+								</Box>
+								<Stack
+									direction='column'
+									spacing={1.5}
+									width='100%'
+									alignItems='center'
+								>
+									<Typography
+										variant='body1'
+										color='var(--website-primary-color)'
+									>
+										Select a payment gateway to continue
+									</Typography>
+									<IconButton
+										onClickCapture={(e) => {
+											e.preventDefault;
+											initiatePayment("razorpay");
+										}}
+										className='custom-btn d-flex w-100'
+										sx={{
+											borderRadius: 2,
+											border: "1px solid var(--website-primary-color)",
+											backgroundColor:
+												"var(--website-alternate-color)",
+											"&:hover": {
+												boxShadow:
+													"0px 0px 5px 2px var(--website-primary-color)",
+												backgroundColor:
+													"var(--website-alternate-color)",
+											},
+										}}
+									>
+										<RazorpayWhite height={30} />
+									</IconButton>
+									<IconButton
+										onClickCapture={(e) => {
+											e.preventDefault;
+											initiatePayment("paytm");
+										}}
+										className='custom-btn d-flex w-100'
+										sx={{
+											borderRadius: 2,
+											border: "1px solid var(--website-primary-color)",
+											backgroundColor:
+												"var(--website-alternate-color)",
+											"&:hover": {
+												boxShadow:
+													"0px 0px 5px 2px var(--website-primary-color)",
+												backgroundColor:
+													"var(--website-alternate-color)",
+											},
+										}}
+									>
+										<Paytm height={30} />
+									</IconButton>
+									<IconButton
+										onClickCapture={(e) => {
+											e.preventDefault;
+											initiatePayment("stripe");
+										}}
+										className='custom-btn d-flex w-100'
+										sx={{
+											borderRadius: 2,
+											border: "1px solid var(--website-primary-color)",
+											backgroundColor:
+												"var(--website-alternate-color)",
+											"&:hover": {
+												boxShadow:
+													"0px 0px 5px 2px var(--website-primary-color)",
+												backgroundColor:
+													"var(--website-alternate-color)",
+											},
+										}}
+									>
+										<Stripe height={40} />
+									</IconButton>
+								</Stack>
+							</Stack>
+						</Grid>
+					</Grid>
 				</Box>
 			</Modal>
 		</>

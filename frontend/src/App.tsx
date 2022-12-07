@@ -199,7 +199,6 @@ const App = () => {
 			<Alert />
 			{/* {welcomeBanner && ? (
 				<Modal
-					keepMounted
 					closeAfterTransition
 					open={isOpen}
 					onClose={() => setOpen(false)}

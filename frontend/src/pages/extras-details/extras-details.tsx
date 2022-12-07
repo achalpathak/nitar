@@ -395,33 +395,28 @@ const ExtraDetails = (props: any) => {
 					) : null}
 				</Grid>
 			</Grid>
-			{movie?.trailer_link ? (
-				<Modal
-					open={showTrailer}
-					keepMounted
-					closeAfterTransition
-					onClose={() => setShowTrailer(false)}
-				>
-					<Box width='100%' height='100%' className='d-center'>
-						<Box
-							sx={{
-								width: "100%",
-								height: "100%",
-							}}
-							className='d-center'
-						>
-							{showTrailer ? (
-								<Player
-									url={movie?.trailer_link}
-									name={movie?.name}
-									description={movie?.description}
-									closePlayer={() => setShowTrailer(false)}
-								/>
-							) : null}
-						</Box>
+			<Modal
+				open={showTrailer}
+				closeAfterTransition
+				onClose={() => setShowTrailer(false)}
+			>
+				<Box width='100%' height='100%' className='d-center'>
+					<Box
+						sx={{
+							width: "100%",
+							height: "100%",
+						}}
+						className='d-center'
+					>
+						<Player
+							url={movie?.trailer_link}
+							name={movie?.name}
+							description={movie?.description}
+							closePlayer={() => setShowTrailer(false)}
+						/>
 					</Box>
-				</Modal>
-			) : null}
+				</Box>
+			</Modal>
 			<Modal
 				open={showMovie}
 				closeAfterTransition
