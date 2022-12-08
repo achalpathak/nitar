@@ -96,7 +96,9 @@ class InitiatePayments(APIView):
                     gateway="stripe",
                     stripe_payment_intent=checkout_session["payment_intent"],
                 )
-                context = {"sessionId": checkout_session.id}
+                context = {}
+                context["sessionId"] = checkout_session.id
+                context["stripe_publishable_key"] = settings.STRIPE_PUBLISHABLE_KEY
                 return Response({"result": context})
 
             else:
