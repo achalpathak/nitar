@@ -6,5 +6,5 @@ export { default as LeftRightButton } from "./left-right-button";
 export { default as SubscribeButton } from "./subscribe-button";
 export { default as DownloadApp } from "./download-app";
 export { default as Loader } from "./loader";
-export { default as BannerCarousel } from "./banner-carousel";
+export { default as BannerCarousel } from "./banner/banner-carousel";
 export { default as Alert } from "./alert";

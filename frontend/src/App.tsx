@@ -17,6 +17,7 @@ import "react-carousel-animated/dist/style.css";
 import { Box, Modal } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import { UnauthenticatedRoute } from "@router";
+import Constants from "@constants";
 
 const Login = lazy(() => import("@pages/login"));
 const Register = lazy(() => import("@pages/register"));
@@ -77,7 +78,14 @@ const App = () => {
 	useEffect(() => {
 		api.interceptors.request.use(
 			(config) => {
-				dispatch({ type: Actions.SET_LOADING });
+				if (
+					Constants.WHITELIST_URLS.filter((url) =>
+						config.url?.toString()?.includes(url?.toString())
+					).length === 0 &&
+					loading !== true
+				) {
+					dispatch({ type: Actions.SET_LOADING });
+				}
 
 				return config;
 			},
@@ -191,7 +199,6 @@ const App = () => {
 			<Alert />
 			{/* {welcomeBanner && ? (
 				<Modal
-					keepMounted
 					closeAfterTransition
 					open={isOpen}
 					onClose={() => setOpen(false)}
