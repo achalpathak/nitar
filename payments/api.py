@@ -95,6 +95,7 @@ class InitiatePayments(APIView):
                     currency=currency,
                     gateway="stripe",
                     stripe_payment_intent=checkout_session["payment_intent"],
+                    stripe_session_id=checkout_session.id,
                 )
                 context = {}
                 context["sessionId"] = checkout_session.id
