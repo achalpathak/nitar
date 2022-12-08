@@ -32,14 +32,18 @@ class Order(models.Model):
         null=False,
     )
     provider_order_id = models.CharField(
-        _("Order ID"), max_length=40, null=False, blank=False
+        _("Order ID"), max_length=40, null=True, blank=True
     )
     payment_id = models.CharField(
-        _("Payment ID"), max_length=36, null=False, blank=False
+        _("Payment ID"), max_length=36, null=True, blank=True
     )
     signature_id = models.CharField(
-        _("Signature ID"), max_length=128, null=False, blank=False
+        _("Signature ID"), max_length=128, null=True, blank=True
     )
+    stripe_payment_intent = models.CharField(
+        _("Stripe ID"), max_length=200, null=True, blank=True
+    )
+    gateway = models.CharField(_("Gateway"), max_length=50, blank=True, null=True)
 
     def __str__(self):
         return f"{self.id}-{self.name}-{self.status}"

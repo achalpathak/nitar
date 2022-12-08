@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status, permissions
 import razorpay
+import stripe
 from .models import Order, PaymentStatus
 from users.models import Memberships
 from django.conf import settings
@@ -21,42 +22,87 @@ class InitiatePayments(APIView):
         try:
             callback_url = request.build_absolute_uri(reverse("payment_handler"))
             membership_id = request.data["membership_id"]
+            gateway = request.data["gateway"]
             user = request.user
             memberhip_obj = Memberships.objects.get(id=membership_id)
-
             currency = user.currency_mode
-
             if currency == "INR":
                 amount = memberhip_obj.price_in_inr
             else:
                 amount = memberhip_obj.price_in_dollar
             amount = 1.99
-            razorpay_order = razorpay_client.order.create(
-                {
-                    "amount": int(amount) * 100,
-                    "currency": currency,
-                    "payment_capture": "0",
-                }
-            )
 
-            # Save the order in DB
-            order = Order.objects.create(
-                user=user,
-                amount=amount,
-                membership=memberhip_obj,
-                membership_plan=memberhip_obj.name,
-                currency=currency,
-                provider_order_id=razorpay_order["id"],
-            )
+            if gateway == "razor_pay":
+                razorpay_order = razorpay_client.order.create(
+                    {
+                        "amount": int(amount) * 100,
+                        "currency": currency,
+                        "payment_capture": "0",
+                    }
+                )
 
-            razorpay_order_id = razorpay_order["id"]
-            context = {}
-            context["razorpay_order_id"] = razorpay_order_id
-            context["razorpay_merchant_key"] = settings.RAZORPAY_KEY_ID
-            context["razorpay_amount"] = amount
-            context["currency"] = currency
-            context["callback_url"] = callback_url
-            return Response({"result": context})
+                # Save the order in DB
+                order = Order.objects.create(
+                    user=user,
+                    amount=amount,
+                    membership=memberhip_obj,
+                    membership_plan=memberhip_obj.name,
+                    currency=currency,
+                    gateway="razor_pay",
+                    provider_order_id=razorpay_order["id"],
+                )
+
+                razorpay_order_id = razorpay_order["id"]
+                context = {}
+                context["razorpay_order_id"] = razorpay_order_id
+                context["razorpay_merchant_key"] = settings.RAZORPAY_KEY_ID
+                context["razorpay_amount"] = amount
+                context["currency"] = currency
+                context["callback_url"] = callback_url
+                return Response({"result": context})
+
+            elif gateway == "stripe":
+                stripe.api_key = settings.STRIPE_SECRET_KEY
+                checkout_session = stripe.checkout.Session.create(
+                    customer_email=user.email,
+                    payment_method_types=["card"],
+                    line_items=[
+                        {
+                            "price_data": {
+                                "currency": currency,
+                                "product_data": {
+                                    "name": memberhip_obj.name,
+                                },
+                                "unit_amount": int(amount) * 100,
+                            },
+                            "quantity": 1,
+                        }
+                    ],
+                    mode="payment",
+                    # success_url=request.build_absolute_uri(
+                    #     reverse('success')
+                    # ) + "?session_id={CHECKOUT_SESSION_ID}",
+                    # cancel_url=request.build_absolute_uri(reverse('failed')),
+                    success_url=f"https://www.example.com?session_id=123",
+                    cancel_url=f"https://www.google.com?session_id=456",
+                )
+                # Save the order in DB
+                order = Order.objects.create(
+                    user=user,
+                    amount=amount,
+                    membership=memberhip_obj,
+                    membership_plan=memberhip_obj.name,
+                    currency=currency,
+                    gateway="stripe",
+                    stripe_payment_intent=checkout_session["payment_intent"],
+                )
+                context = {"sessionId": checkout_session.id}
+                return Response({"result": context})
+
+            else:
+                return Response(
+                    {"message": f"Unknown payment gateway."},
+                )
         except KeyError as e:
             return Response(
                 {"message": f"{e} field is required."},
