@@ -7,7 +7,13 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import appReducer from "@redux/reducers";
 import Actions from "@redux/actions";
-import { IMessage, IPreferences, IReducer, IUser } from "@types";
+import {
+	IMessage,
+	IPaymentInitiate,
+	IPreferences,
+	IReducer,
+	IUser,
+} from "@types";
 
 // const rootReducer = (state: any, action: IReducer) => {
 // 	if (action.type === Actions.LOGOUT) {
@@ -57,6 +63,7 @@ export type RootState = {
 	preferences: IPreferences;
 	user: IUser;
 	loading: boolean;
+	payment: IPaymentInitiate;
 };
 
 export type AppDispatch = typeof store.dispatch;

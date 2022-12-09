@@ -12,6 +12,7 @@ import {
 	ExtrasDetails,
 } from "@pages";
 import SeriesDetails from "@pages/series-details";
+import { useAppSelector } from "@redux/hooks";
 
 const Wrapper = ({ children }: any) => {
 	const location = useLocation();
@@ -22,6 +23,7 @@ const Wrapper = ({ children }: any) => {
 };
 
 const TheContent = () => {
+	const payment = useAppSelector((state) => state.payment);
 	return (
 		<div
 			style={{
@@ -51,7 +53,9 @@ const TheContent = () => {
 								path='/extras/:slug'
 								element={<ExtrasDetails />}
 							/>
-							<Route path='/plans' element={<Plans />} />
+							{!payment?.status ? (
+								<Route path='/plans' element={<Plans />} />
+							) : null}
 							<Route path='/contact-us' element={<ContactUs />} />
 							<Route
 								path='/terms-and-conditions'

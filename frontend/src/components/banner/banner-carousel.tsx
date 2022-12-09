@@ -57,7 +57,7 @@ const BannerCarousel: FC = () => {
 				className='banner-container'
 			>
 				<Slider
-					// autoplay={2000}
+					autoplay={2000}
 					infinite
 					previousButton={
 						<ChevronLeftOutlined

@@ -27,7 +27,7 @@ import makeAnimated from "react-select/animated";
 import AsyncSelect from "react-select/async";
 import "./app-bar.scss";
 
-const routes: IRoutes[] = [
+let routes: IRoutes[] = [
 	{
 		title: "Home",
 		path: "/",
@@ -75,11 +75,16 @@ const AppBar = () => {
 
 	const prefs = useAppSelector((state) => state.preferences);
 	const user = useAppSelector((state) => state.user);
+	const payment = useAppSelector((state) => state.payment);
 
 	const [isSearching, setSearching] = useState<boolean>(false);
 	const [isDrawerOpen, setDrawerOpen] = useState<boolean>(false);
 
 	const drawerWidth = 240;
+
+	if (payment?.status) {
+		routes = routes.filter((v) => v.title !== "Plans");
+	}
 
 	const loadSuggestions = async (searchKey: string) => {
 		try {
