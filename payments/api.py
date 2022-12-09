@@ -83,8 +83,8 @@ class InitiatePayments(APIView):
                     #     reverse('success')
                     # ) + "?session_id={CHECKOUT_SESSION_ID}",
                     # cancel_url=request.build_absolute_uri(reverse('failed')),
-                    success_url=f"https://www.example.com?session_id=123",
-                    cancel_url=f"https://www.google.com?session_id=456",
+                    success_url=f"http://localhost:3001/plans?success=true",
+                    cancel_url=f"http://localhost:3001/plans?success=false",
                 )
                 # Save the order in DB
                 order = Order.objects.create(

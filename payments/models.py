@@ -47,4 +47,4 @@ class Order(models.Model):
     gateway = models.CharField(_("Gateway"), max_length=50, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.user.full_name}-{self.membership_plan}-{self.status}"
+        return f"{self.id}-{self.user.full_name}-{self.membership_plan}-{self.status}"
