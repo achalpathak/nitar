@@ -16,6 +16,7 @@
 		"@mui/icons-material": "^5.10.14",
 		"@mui/material": "^5.10.13",
 		"@reduxjs/toolkit": "^1.9.0",
+		"@stripe/stripe-js": "^1.46.0",
 		"@sweetalert2/theme-borderless": "^5.0.15",
 		"@sweetalert2/theme-dark": "^5.0.15",
 		"@use-gesture/react": "^10.2.22",

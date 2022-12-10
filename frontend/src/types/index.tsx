@@ -227,10 +227,39 @@ export type ICountryList = {
 	code: string;
 };
 
-export type IPaymentConfig = {
+export type IRazorpay = {
 	razorpay_order_id: string;
 	razorpay_merchant_key?: any;
 	razorpay_amount: number;
 	currency: string;
 	callback_url: string;
+};
+
+export type IStripe = {
+	sessionId: string;
+	stripe_publishable_key: string;
+};
+
+export type IPaytm = {
+	id: string;
+};
+
+export type IPaymentGateways = "razor_pay" | "stripe" | "paytm";
+
+export type IPaymentState = {
+	razor_pay: IRazorpay;
+	stripe: IStripe;
+	paytm: IPaytm;
+};
+
+export type IPaymentConfig<T extends IPaymentGateways> = T extends "razor_ray"
+	? IRazorpay
+	: T extends "stripe"
+	? IStripe
+	: IPaytm;
+
+export type IPaymentInitiate = {
+	type: IPaymentGateways;
+	timestamp: Date;
+	status: boolean;
 };

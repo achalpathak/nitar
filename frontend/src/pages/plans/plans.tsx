@@ -1,6 +1,6 @@
 //****************************************************************All imports go here!***************************************************************
 import api, { Routes } from "@api";
-import { Paytm, RazorpayWhite, Stripe } from "@assets";
+import { Paytm, RazorpayWhite, Stripe as StripeIcon } from "@assets";
 import Button from "@components/button";
 import { CustomLoader } from "@components/loader";
 import { AttachMoney, Close, CurrencyRupee } from "@mui/icons-material";
@@ -8,22 +8,28 @@ import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { Box, Grid, IconButton, Modal, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
-import { useAppSelector } from "@redux/hooks";
-import { IPaymentConfig, IPlanItem, IPlans, ISuccess } from "@types";
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import { IPaymentGateways, IPlanItem, IPlans, IStripe, ISuccess } from "@types";
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import useRazorpay, { RazorpayOptions } from "react-razorpay";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import OldSwal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import "./plans.scss";
+import { loadStripe } from "@stripe/stripe-js";
+import Actions from "@redux/actions";
+import moment from "moment";
 
 const Swal = withReactContent(OldSwal);
 
 //****************************************************************All imports ends here!***************************************************************
 
 const Plans = () => {
+	const dispatch = useAppDispatch();
+
 	const prefs = useAppSelector((state) => state.preferences);
+	const paymentInitiate = useAppSelector((state) => state.payment);
 
 	const pay_description = prefs?.pay_description?.value;
 
@@ -37,6 +43,50 @@ const Plans = () => {
 	const user = useAppSelector((state) => state.user);
 
 	const Razorpay = useRazorpay();
+
+	const [searchParams] = useSearchParams();
+
+	useEffect(() => {
+		if (searchParams.get("success")) {
+			if (
+				paymentInitiate?.type === "stripe" &&
+				paymentInitiate?.status === null
+			) {
+				if (searchParams.get("success") === "true") {
+					//Got Success True
+					Swal.fire({
+						title: "Payment Successful",
+						text: "Your payment is successful",
+						icon: "success",
+						confirmButtonText: "Continue to Home",
+					}).then((res) => {
+						navigate("/");
+					});
+
+					//Set payment info to success after showing message
+					dispatch({
+						type: Actions.SET_PAYMENT,
+						payload: {
+							...paymentInitiate,
+							status: true,
+						},
+					});
+				} else if (searchParams.get("success") === "false") {
+					//Got Success False
+					Swal.fire({
+						title: "Payment Failed",
+						text: "Your payment has failed",
+						icon: "error",
+					});
+
+					//Remove payment info after showing message
+					dispatch({
+						type: Actions.REMOVE_PAYMENT,
+					});
+				}
+			}
+		}
+	}, [searchParams]);
 
 	useEffect(() => {
 		(async () => {
@@ -53,22 +103,45 @@ const Plans = () => {
 		})();
 	}, []);
 
-	const initiatePayment = async (type: string) => {
+	const initiatePayment = async (type: IPaymentGateways) => {
 		try {
-			// showPaymentGateways(false);
 			showRenderingGateway(true);
-			if (type === "razorpay") {
-				const res = await api.post<ISuccess<IPaymentConfig>>(
-					Routes.PAYMENT,
-					{
-						membership_id: currentPlan?.id,
-					}
-				);
+			if (type === "razor_pay" || type === "stripe") {
+				const res = await api.post<ISuccess<any>>(Routes.PAYMENT, {
+					membership_id: currentPlan?.id,
+					gateway: type,
+				});
 
 				if (res.status === 200) {
-					setTimeout(() => {
+					setTimeout(async () => {
 						showRenderingGateway(false);
-						initiateRazorpay(res.data?.result);
+
+						dispatch({
+							type: Actions.SET_PAYMENT,
+							payload: {
+								type: type,
+								timestamp: moment().toDate(),
+								status: null,
+							},
+						});
+
+						if (type === "razor_pay") {
+							initiateRazorpay(res.data?.result);
+						} else if (type === "stripe") {
+							const stripe = await loadStripe(
+								res.data?.result?.stripe_publishable_key
+							);
+
+							showPaymentGateways(false);
+
+							//Redirect to stripe checkout using sessionId from backend
+							if (stripe) {
+								//Stripe object loaded successfully
+								stripe?.redirectToCheckout({
+									sessionId: res.data?.result?.sessionId,
+								});
+							}
+						}
 					}, 1500);
 				}
 			} else {
@@ -89,7 +162,7 @@ const Plans = () => {
 		}
 	};
 
-	const initiateRazorpay = (data: IPaymentConfig) => {
+	const initiateRazorpay = (data: any) => {
 		try {
 			const config: RazorpayOptions = {
 				key: data?.razorpay_merchant_key,
@@ -141,7 +214,7 @@ const Plans = () => {
 				iconHtml: <CustomLoader />,
 			});
 
-			const res = await api.post<ISuccess<IPaymentConfig>>(
+			const res = await api.post<ISuccess>(
 				Routes.PAYMENT_CONFIRM,
 				response
 			);
@@ -335,12 +408,6 @@ const Plans = () => {
 									position: "absolute",
 									top: 10,
 									right: 10,
-									// "&:hover": {
-									// 	boxShadow:
-									// 		"0px 0px 5px 2px var(--website-primary-color)",
-									// 	backgroundColor:
-									// 		"var(--website-alternate-color)",
-									// },
 								}}
 							>
 								<Close
@@ -389,7 +456,7 @@ const Plans = () => {
 									<IconButton
 										onClickCapture={(e) => {
 											e.preventDefault;
-											initiatePayment("razorpay");
+											initiatePayment("razor_pay");
 										}}
 										className='custom-btn d-flex w-100'
 										sx={{
@@ -447,7 +514,7 @@ const Plans = () => {
 											},
 										}}
 									>
-										<Stripe height={40} />
+										<StripeIcon height={40} />
 									</IconButton>
 								</Stack>
 							</Stack>
