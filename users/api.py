@@ -11,7 +11,9 @@ from django.conf import settings
 import requests
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 GOOGLE_DTO = settings.GOOGLE_DTO
 
@@ -53,7 +55,6 @@ class VerifyOTP(APIView):
                 {
                     "result": {
                         "full_name": user_obj.full_name,
-                        "email": user_obj.email,
                         "phone": user_obj.phone,
                         "email": user_obj.email,
                         "has_active_membership": user_obj.has_active_membership,
@@ -120,9 +121,27 @@ class GoogleCallbackAPI(APIView):
         )
         # Parse the tokens!
         google_client.parse_request_body_response(json.dumps(token_response.json()))
-
+        
         # Get user info
         uri, headers, body = google_client.add_token(GOOGLE_DTO.get("userinfo_url"))
         userinfo_response = requests.get(uri, headers=headers, data=body).json()
-        
-        return Response({"result": userinfo_response})
+        validated_data={
+            "full_name": userinfo_response["result"]["name"]
+        }
+        user_obj, _ = User.objects.update_or_create(
+            email=userinfo_response["result"]["email"], defaults=validated_data
+        )
+        user_obj.save()
+        login(
+                request, user_obj, backend="django.contrib.auth.backends.ModelBackend"
+            )
+        return Response(
+            {
+                "result": {
+                    "full_name": user_obj.full_name,
+                    "email": user_obj.email,
+                    "phone": user_obj.phone,
+                    "has_active_membership": user_obj.has_active_membership,
+                }
+            }
+        )
