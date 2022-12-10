@@ -24,6 +24,12 @@ class InitiatePayments(APIView):
             membership_id = request.data["membership_id"]
             gateway = request.data["gateway"]
             user = request.user
+
+            if not user.phone_number:
+                return Response(
+                    {"message": f"Phone number is not updated."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             memberhip_obj = Memberships.objects.get(id=membership_id)
             currency = user.currency_mode
             if currency == "INR":

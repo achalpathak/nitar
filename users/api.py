@@ -1,3 +1,4 @@
+import json
 from django.contrib.auth import login
 from rest_framework import status
 from rest_framework.response import Response
@@ -5,6 +6,17 @@ from rest_framework.views import APIView
 from . import models as user_models
 from . import serializers as user_serializers
 from django.contrib.auth import logout
+from oauthlib.oauth2 import WebApplicationClient
+from django.conf import settings
+import requests
+from django.shortcuts import redirect
+from django.urls import reverse
+
+
+GOOGLE_DTO = settings.GOOGLE_DTO
+
+
+google_client = WebApplicationClient(GOOGLE_DTO.get("client_id"))
 
 
 class RegisterUser(APIView):
@@ -80,3 +92,37 @@ class LogoutAPI(APIView):
     def get(self, request):
         logout(request)
         return Response({"result": "User is logged out."})
+
+
+class GoogleLoginAPI(APIView):
+    def get(self, request):
+        request_uri = google_client.prepare_request_uri(
+            GOOGLE_DTO.get("authorization_url"),
+            redirect_uri=request.build_absolute_uri(reverse("google_callback")),
+            scope=["openid", "email", "profile"],
+        )
+        return redirect(request_uri)
+
+
+class GoogleCallbackAPI(APIView):
+    def get(self, request):
+        code = self.request.GET.get("code")
+        token_url, headers, body = google_client.prepare_token_request(
+            GOOGLE_DTO.get("token_url"),
+            redirect_url=request.build_absolute_uri(reverse("google_callback")),
+            code=code,
+        )
+        token_response = requests.post(
+            token_url,
+            headers=headers,
+            data=body,
+            auth=(GOOGLE_DTO.get("client_id"), GOOGLE_DTO.get("client_secret")),
+        )
+        # Parse the tokens!
+        google_client.parse_request_body_response(json.dumps(token_response.json()))
+
+        # Get user info
+        uri, headers, body = google_client.add_token(GOOGLE_DTO.get("userinfo_url"))
+        userinfo_response = requests.get(uri, headers=headers, data=body).json()
+        
+        return Response({"result": userinfo_response})

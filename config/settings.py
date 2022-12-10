@@ -191,3 +191,15 @@ try:
         from .local_settings import *
 except Exception as e:
     raise Exception("[X] Error in importing settings : ", e)
+
+###### GOOGLE AUTHENTICATION ######
+# "openid", "email", "profile" => required scopes
+GOOGLE_DTO = {
+    "client_id": os.environ.get("GOOGLE_CLIENT_ID"),
+    "client_secret": os.environ.get("GOOGLE_CLIENT_SECRET"),
+    "authorization_url": "https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent",
+    "token_url": "https://oauth2.googleapis.com/token",
+    "userinfo_url": "https://openidconnect.googleapis.com/v1/userinfo",
+    "redirect_url": "http://localhost/backend/api/users/google_callback/",
+}
+###################################
