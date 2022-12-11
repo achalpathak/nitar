@@ -179,6 +179,14 @@ class VerifyOtpSerializer(serializers.Serializer):
                         }
                     )
                 # OTP is verifed
+                some_other_user = User.objects.filter(
+                    phone=validated_data["phone"], phone_verified=False
+                ).first()
+                if (
+                    some_other_user
+                ):  # removes phone number for any other user non-verified
+                    some_other_user.phone = None
+                    some_other_user.save()
                 phone_otp_obj.user.phone_verified = True
                 phone_otp_obj.user.is_active = True
                 phone_otp_obj.user.save()
@@ -192,3 +200,24 @@ class VerifyOtpSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 {"message": "Phone number is not registered."}
             )
+            
+class UpdatePhoneSerializer(serializers.Serializer):
+    phone = serializers.CharField(required=True)
+    phone_code = serializers.CharField(required=True)
+
+    def validate_phone(self, phone):
+        if len(phone) != 10:
+            raise serializers.ValidationError("Phone number should be 10 digits.")
+        if not phone.isnumeric():
+            raise serializers.ValidationError(
+                "Phone number should only contain numbers."
+            )
+        return phone
+
+
+    def create(self, validated_data):
+        user = self.context.get("request", None).user
+        user.phone = validated_data["phone"]
+        user.phone_code = validated_data["phone_code"]
+        user.save()
+        return user

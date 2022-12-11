@@ -41,6 +41,19 @@ class SendOTP(APIView):
         return Response({"message": f"OTP is sent. Valid for next 15minutes."})
 
 
+class UpdatePhoneAPI(APIView):
+    serializer_class = user_serializers.UpdatePhoneSerializer
+
+    def post(self, request):
+        serialized_data = self.serializer_class(
+            data=self.request.data, context={"request": request}
+        )
+        if serialized_data.is_valid(raise_exception=True):
+            serialized_data.save()
+            return Response({"message": f"Phone number is updated."})
+        return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
+
+
 class VerifyOTP(APIView):
     serializer_class = user_serializers.VerifyOtpSerializer
 
@@ -56,6 +69,8 @@ class VerifyOTP(APIView):
                     "result": {
                         "full_name": user_obj.full_name,
                         "phone": user_obj.phone,
+                        "phone_code": user_obj.phone_code,
+                        "phone_verified": user_obj.phone_verified,
                         "email": user_obj.email,
                         "has_active_membership": user_obj.has_active_membership,
                     }
@@ -105,6 +120,26 @@ class GoogleLoginAPI(APIView):
         return redirect(request_uri)
 
 
+class UserInfo(APIView):
+    def get(self, request):
+        user = request.user
+        if not user:
+            return Response(
+                {"message": f"User is not logged in."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        else:
+            context = {
+                "full_name": user.full_name,
+                "email": user.email,
+                "phone": user.phone,
+                "phone_verified": user.phone_verified,
+                "phone_code": user.phone_code,
+                "has_active_membership": user.has_active_membership,
+            }
+            return Response({"result": context})
+
+
 class GoogleCallbackAPI(APIView):
     def get(self, request):
         code = self.request.GET.get("code")
@@ -131,13 +166,4 @@ class GoogleCallbackAPI(APIView):
         )
         user_obj.save()
         login(request, user_obj, backend="django.contrib.auth.backends.ModelBackend")
-        return Response(
-            {
-                "result": {
-                    "full_name": user_obj.full_name,
-                    "email": user_obj.email,
-                    "phone": user_obj.phone,
-                    "has_active_membership": user_obj.has_active_membership,
-                }
-            }
-        )
+        return redirect(request.build_absolute_uri(reverse("home")))

@@ -70,7 +70,6 @@ class User(AbstractUser, TimeStampedModel):
     phone = models.CharField(
         max_length=10,
         validators=[MinLengthValidator(10)],
-        unique=True,
         blank=True,
         null=True,
     )
