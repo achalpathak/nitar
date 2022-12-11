@@ -9,6 +9,7 @@ from . import models as user_models
 from django.db import transaction
 
 User = get_user_model()
+from django.contrib.auth.models import AnonymousUser
 
 
 class RegisterUserSerializer(serializers.Serializer):
@@ -121,8 +122,12 @@ class PhoneOtpSerializer(serializers.Serializer):
     def create(self, validated_data):
         try:
             with transaction.atomic():
-                # TODO: add check if phone is already registered with different user and activated too.
-                user_obj = user_models.User.objects.get(phone=validated_data["phone"])
+                user_obj = self.context.get("request", None).user
+                if type(user_obj) == type(AnonymousUser):
+                    user_obj = user_models.User.objects.filter(
+                        phone=validated_data["phone"]
+                    ).last()
+
                 data = {
                     "otp": randint(100000, 999999),
                     "valid_till": datetime.now() + timedelta(minutes=15),
@@ -181,12 +186,11 @@ class VerifyOtpSerializer(serializers.Serializer):
                 # OTP is verifed
                 some_other_user = User.objects.filter(
                     phone=validated_data["phone"], phone_verified=False
-                ).first()
+                )
                 if (
                     some_other_user
                 ):  # removes phone number for any other user non-verified
-                    some_other_user.phone = None
-                    some_other_user.save()
+                    some_other_user.update(phone=None)
                 phone_otp_obj.user.phone_verified = True
                 phone_otp_obj.user.is_active = True
                 phone_otp_obj.user.save()
@@ -200,7 +204,8 @@ class VerifyOtpSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 {"message": "Phone number is not registered."}
             )
-            
+
+
 class UpdatePhoneSerializer(serializers.Serializer):
     phone = serializers.CharField(required=True)
     phone_code = serializers.CharField(required=True)
@@ -214,8 +219,15 @@ class UpdatePhoneSerializer(serializers.Serializer):
             )
         return phone
 
-
     def create(self, validated_data):
+        # check if phone already linked
+        other_user = User.objects.filter(
+            phone=validated_data["phone"], phone_verified=True
+        ).first()
+        if other_user:
+            raise serializers.ValidationError(
+                "Phone number is already linked with another user."
+            )
         user = self.context.get("request", None).user
         user.phone = validated_data["phone"]
         user.phone_code = validated_data["phone_code"]
