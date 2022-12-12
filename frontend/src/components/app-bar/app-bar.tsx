@@ -5,7 +5,6 @@ import { Close, Menu, SearchOutlined } from "@mui/icons-material";
 import {
 	AppBar as MuiAppBar,
 	Box,
-	Divider,
 	IconButton,
 	List,
 	ListItem,
@@ -118,6 +117,7 @@ const AppBar = () => {
 				dispatch({
 					type: Actions.LOGOUT,
 				});
+				window.location.reload();
 			}
 		} catch (error) {
 			const err = error as AxiosError<ISuccess>;

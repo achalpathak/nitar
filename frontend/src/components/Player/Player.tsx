@@ -108,9 +108,7 @@ const Player: React.FC<
 	useEffect(() => {
 		const handleMove = (e: MouseEvent) => {
 			// console.log("MOuse", e);
-			if (!(state as any).mouseMoving) {
-				dispatch({ type: "MOUSE_ACTIVE" });
-			}
+			dispatch({ type: "MOUSE_ACTIVE" });
 
 			if (timeout.current) {
 				clearTimeout(timeout.current);
@@ -134,13 +132,13 @@ const Player: React.FC<
 		<StyledPlayer
 			state={state}
 			ref={wrapperRef}
-			// style={{
-			// 	cursor: (state as any)?.mouseMoving
-			// 		? "default"
-			// 		: !(state as any)?.playing
-			// 		? "default"
-			// 		: "none",
-			// }}
+			style={{
+				cursor: (state as any)?.mouseMoving
+					? "default"
+					: !(state as any)?.playing
+					? "default"
+					: "none",
+			}}
 		>
 			<ReactPlayer
 				ref={playerRef}

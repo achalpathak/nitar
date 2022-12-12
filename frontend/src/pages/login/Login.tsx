@@ -233,7 +233,7 @@ const Login = () => {
 						/>
 						{process === "login" ? (
 							<a
-								href={`http://localhost:8000${Routes.LOGIN_WITH_GOOGLE}`}
+								href={Routes.LOGIN_WITH_GOOGLE}
 								target='_self'
 								className='sign-in-with-google d-center'
 							>
