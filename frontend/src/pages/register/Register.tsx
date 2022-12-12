@@ -13,7 +13,7 @@ import {
 import { useAppSelector } from "@redux/hooks";
 import { ICountryList, IError, IResponse, ISuccess } from "@types";
 import { CustomSelectUtils } from "@utils";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import {
 	ChangeEvent,
 	KeyboardEvent,
@@ -39,6 +39,7 @@ const Register = () => {
 	//Register
 	const [name, setName] = useState<string>("");
 	const [email, setEmail] = useState<string>("");
+
 	const [ageRequirement, setAgeRequirement] = useState<boolean>(false);
 	const [termsAndConditions, setTermsAndConditions] =
 		useState<boolean>(false);
@@ -46,12 +47,14 @@ const Register = () => {
 	const [countries, setCountries] = useState<ICountryList[]>([]);
 	const [country, setCountry] = useState<ICountryList>({} as ICountryList);
 
-	const [errors, setErrors] = useState<IError>({
+	const initialErrorState: IError = {
 		full_name: [],
 		email: [],
 		phone: [],
 		age: [],
-	});
+	};
+
+	const [errors, setErrors] = useState<IError>(initialErrorState);
 
 	const [ageError, setAgeError] = useState<boolean>(false);
 	const [termsError, setTermsError] = useState<boolean>(false);
@@ -60,7 +63,7 @@ const Register = () => {
 	useEffect(() => {
 		(async () => {
 			try {
-				const res = await axios.get<ISuccess<ICountryList[]>>(
+				const res = await api.get<ISuccess<ICountryList[]>>(
 					Routes.COUNTRY_LIST
 				);
 
@@ -109,6 +112,8 @@ const Register = () => {
 
 	const register = async () => {
 		try {
+			setErrors(initialErrorState);
+
 			if (!errorHandler()) {
 				return;
 			}
