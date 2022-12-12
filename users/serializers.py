@@ -123,7 +123,7 @@ class PhoneOtpSerializer(serializers.Serializer):
         try:
             with transaction.atomic():
                 user_obj = self.context.get("request", None).user
-                if type(user_obj) == type(AnonymousUser):
+                if type(user_obj) == AnonymousUser:
                     user_obj = user_models.User.objects.filter(
                         phone=validated_data["phone"]
                     ).last()

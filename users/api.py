@@ -12,6 +12,7 @@ import requests
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AnonymousUser
 
 User = get_user_model()
 
@@ -35,7 +36,7 @@ class SendOTP(APIView):
     serializer_class = user_serializers.PhoneOtpSerializer
 
     def post(self, request):
-        serialized_data = self.serializer_class(data=self.request.data)
+        serialized_data = self.serializer_class(data=self.request.data, context={"request": request})
         if serialized_data.is_valid(raise_exception=True):
             serialized_data.save()
         return Response({"message": f"OTP is sent. Valid for next 15minutes."})
@@ -123,7 +124,7 @@ class GoogleLoginAPI(APIView):
 class UserInfo(APIView):
     def get(self, request):
         user = request.user
-        if not user:
+        if type(user) == AnonymousUser:
             return Response(
                 {"message": f"User is not logged in."},
                 status=status.HTTP_400_BAD_REQUEST,
