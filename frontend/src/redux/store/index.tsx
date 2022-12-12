@@ -15,16 +15,16 @@ import {
 	IUser,
 } from "@types";
 
-// const rootReducer = (state: any, action: IReducer) => {
-// 	if (action.type === Actions.LOGOUT) {
-// 		// for all keys defined in your persistConfig(s)
-// 		storage.removeItem("persist:root");
-// 		// storage.removeItem('persist:otherKey')
+const rootReducer = (state: any, action: IReducer) => {
+	if (action.type === Actions.LOGOUT) {
+		// for all keys defined in your persistConfig(s)
+		storage.removeItem("persist:root");
+		// storage.removeItem('persist:otherKey')
 
-// 		return appReducer(undefined, action);
-// 	}
-// 	return appReducer(state, action);
-// };
+		return appReducer(undefined, action);
+	}
+	return appReducer(state, action);
+};
 
 const persistConfig = {
 	key: "root",
@@ -44,7 +44,7 @@ const persistedReducer = persistReducer(
 		// ],
 		...persistConfig,
 	},
-	appReducer
+	rootReducer
 );
 
 //Adding Redux devtools support

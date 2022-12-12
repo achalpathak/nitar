@@ -9,6 +9,7 @@ import {
 	IPreferences,
 	IPrefs,
 	ISuccess,
+	IUser,
 	IWelcomeBanner,
 } from "@types";
 import { AxiosError } from "axios";
@@ -161,6 +162,26 @@ const App = () => {
 			} catch (error) {
 				const err = error as AxiosError<ISuccess>;
 				console.error(err.response);
+			}
+		})();
+	}, []);
+
+	useLayoutEffect(() => {
+		(async () => {
+			try {
+				const res = await api.get<ISuccess<IUser>>(
+					Routes.GET_USER_INFO
+				);
+
+				if (res.status === 200) {
+					dispatch({
+						type: Actions.LOGIN,
+						payload: res.data?.result,
+					});
+				}
+			} catch (error) {
+				const err = error as AxiosError<ISuccess>;
+				console.error(err?.response);
 			}
 		})();
 	}, []);

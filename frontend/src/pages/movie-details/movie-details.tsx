@@ -74,10 +74,11 @@ const MovieDetails = (props: any) => {
 
 	return (
 		<>
-			<Grid container className='movie-details'>
+			<Grid container display='flex' className='movie-details d-center'>
 				<Grid
 					item
 					xs={12}
+					sm={10}
 					sx={{
 						position: "relative",
 						backgroundImage: {
@@ -99,6 +100,7 @@ const MovieDetails = (props: any) => {
 						flexDirection: "column",
 						alignItems: "center",
 						justifyContent: "center",
+						alignSelf: "center",
 					}}
 				>
 					<Grid
@@ -120,7 +122,7 @@ const MovieDetails = (props: any) => {
 							sm={8}
 							md={6}
 							sx={{
-								backgroundColor: "rgba(0,0,0,0.5)",
+								backgroundColor: "rgba(0,0,0,0.7)",
 								maxHeight: "600px",
 								maxWidth: "550px",
 							}}

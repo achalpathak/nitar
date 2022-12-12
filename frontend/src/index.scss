@@ -129,12 +129,15 @@ input[type="number"] {
 }
 
 .login-btn {
-	padding: 10px 20px;
+	padding: 6px 15px;
 	border: 1px solid var(--website-primary-color);
 	color: var(--website-primary-color);
 	text-transform: uppercase;
 	// background-color: rgba($color: #fff, $alpha: 0.15);
 	font-family: "Barlow Condensed";
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
 	&:hover {
 		color: var(--website-secondary-color);
@@ -203,7 +206,7 @@ body {
 	top: 2rem;
 	right: 2rem;
 	transition: all 1s ease-in-out;
-	z-index: 1101;
+	z-index: 1301;
 
 	&.hide {
 		visibility: hidden;
@@ -271,4 +274,8 @@ span {
 
 .bg-white {
 	background-color: white !important;
+}
+
+.flex-column {
+	flex-direction: column;
 }

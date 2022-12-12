@@ -123,11 +123,14 @@ class PhoneOtpSerializer(serializers.Serializer):
         try:
             with transaction.atomic():
                 user_obj = self.context.get("request", None).user
-                if type(user_obj) == AnonymousUser:
+                if type(user_obj) in [AnonymousUser, None]:
                     user_obj = user_models.User.objects.filter(
                         phone=validated_data["phone"]
                     ).last()
+                    if user_obj is None:
+                        raise user_models.User.DoesNotExist()
 
+                print(user_obj)
                 data = {
                     "otp": randint(100000, 999999),
                     "valid_till": datetime.now() + timedelta(minutes=15),
@@ -184,6 +187,10 @@ class VerifyOtpSerializer(serializers.Serializer):
                         }
                     )
                 # OTP is verifed
+                phone_otp_obj.user.phone_verified = True
+                phone_otp_obj.user.is_active = True
+                phone_otp_obj.user.save()
+                phone_otp_obj.delete()
                 some_other_user = User.objects.filter(
                     phone=validated_data["phone"], phone_verified=False
                 )
@@ -191,10 +198,6 @@ class VerifyOtpSerializer(serializers.Serializer):
                     some_other_user
                 ):  # removes phone number for any other user non-verified
                     some_other_user.update(phone=None)
-                phone_otp_obj.user.phone_verified = True
-                phone_otp_obj.user.is_active = True
-                phone_otp_obj.user.save()
-                phone_otp_obj.delete()
                 return phone_otp_obj.user
             else:
                 raise serializers.ValidationError(

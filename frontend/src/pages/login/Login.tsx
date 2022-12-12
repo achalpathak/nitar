@@ -12,6 +12,7 @@ import { AxiosError } from "axios";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import OtpInput from "react-otp-input";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Google } from "@assets";
 
 type ILocationProps = {
 	pathname: string;
@@ -217,6 +218,9 @@ const Login = () => {
 					>
 						<Button
 							title={process === "login" ? "CONTINUE" : "VERIFY"}
+							style={{
+								marginBottom: "1rem",
+							}}
 							onClickCapture={async (e) => {
 								e.preventDefault();
 								if (process === "login") {
@@ -227,6 +231,20 @@ const Login = () => {
 							}}
 							disabled={loading}
 						/>
+						{process === "login" ? (
+							<a
+								href={`http://localhost:8000${Routes.LOGIN_WITH_GOOGLE}`}
+								target='_self'
+								className='sign-in-with-google d-center'
+							>
+								<Google
+									style={{
+										marginRight: "1rem",
+									}}
+								/>
+								Login with Google
+							</a>
+						) : null}
 						{process === "otp" && (
 							<>
 								<Button

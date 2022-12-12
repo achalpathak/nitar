@@ -19,7 +19,7 @@ const StyledPlayer = styled("div")<ReactPlayerProps>`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	cursor: none;
+    opacity: 1;
 
 	video,
 	.react-player__preview {
@@ -134,13 +134,13 @@ const Player: React.FC<
 		<StyledPlayer
 			state={state}
 			ref={wrapperRef}
-			style={{
-				cursor: (state as any)?.mouseMoving
-					? "default"
-					: !(state as any)?.playing
-					? "default"
-					: "none",
-			}}
+			// style={{
+			// 	cursor: (state as any)?.mouseMoving
+			// 		? "default"
+			// 		: !(state as any)?.playing
+			// 		? "default"
+			// 		: "none",
+			// }}
 		>
 			<ReactPlayer
 				ref={playerRef}

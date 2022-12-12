@@ -124,6 +124,7 @@ class GoogleLoginAPI(APIView):
 class UserInfo(APIView):
     def get(self, request):
         user = request.user
+        print(user)
         if type(user) == AnonymousUser:
             return Response(
                 {"message": f"User is not logged in."},
@@ -166,5 +167,7 @@ class GoogleCallbackAPI(APIView):
             email=userinfo_response["email"], defaults=validated_data
         )
         user_obj.save()
+        print(user_obj)
         login(request, user_obj, backend="django.contrib.auth.backends.ModelBackend")
         return redirect(request.build_absolute_uri(reverse("home")))
+        

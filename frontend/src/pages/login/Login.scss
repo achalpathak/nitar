@@ -210,3 +210,34 @@
 .otp-container {
 	margin: 5px;
 }
+
+.sign-in-with-google {
+	transition: background-color 0.3s, box-shadow 0.3s;
+	color: "white";
+	font-weight: bold;
+	padding: 0.6em 0;
+	width: 15rem;
+	border: none;
+	border-radius: 30px;
+	box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.25);
+
+	color: #757575;
+	font-size: 14px;
+	font-weight: 500;
+	background-color: white;
+
+	&:hover {
+		border-color: var(--website-primary-color);
+		box-shadow: 1px 1px 10px 1px var(--website-primary-color);
+		color: #757575;
+	}
+
+	&:active {
+		background-color: #eeeeee;
+	}
+
+	&:focus {
+		outline: none;
+		box-shadow: 1px 1px 10px 1px var(--website-primary-color);
+	}
+}

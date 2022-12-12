@@ -1,47 +1,65 @@
-.slide {
-	&.previous:not(.animateOut) {
-		transform: translateX(26%) rotateY(30deg);
-	}
-	&.next:not(.animateIn) {
-		transform: translateX(-26%) rotateY(30deg);
-	}
+// .slide {
+// 	&.previous:not(.animateOut) {
+// 		transform: translateX(26%) rotateY(30deg);
+// 	}
+// 	&.next:not(.animateIn) {
+// 		transform: translateX(-26%) rotateY(30deg);
+// 	}
+// }
+
+// @media only screen and (min-width: 2000px) {
+// 	.slide {
+// 		&.previous:not(.animateOut) {
+// 			// transform: translateX(26%)
+// 			transform: translateX(calc(30% + 30vw));
+// 		}
+// 		&.next:not(.animateIn) {
+// 			// transform: translateX(-26%)
+// 			transform: translateX(calc(-30% - 30vw));
+// 		}
+// 	}
+// }
+
+// @media only screen and (min-width: 2000px) {
+// 	.slide {
+// 		&.previous:not(.animateOut) {
+// 			// transform: translateX(26%)
+// 			transform: translateX(calc(30% + 10vw));
+// 		}
+// 		&.next:not(.animateIn) {
+// 			// transform: translateX(-26%)
+// 			transform: translateX(calc(-30% - 10vw));
+// 		}
+// 	}
+// }
+
+// @media only screen and (min-width: 1700px) {
+// 	.slide {
+// 		&.previous:not(.animateOut) {
+// 			// transform: translateX(26%)
+// 			transform: translateX(calc(30% + 10vw));
+// 		}
+// 		&.next:not(.animateIn) {
+// 			// transform: translateX(-26%)
+// 			transform: translateX(calc(-30% - 10vw));
+// 		}
+// 	}
+// }
+
+.img-container {
+	width: 100%;
+	height: 100%;
 }
 
-@media only screen and (min-width: 2000px) {
-	.slide {
-		&.previous:not(.animateOut) {
-			// transform: translateX(26%)
-			transform: translateX(calc(30% + 30vw));
-		}
-		&.next:not(.animateIn) {
-			// transform: translateX(-26%)
-			transform: translateX(calc(-30% - 30vw));
-		}
-	}
+.slider .banner-picture img {
+	border-radius: 2rem;
+	width: auto;
+	height: 100% !important;
+	aspect-ratio: 16 / 9;
 }
 
-@media only screen and (min-width: 2000px) {
-	.slide {
-		&.previous:not(.animateOut) {
-			// transform: translateX(26%)
-			transform: translateX(calc(30% + 10vw));
-		}
-		&.next:not(.animateIn) {
-			// transform: translateX(-26%)
-			transform: translateX(calc(-30% - 10vw));
-		}
-	}
-}
-
-@media only screen and (min-width: 1700px) {
-	.slide {
-		&.previous:not(.animateOut) {
-			// transform: translateX(26%)
-			transform: translateX(calc(30% + 10vw));
-		}
-		&.next:not(.animateIn) {
-			// transform: translateX(-26%)
-			transform: translateX(calc(-30% - 10vw));
-		}
-	}
-}
+// @media only screen and (min-width: 1700px) {
+// 	.slider img {
+// 		border-radius: 2rem;
+// 	}
+// }

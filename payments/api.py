@@ -24,7 +24,7 @@ class InitiatePayments(APIView):
             membership_id = request.data["membership_id"]
             gateway = request.data["gateway"]
             user = request.user
-
+            print(user)
             if not user.phone_number:
                 return Response(
                     {"message": f"Phone number is not updated."},

@@ -9,9 +9,19 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { Box, Grid, IconButton, Modal, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
-import { IPaymentGateways, IPlanItem, IPlans, IStripe, ISuccess } from "@types";
+import {
+	ICountryList,
+	IError,
+	IPaymentGateways,
+	IPlanItem,
+	IPlans,
+	IResponse,
+	IStripe,
+	ISuccess,
+	IUser,
+} from "@types";
 import { AxiosError } from "axios";
-import { useEffect, useState } from "react";
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import useRazorpay, { RazorpayOptions } from "react-razorpay";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import OldSwal from "sweetalert2";
@@ -20,6 +30,14 @@ import "./plans.scss";
 import { loadStripe } from "@stripe/stripe-js";
 import Actions from "@redux/actions";
 import moment from "moment";
+import { CustomInput } from "@components";
+import { CustomSelectUtils } from "@utils";
+import makeAnimated from "react-select/animated";
+import Select from "react-select";
+import OtpInput from "react-otp-input";
+import { useAlert } from "@hooks";
+
+const animatedComponents = makeAnimated();
 
 const Swal = withReactContent(OldSwal);
 
@@ -27,6 +45,7 @@ const Swal = withReactContent(OldSwal);
 
 const Plans = () => {
 	const dispatch = useAppDispatch();
+	const showAlert = useAlert();
 
 	const prefs = useAppSelector((state) => state.preferences);
 	const paymentInitiate = useAppSelector((state) => state.payment);
@@ -36,8 +55,13 @@ const Plans = () => {
 	const [plans, setPlans] = useState<IPlans>();
 	const [paymentGateways, showPaymentGateways] = useState<boolean>(false);
 	const [renderingGateway, showRenderingGateway] = useState<boolean>(false);
+	const [phoneVerification, showPhoneVerification] = useState<boolean>(false);
 
 	const [currentPlan, setCurrentPlan] = useState<IPlanItem>();
+
+	const [countries, setCountries] = useState<ICountryList[]>([]);
+	const [country, setCountry] = useState<ICountryList>({} as ICountryList);
+	const [phone, setPhone] = useState<string>("");
 
 	const navigate = useNavigate();
 	const user = useAppSelector((state) => state.user);
@@ -45,6 +69,67 @@ const Plans = () => {
 	const Razorpay = useRazorpay();
 
 	const [searchParams] = useSearchParams();
+
+	const [errors, setErrors] = useState<IError>({
+		phone: [],
+	});
+
+	const [otp, setOtp] = useState<string>("");
+	const [process, setProcess] = useState<"login" | "otp">("login");
+	const interval = useRef<NodeJS.Timer>();
+	const [timer, setTimer] = useState<number>(60);
+
+	const loading = useAppSelector((state) => state.loading);
+
+	const startTimer = () => {
+		setTimer(60);
+		const id = setInterval(() => {
+			setTimer((t) => t - 1);
+		}, 1000);
+
+		interval.current = id;
+	};
+
+	const stopTimer = () => {
+		clearInterval(interval.current);
+		interval.current = undefined;
+	};
+
+	useEffect(() => {
+		return () => stopTimer();
+	}, []);
+
+	useEffect(() => {
+		if (timer <= 0) {
+			stopTimer();
+		}
+	}, [timer]);
+
+	useEffect(() => {
+		(async () => {
+			try {
+				const res = await api.get<ISuccess<ICountryList[]>>(
+					Routes.COUNTRY_LIST
+				);
+
+				if (res.status === 200) {
+					setCountries(res.data?.result);
+					const india = res.data?.result?.find(
+						(v) => v.name === "India"
+					);
+					if (india) {
+						setCountry(india);
+					}
+				} else {
+					setCountries([]);
+				}
+			} catch (error) {
+				const err = error as AxiosError<IResponse>;
+				console.error(err.response);
+				setCountries([]);
+			}
+		})();
+	}, []);
 
 	useEffect(() => {
 		if (searchParams.get("success")) {
@@ -253,6 +338,86 @@ const Plans = () => {
 		}
 	};
 
+	const sendOtp = async (phoneNum: string = phone) => {
+		try {
+			const res = await api.post<IResponse>(Routes.SEND_OTP, {
+				phone: phoneNum,
+			});
+
+			if (res.status === 200) {
+				console.log("OTP Sent");
+				setProcess("otp");
+				showAlert("success", "Success", res?.data?.message);
+
+				startTimer();
+			}
+		} catch (error) {
+			const err = error as AxiosError<IResponse>;
+			const data = err?.response?.data;
+			if (data?.message) {
+				showAlert("error", "Error", data?.message);
+			} else if (data) {
+				setErrors(data);
+			}
+		}
+	};
+
+	const verifyOtp = async () => {
+		try {
+			const res = await api.post<IResponse<IUser>>(Routes.VERIFY_OTP, {
+				phone,
+				otp: parseInt(otp),
+			});
+
+			if (res.status === 200) {
+				dispatch({
+					type: Actions.LOGIN,
+					payload: res.data?.result,
+				});
+				showPhoneVerification(false);
+				Swal.fire({
+					title: "Success",
+					text:
+						res.data?.message ??
+						"Phone Number Updated Successfully",
+					icon: "success",
+					confirmButtonText: "Continue to Payment",
+				}).then(async () => {
+					showPaymentGateways(true);
+				});
+			}
+		} catch (error) {
+			const err = error as AxiosError<IResponse>;
+			const data = err?.response?.data;
+			if (data?.message) {
+				showAlert("error", "Error", data?.message);
+			} else if (data) {
+				setErrors(data);
+			}
+		}
+	};
+
+	const updatePhone = async () => {
+		try {
+			const res = await api.post<IResponse>(Routes.UPDATE_PHONE, {
+				phone: phone,
+				phone_code: country.code,
+			});
+
+			if (res.status === 200) {
+				sendOtp();
+			}
+		} catch (error) {
+			const err = error as AxiosError<IResponse>;
+			const data = err?.response?.data;
+			if (data?.message) {
+				showAlert("error", "Error", data?.message);
+			} else if (data) {
+				setErrors(data);
+			}
+		}
+	};
+
 	return (
 		<>
 			<Grid container>
@@ -343,11 +508,15 @@ const Plans = () => {
 													}
 												});
 											} else {
-												console.log(
-													"Initiating Payment"
-												);
-												setCurrentPlan(d);
-												showPaymentGateways(true);
+												if (!user.phone_verified) {
+													showPhoneVerification(true);
+												} else {
+													console.log(
+														"Initiating Payment"
+													);
+													setCurrentPlan(d);
+													showPaymentGateways(true);
+												}
 											}
 										}}
 									/>
@@ -518,6 +687,142 @@ const Plans = () => {
 									</IconButton>
 								</Stack>
 							</Stack>
+						</Grid>
+					</Grid>
+				</Box>
+			</Modal>
+			<Modal
+				open={phoneVerification}
+				closeAfterTransition
+				onClose={() => showPhoneVerification(false)}
+			>
+				<Box
+					width='100%'
+					height='100%'
+					className='d-center input-container'
+				>
+					<Grid container className='d-center'>
+						<Grid
+							item
+							xs={11}
+							sm={8}
+							md={5}
+							xl={4}
+							sx={{
+								position: "relative",
+								backgroundColor: "rgba(0,0,0,1)",
+							}}
+							paddingTop={2}
+							paddingBottom={4}
+						>
+							<div className='d-center flex-column'>
+								{process === "login" ? (
+									<>
+										<Typography variant='h6'>
+											Update your phone number
+										</Typography>
+										<Box className='d-center flex-column'>
+											<Select<ICountryList, false>
+												name='country'
+												id='country'
+												closeMenuOnSelect={true}
+												className='w-100'
+												components={animatedComponents}
+												isMulti={false}
+												isSearchable
+												options={countries}
+												value={country}
+												onChange={(newValue) => {
+													if (newValue) {
+														setCountry(newValue);
+													}
+												}}
+												noOptionsMessage={() => (
+													<Box>No results found</Box>
+												)}
+												getOptionLabel={(option) =>
+													`(${option.code}) ${option.name}`
+												}
+												getOptionValue={(option) =>
+													option.name
+												}
+												filterOption={(option, input) =>
+													option.label
+														?.toLowerCase()
+														.includes(
+															input?.toLowerCase()
+														)
+												}
+												styles={CustomSelectUtils.customStyles()}
+											/>
+											<CustomInput
+												type='number'
+												id='phone'
+												name='phone'
+												placeholder='Enter your Phone Number'
+												value={phone}
+												onChangeCapture={(
+													e: ChangeEvent<HTMLInputElement>
+												) => {
+													const phoneNum =
+														e.target.value;
+													if (
+														phoneNum.length <= 10 &&
+														!isNaN(
+															parseInt(phoneNum)
+														)
+													) {
+														setPhone(phoneNum);
+													}
+												}}
+												errors={errors?.phone}
+											/>
+										</Box>
+									</>
+								) : (
+									<div className='d-center flex-column'>
+										<label>
+											Enter verification code sent on your
+											mobile number
+										</label>
+										<OtpInput
+											value={otp}
+											onChange={setOtp}
+											numInputs={6}
+											// isInputSecure={true}
+											inputStyle={{
+												width: "2rem",
+												height: "2rem",
+												padding: 5,
+												backgroundSize: "cover",
+											}}
+											className='otp-container'
+											isInputNum
+										/>
+									</div>
+								)}
+								<Button
+									title={
+										process === "login"
+											? "CONTINUE"
+											: "VERIFY"
+									}
+									style={{
+										fontFamily: "Barlow Condensed",
+										marginTop: "1rem",
+									}}
+									onClickCapture={async (
+										e: MouseEvent<HTMLButtonElement>
+									) => {
+										e.preventDefault();
+										if (process === "login") {
+											updatePhone();
+										} else {
+											verifyOtp();
+										}
+									}}
+								/>
+							</div>
 						</Grid>
 					</Grid>
 				</Box>

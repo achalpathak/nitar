@@ -1,6 +1,6 @@
 import api, { Routes } from "@api";
 import { ChevronLeftOutlined, ChevronRightOutlined } from "@mui/icons-material";
-import { Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { IBanners, ISuccess } from "@types";
 import { AxiosError } from "axios";
 import { FC, useEffect, useState } from "react";
@@ -46,13 +46,19 @@ const BannerCarousel: FC = () => {
 				overflow='hidden'
 				display='flex'
 				flex={3}
+				sx={{
+					height: {
+						xs: "15rem",
+						sm: "25rem",
+						md: "37rem",
+						xl: "75vw",
+					},
+					maxHeight: {
+						xl: "70vh",
+					},
+				}}
 				style={{
 					paddingLeft: 0,
-				}}
-				height={{
-					xs: "15rem",
-					sm: "25rem",
-					md: "37rem",
 				}}
 				className='banner-container'
 			>
@@ -62,8 +68,8 @@ const BannerCarousel: FC = () => {
 					previousButton={
 						<ChevronLeftOutlined
 							style={{
-								width: 40,
-								height: 40,
+								width: "2rem",
+								height: "2rem",
 								color: "var(--website-secondary-color)",
 							}}
 						/>
@@ -71,8 +77,8 @@ const BannerCarousel: FC = () => {
 					nextButton={
 						<ChevronRightOutlined
 							style={{
-								width: 40,
-								height: 40,
+								width: "2rem",
+								height: "2rem",
 								color: "var(--website-secondary-color)",
 							}}
 						/>
@@ -94,30 +100,26 @@ const BannerCarousel: FC = () => {
 								}}
 								className='d-center'
 							>
-								<picture
-									className='d-center'
-									style={{
-										height: "100%",
-										width: "100%",
-									}}
-								>
-									<source
-										media='(max-width: 500px)'
-										src={`${item?.mobile_banner}`}
-									/>
-									<img
-										key={index}
-										src={`${item?.website_banner}`}
-										alt={item?.banner_type}
-										loading='lazy'
+								<Box className='img-container'>
+									<picture
+										className='d-center banner-picture'
 										style={{
-											borderRadius: "20px",
-											width: "auto",
 											height: "100%",
-											objectFit: "fill",
+											width: "100%",
 										}}
-									/>
-								</picture>
+									>
+										<source
+											media='(max-width: 500px)'
+											src={`${item?.mobile_banner}`}
+										/>
+										<img
+											key={index}
+											src={`${item?.website_banner}`}
+											alt={item?.banner_type}
+											loading='lazy'
+										/>
+									</picture>
+								</Box>
 							</Link>
 						</div>
 					))}

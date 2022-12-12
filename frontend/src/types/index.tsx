@@ -218,6 +218,8 @@ export type IUser = {
 	full_name: string;
 	email: string;
 	phone: string;
+	phone_verified: boolean;
+	phone_code: string;
 	has_active_membership: boolean;
 	newsletter_subscribed: boolean;
 };

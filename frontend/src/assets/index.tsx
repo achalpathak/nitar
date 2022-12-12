@@ -7,3 +7,4 @@ export { ReactComponent as RazorpayBlue } from "./brands/razorpay_blue.svg";
 export { ReactComponent as RazorpayWhite } from "./brands/razorpay_white.svg";
 export { ReactComponent as Paytm } from "./brands/paytm.svg";
 export { ReactComponent as Stripe } from "./brands/stripe.svg";
+export { ReactComponent as Google } from "./brands/google.svg";
