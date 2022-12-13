@@ -36,7 +36,7 @@ const MovieList: FC<IMovieListProps> = ({
 	});
 
 	const wheel = useWheel((event) => {
-		console.log("Wheeling", event);
+		// console.log("Wheeling", event);
 		set({
 			transform: `perspective(500px) rotateY(${
 				event.scrolling ? clamp(event.delta[0]) : 0

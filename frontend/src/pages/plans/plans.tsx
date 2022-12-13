@@ -528,7 +528,12 @@ const Plans = () => {
 				<Grid container className='d-center' my={10}>
 					<Grid item xs={12} sm={12} md={10} className='description'>
 						<div>
-							<Typography variant='h5'>Information</Typography>
+							<Typography
+								variant='h5'
+								color='var(--website-secondary-color)'
+							>
+								Information
+							</Typography>
 						</div>
 						<span
 							style={{
@@ -620,71 +625,77 @@ const Plans = () => {
 										variant='body1'
 										color='var(--website-primary-color)'
 									>
-										Select a payment gateway to continue
+										Select a payment method to continue
 									</Typography>
-									<IconButton
-										onClickCapture={(e) => {
-											e.preventDefault;
-											initiatePayment("razor_pay");
-										}}
-										className='custom-btn d-flex w-100'
-										sx={{
-											borderRadius: 2,
-											border: "1px solid var(--website-primary-color)",
-											backgroundColor:
-												"var(--website-alternate-color)",
-											"&:hover": {
-												boxShadow:
-													"0px 0px 5px 2px var(--website-primary-color)",
+									{prefs?.razor_pay?.toggle_value ? (
+										<IconButton
+											onClickCapture={(e) => {
+												e.preventDefault;
+												initiatePayment("razor_pay");
+											}}
+											className='custom-btn d-flex w-100'
+											sx={{
+												borderRadius: 2,
+												border: "1px solid var(--website-primary-color)",
 												backgroundColor:
 													"var(--website-alternate-color)",
-											},
-										}}
-									>
-										<RazorpayWhite height={30} />
-									</IconButton>
-									<IconButton
-										onClickCapture={(e) => {
-											e.preventDefault;
-											initiatePayment("paytm");
-										}}
-										className='custom-btn d-flex w-100'
-										sx={{
-											borderRadius: 2,
-											border: "1px solid var(--website-primary-color)",
-											backgroundColor:
-												"var(--website-alternate-color)",
-											"&:hover": {
-												boxShadow:
-													"0px 0px 5px 2px var(--website-primary-color)",
+												"&:hover": {
+													boxShadow:
+														"0px 0px 5px 2px var(--website-primary-color)",
+													backgroundColor:
+														"var(--website-alternate-color)",
+												},
+											}}
+										>
+											<RazorpayWhite height={30} />
+										</IconButton>
+									) : null}
+									{prefs?.paytm?.toggle_value ? (
+										<IconButton
+											onClickCapture={(e) => {
+												e.preventDefault;
+												initiatePayment("paytm");
+											}}
+											className='custom-btn d-flex w-100'
+											sx={{
+												borderRadius: 2,
+												border: "1px solid var(--website-primary-color)",
 												backgroundColor:
 													"var(--website-alternate-color)",
-											},
-										}}
-									>
-										<Paytm height={30} />
-									</IconButton>
-									<IconButton
-										onClickCapture={(e) => {
-											e.preventDefault;
-											initiatePayment("stripe");
-										}}
-										className='custom-btn d-flex w-100'
-										sx={{
-											borderRadius: 2,
-											border: "1px solid var(--website-primary-color)",
-											backgroundColor:
-												"var(--website-alternate-color)",
-											"&:hover": {
-												boxShadow:
-													"0px 0px 5px 2px var(--website-primary-color)",
+												"&:hover": {
+													boxShadow:
+														"0px 0px 5px 2px var(--website-primary-color)",
+													backgroundColor:
+														"var(--website-alternate-color)",
+												},
+											}}
+										>
+											<Paytm height={30} />
+										</IconButton>
+									) : null}
+									{prefs?.stripe?.toggle_value ? (
+										<IconButton
+											onClickCapture={(e) => {
+												e.preventDefault;
+												initiatePayment("stripe");
+											}}
+											className='custom-btn d-flex w-100'
+											sx={{
+												borderRadius: 2,
+												border: "1px solid var(--website-primary-color)",
 												backgroundColor:
 													"var(--website-alternate-color)",
-											},
-										}}
-									>
-										<StripeIcon height={40} />
-									</IconButton>
+												"&:hover": {
+													boxShadow:
+														"0px 0px 5px 2px var(--website-primary-color)",
+													backgroundColor:
+														"var(--website-alternate-color)",
+												},
+											}}
+										>
+											<StripeIcon height={40} />
+										</IconButton>
+									) : null}
 								</Stack>
 							</Stack>
 						</Grid>
