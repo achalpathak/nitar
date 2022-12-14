@@ -4,7 +4,7 @@ import "./Login.scss";
 import api, { Routes } from "@api";
 import { Button, CustomInput } from "@components";
 import { useAlert } from "@hooks";
-import { Alert, AlertTitle, Typography } from "@mui/material";
+import { Alert, AlertTitle, Grid, Typography } from "@mui/material";
 import Actions from "@redux/actions";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import { IError, IMessage, IResponse, IUser } from "@types";
@@ -141,21 +141,32 @@ const Login = () => {
 	}, []);
 
 	return (
-		<>
-			<div className='main-container'>
-				<div className='login-container'>
-					<div className='logo-container'>
-						<img
-							alt='logo'
-							src={prefs?.logo_url?.image}
-							width='100%'
-							height='100%'
-						></img>
-					</div>
-					<div className='input-container'>
-						{process === "login" && (
-							<>
-								<label>
+		<Grid container className='d-center'>
+			<Grid item xs={10} md={6} xl={4}>
+				<Grid
+					container
+					display='flex'
+					flexDirection='column'
+					className='input-container'
+				>
+					<Grid item xs={12} className='d-center'>
+						<div className='logo-container d-center'>
+							<img
+								alt='logo'
+								src={prefs?.logo_url?.image}
+								width='100%'
+								height='100%'
+							></img>
+						</div>
+					</Grid>
+					{process === "login" ? (
+						<>
+							<Grid item xs={12} className='d-center flex-column'>
+								<label
+									style={{
+										textAlign: "center",
+									}}
+								>
 									Enter your phone number below to continue
 								</label>
 								<CustomInput
@@ -174,6 +185,8 @@ const Login = () => {
 									}}
 									errors={errors?.phone}
 								/>
+							</Grid>
+							<Grid item xs={12} className='d-center'>
 								<Typography mt={1}>
 									<>
 										Don't have an account?{" "}
@@ -187,40 +200,32 @@ const Login = () => {
 										</Link>
 									</>
 								</Typography>
-							</>
-						)}
-						{process === "otp" && (
-							<>
-								<label>
-									Enter verification code sent on your mobile
-									number
-								</label>
-								<OtpInput
-									value={otp}
-									onChange={setOtp}
-									numInputs={6}
-									// isInputSecure={true}
-									inputStyle={{
-										width: "2rem",
-										height: "2rem",
-										padding: 5,
-										backgroundSize: "cover",
-									}}
-									className='otp-container'
-									isInputNum
-								/>
-							</>
-						)}
-					</div>
-					<div
-						className='btn-container'
-						style={{ marginTop: "15px" }}
-					>
+							</Grid>
+						</>
+					) : (
+						<Grid item xs={12} className='d-center flex-column'>
+							<label>
+								Enter verification code sent on your mobile
+								number
+							</label>
+							<OtpInput
+								value={otp}
+								onChange={setOtp}
+								numInputs={6}
+								inputStyle={{
+									width: "3rem",
+									height: "3rem",
+									padding: 5,
+									backgroundSize: "cover",
+								}}
+								className='otp-container'
+								isInputNum
+							/>
+						</Grid>
+					)}
+					<Grid item xs={12} mt={2} className='d-center'>
 						<Button
 							title={process === "login" ? "CONTINUE" : "VERIFY"}
-							style={{
-								marginBottom: "1rem",
-							}}
 							onClickCapture={async (e) => {
 								e.preventDefault();
 								if (process === "login") {
@@ -231,7 +236,9 @@ const Login = () => {
 							}}
 							disabled={loading}
 						/>
-						{process === "login" ? (
+					</Grid>
+					{process === "login" ? (
+						<Grid item xs={12} mt={2} className='d-center'>
 							<a
 								href={Routes.LOGIN_WITH_GOOGLE}
 								target='_self'
@@ -244,9 +251,10 @@ const Login = () => {
 								/>
 								Login with Google
 							</a>
-						) : null}
-						{process === "otp" && (
-							<>
+						</Grid>
+					) : (
+						<>
+							<Grid item xs={12} className='d-center'>
 								<Button
 									title={"Resend OTP"}
 									onClickCapture={async (e) => {
@@ -256,14 +264,18 @@ const Login = () => {
 									disabled={timer > 0}
 									style={{ margin: "1rem 0" }}
 								/>
+							</Grid>
+							<Grid item xs={12}>
 								<Typography
 									component='label'
 									textAlign='center'
 								>
 									You can resend the OTP in {timer} seconds
 								</Typography>
-							</>
-						)}
+							</Grid>
+						</>
+					)}
+					<Grid item xs={12} className='d-center'>
 						<button
 							className='cancel-btn'
 							onClickCapture={(e) => {
@@ -291,22 +303,10 @@ const Login = () => {
 								/>
 							</svg>
 						</button>
-					</div>
-				</div>
-			</div>
-			<div
-				className={`alert-container ${
-					message !== null ? "show" : "hide"
-				}`}
-			>
-				{message?.severity && (
-					<Alert severity={message?.severity}>
-						<AlertTitle>{message?.title}</AlertTitle>
-						{message?.description}
-					</Alert>
-				)}
-			</div>
-		</>
+					</Grid>
+				</Grid>
+			</Grid>
+		</Grid>
 	);
 };
 export default Login;

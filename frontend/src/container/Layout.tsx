@@ -1,4 +1,4 @@
-import { FC, lazy, Suspense, useLayoutEffect } from "react";
+import { Suspense, useLayoutEffect } from "react";
 import { AppBar, Loader } from "@components";
 import { Route, Routes, useLocation } from "react-router-dom";
 import {
@@ -24,12 +24,15 @@ const Wrapper = ({ children }: any) => {
 
 const TheContent = () => {
 	const payment = useAppSelector((state) => state.payment);
+
 	return (
 		<div
 			style={{
 				display: "flex",
 				flex: 1,
 				flexDirection: "column",
+				minHeight: "100vh",
+				justifyContent: "space-between",
 			}}
 		>
 			<header>
