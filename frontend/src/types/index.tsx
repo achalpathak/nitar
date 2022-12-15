@@ -93,7 +93,7 @@ export type ICategoryItem = {
 	rankings: number;
 	content_type: "movie" | "series";
 	slug: string;
-	get_genres: string[];
+	media: string;
 	membership_required: boolean;
 	video_link: string;
 	episodes_set: IEpisodesSet[];

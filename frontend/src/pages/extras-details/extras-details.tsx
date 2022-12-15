@@ -149,9 +149,9 @@ const ExtraDetails = (props: any) => {
 											{movie?.age_rating}
 										</Typography>
 									</Box>
-									{movie?.get_genres?.map((g, i) => (
+									{movie?.genres?.map((g, i) => (
 										<Box
-											key={g}
+											key={g.id}
 											mr={2}
 											className='genre'
 											sx={{
@@ -163,7 +163,7 @@ const ExtraDetails = (props: any) => {
 												fontFamily='Barlow Condensed'
 												fontSize={16}
 											>
-												{g}
+												{g.name}
 											</Typography>
 										</Box>
 									))}

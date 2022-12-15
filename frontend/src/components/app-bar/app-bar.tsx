@@ -209,7 +209,7 @@ const AppBar = () => {
 					<Box height='100px' width='500px' mr={1}>
 						<picture>
 							<img
-								src={`/media/${v?.poster_small_vertical_image}`}
+								src={`${v?.poster_small_vertical_image}`}
 								style={{
 									height: "100%",
 									width: "100%",
