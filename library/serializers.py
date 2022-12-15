@@ -2,7 +2,7 @@ from rest_framework import serializers
 from . import models as library_models
 from settings.serializers import AgeSerializer, LanguageSerializer
 from . import utils
-
+from django.conf import settings
 
 class GenersSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,16 +38,21 @@ class HomePageListSerializer(serializers.Serializer):
     duration = serializers.CharField(required=False)
     director_name = serializers.CharField(required=False)
     star_cast = serializers.CharField(required=False)
-    poster_small_vertical_image = serializers.ImageField()
-    poster_large_vertical_image = serializers.ImageField()
-    poster_small_horizontal_image = serializers.ImageField()
-    poster_large_horizontal_image = serializers.ImageField()
+    poster_small_vertical_image = serializers.ImageField(use_url=False)
+    poster_large_vertical_image = serializers.ImageField(use_url=False)
+    poster_small_horizontal_image = serializers.ImageField(use_url=False)
+    poster_large_horizontal_image = serializers.ImageField(use_url=False)
     genres = GenersSerializer(many=True)
     age_rating = serializers.ReadOnlyField(source="age_rating.name")
     language = serializers.ReadOnlyField(source="language.name")
     rankings = serializers.IntegerField(required=False)
     content_type = serializers.CharField()
     slug = serializers.CharField()
+    
+    def to_representation(self, obj):
+        ret = super(serializers.HomePageListSerializer, self).to_representation(obj)
+        ret["media"] = settings.MEDIA_URL
+        return ret
 
 
 class MovieDetailSerializer(serializers.ModelSerializer):
@@ -66,6 +71,7 @@ class MovieDetailSerializer(serializers.ModelSerializer):
             self.context.get("request", None).user, obj
         ):
             ret.pop("video_link")
+        ret["media"] = settings.MEDIA_URL
         return ret
 
     class Meta:
@@ -81,6 +87,11 @@ class SeriesBasicDetailSerializer(serializers.ModelSerializer):
     poster_small_horizontal_image = serializers.ImageField(use_url=False)
     poster_large_horizontal_image = serializers.ImageField(use_url=False)
     get_genres = serializers.JSONField()
+    
+    def to_representation(self, obj):
+        ret = super(serializers.SeriesBasicDetailSerializer, self).to_representation(obj)
+        ret["media"] = settings.MEDIA_URL
+        return ret
 
     class Meta:
         model = library_models.Series
@@ -99,6 +110,7 @@ class EpisodesDetailWithoutSeriesSerializer(serializers.ModelSerializer):
             self.context.get("request", None).user, obj
         ):
             ret.pop("video_link")
+        ret["media"] = settings.MEDIA_URL
         return ret
 
     class Meta:
@@ -119,6 +131,7 @@ class EpisodesDetailSerializer(EpisodesDetailWithoutSeriesSerializer):
             self.context.get("request", None).user, obj
         ):
             ret.pop("video_link")
+        ret["media"] = settings.MEDIA_URL
         return ret
 
     class Meta:
@@ -135,6 +148,11 @@ class SeriesDetailSerializer(serializers.ModelSerializer):
     poster_large_horizontal_image = serializers.ImageField(use_url=False)
     genres = GenersSerializer(many=True)
     episodes_set = EpisodesDetailWithoutSeriesSerializer(many=True, read_only=True)
+    
+    def to_representation(self, obj):
+        ret = super(serializers.SeriesDetailSerializer, self).to_representation(obj)
+        ret["media"] = settings.MEDIA_URL
+        return ret
 
     class Meta:
         model = library_models.Series
@@ -149,6 +167,11 @@ class UpcomingDetailSerializer(serializers.ModelSerializer):
     poster_small_horizontal_image = serializers.ImageField(use_url=False)
     poster_large_horizontal_image = serializers.ImageField(use_url=False)
     genres = GenersSerializer(many=True)
+    
+    def to_representation(self, obj):
+        ret = super(serializers.UpcomingDetailSerializer, self).to_representation(obj)
+        ret["media"] = settings.MEDIA_URL
+        return ret
 
     class Meta:
         model = library_models.Upcoming
@@ -169,6 +192,7 @@ class ExtrasDetailSerializer(serializers.ModelSerializer):
             self.context.get("request", None).user, obj
         ):
             ret.pop("video_link")
+        ret["media"] = settings.MEDIA_URL
         return ret
 
     class Meta:
