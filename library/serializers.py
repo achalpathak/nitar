@@ -53,10 +53,10 @@ class HomePageListSerializer(serializers.Serializer):
 class MovieDetailSerializer(serializers.ModelSerializer):
     age_rating = serializers.ReadOnlyField(source="age_rating.name")
     language = serializers.ReadOnlyField(source="language.name")
-    poster_small_vertical_image = serializers.ImageField()
-    poster_large_vertical_image = serializers.ImageField()
-    poster_small_horizontal_image = serializers.ImageField()
-    poster_large_horizontal_image = serializers.ImageField()
+    poster_small_vertical_image = serializers.ImageField(use_url=False)
+    poster_large_vertical_image = serializers.ImageField(use_url=False)
+    poster_small_horizontal_image = serializers.ImageField(use_url=False)
+    poster_large_horizontal_image = serializers.ImageField(use_url=False)
 
     get_genres = serializers.JSONField()
 
@@ -76,10 +76,10 @@ class MovieDetailSerializer(serializers.ModelSerializer):
 class SeriesBasicDetailSerializer(serializers.ModelSerializer):
     age_rating = serializers.ReadOnlyField(source="age_rating.name")
     language = serializers.ReadOnlyField(source="language.name")
-    poster_small_vertical_image = serializers.ImageField()
-    poster_large_vertical_image = serializers.ImageField()
-    poster_small_horizontal_image = serializers.ImageField()
-    poster_large_horizontal_image = serializers.ImageField()
+    poster_small_vertical_image = serializers.ImageField(use_url=False)
+    poster_large_vertical_image = serializers.ImageField(use_url=False)
+    poster_small_horizontal_image = serializers.ImageField(use_url=False)
+    poster_large_horizontal_image = serializers.ImageField(use_url=False)
     get_genres = serializers.JSONField()
 
     class Meta:
@@ -88,10 +88,10 @@ class SeriesBasicDetailSerializer(serializers.ModelSerializer):
 
 
 class EpisodesDetailWithoutSeriesSerializer(serializers.ModelSerializer):
-    poster_small_vertical_image = serializers.ImageField()
-    poster_large_vertical_image = serializers.ImageField()
-    poster_small_horizontal_image = serializers.ImageField()
-    poster_large_horizontal_image = serializers.ImageField()
+    poster_small_vertical_image = serializers.ImageField(use_url=False)
+    poster_large_vertical_image = serializers.ImageField(use_url=False)
+    poster_small_horizontal_image = serializers.ImageField(use_url=False)
+    poster_large_horizontal_image = serializers.ImageField(use_url=False)
 
     def to_representation(self, obj):
         ret = super(EpisodesDetailWithoutSeriesSerializer, self).to_representation(obj)
@@ -108,10 +108,10 @@ class EpisodesDetailWithoutSeriesSerializer(serializers.ModelSerializer):
 
 class EpisodesDetailSerializer(EpisodesDetailWithoutSeriesSerializer):
     series = SeriesBasicDetailSerializer()
-    poster_small_vertical_image = serializers.ImageField()
-    poster_large_vertical_image = serializers.ImageField()
-    poster_small_horizontal_image = serializers.ImageField()
-    poster_large_horizontal_image = serializers.ImageField()
+    poster_small_vertical_image = serializers.ImageField(use_url=False)
+    poster_large_vertical_image = serializers.ImageField(use_url=False)
+    poster_small_horizontal_image = serializers.ImageField(use_url=False)
+    poster_large_horizontal_image = serializers.ImageField(use_url=False)
 
     def to_representation(self, obj):
         ret = super(EpisodesDetailSerializer, self).to_representation(obj)
@@ -129,10 +129,10 @@ class EpisodesDetailSerializer(EpisodesDetailWithoutSeriesSerializer):
 class SeriesDetailSerializer(serializers.ModelSerializer):
     age_rating = serializers.ReadOnlyField(source="age_rating.name")
     language = serializers.ReadOnlyField(source="language.name")
-    poster_small_vertical_image = serializers.ImageField()
-    poster_large_vertical_image = serializers.ImageField()
-    poster_small_horizontal_image = serializers.ImageField()
-    poster_large_horizontal_image = serializers.ImageField()
+    poster_small_vertical_image = serializers.ImageField(use_url=False)
+    poster_large_vertical_image = serializers.ImageField(use_url=False)
+    poster_small_horizontal_image = serializers.ImageField(use_url=False)
+    poster_large_horizontal_image = serializers.ImageField(use_url=False)
     genres = GenersSerializer(many=True)
     episodes_set = EpisodesDetailWithoutSeriesSerializer(many=True, read_only=True)
 
@@ -144,10 +144,10 @@ class SeriesDetailSerializer(serializers.ModelSerializer):
 class UpcomingDetailSerializer(serializers.ModelSerializer):
     age_rating = serializers.ReadOnlyField(source="age_rating.name")
     language = serializers.ReadOnlyField(source="language.name")
-    poster_small_vertical_image = serializers.ImageField()
-    poster_large_vertical_image = serializers.ImageField()
-    poster_small_horizontal_image = serializers.ImageField()
-    poster_large_horizontal_image = serializers.ImageField()
+    poster_small_vertical_image = serializers.ImageField(use_url=False)
+    poster_large_vertical_image = serializers.ImageField(use_url=False)
+    poster_small_horizontal_image = serializers.ImageField(use_url=False)
+    poster_large_horizontal_image = serializers.ImageField(use_url=False)
     genres = GenersSerializer(many=True)
 
     class Meta:
