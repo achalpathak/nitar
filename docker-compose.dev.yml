@@ -1,28 +1,33 @@
 version: "3.8"
 
 services:
-  backend:
-    build: .
-    container_name: django_container
-    command : bash -c "python manage.py runserver 0.0.0.0:8000"
-    env_file: .env
-    restart: always
-    volumes:
-      - .:/application
-    ports:
-      - "8000:8000"
-    stdin_open: true
-    tty: true
+    backend:
+        build: .
+        container_name: django_container
+        command: bash -c "python manage.py runserver 0.0.0.0:8000"
+        env_file: .env
+        restart: always
+        volumes:
+            - .:/application
+        ports:
+            - "8000:8000"
+        stdin_open: true
+        tty: true
 
-  frontend:
-    restart: always
-    command : npm start
-    container_name: react_container
-    build:
-      context: ./frontend/
-      dockerfile: Dockerfile
-    ports:
-      - "80:5173"
-    stdin_open: true
-    depends_on:
-      - backend
+    frontend:
+        restart: always
+        command: bash -c "echo '--------Installing Node Modules--------' && npm install --legacy-peer-deps && echo '--------Node Modules Installed--------' && npm start"
+        container_name: react_container
+        build:
+            context: ./frontend/
+            dockerfile: Dockerfile
+        ports:
+            - "80:5173"
+        environment:
+            - WATCHPACK_POLLING=true
+            - CHOKIDAR_USEPOLLING=true
+        volumes:
+            - ./frontend:/application
+        stdin_open: true
+        depends_on:
+            - backend

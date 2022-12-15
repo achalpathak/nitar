@@ -50,8 +50,7 @@ class HomePageListSerializer(serializers.Serializer):
     slug = serializers.CharField()
     
     def to_representation(self, obj):
-        ret = super(serializers.HomePageListSerializer, self).to_representation(obj)
-        ret["media"] = settings.MEDIA_URL
+        ret = super(HomePageListSerializer, self).to_representation(obj)
         return ret
 
 
@@ -63,7 +62,7 @@ class MovieDetailSerializer(serializers.ModelSerializer):
     poster_small_horizontal_image = serializers.ImageField(use_url=False)
     poster_large_horizontal_image = serializers.ImageField(use_url=False)
 
-    get_genres = serializers.JSONField()
+    genres = GenersSerializer(many=True)
 
     def to_representation(self, obj):
         ret = super(serializers.ModelSerializer, self).to_representation(obj)
@@ -71,12 +70,11 @@ class MovieDetailSerializer(serializers.ModelSerializer):
             self.context.get("request", None).user, obj
         ):
             ret.pop("video_link")
-        ret["media"] = settings.MEDIA_URL
         return ret
 
     class Meta:
         model = library_models.Movies
-        exclude = ["genres"]
+        fields = '__all__'
 
 
 class SeriesBasicDetailSerializer(serializers.ModelSerializer):
@@ -86,16 +84,15 @@ class SeriesBasicDetailSerializer(serializers.ModelSerializer):
     poster_large_vertical_image = serializers.ImageField(use_url=False)
     poster_small_horizontal_image = serializers.ImageField(use_url=False)
     poster_large_horizontal_image = serializers.ImageField(use_url=False)
-    get_genres = serializers.JSONField()
+    genres = GenersSerializer(many=True)
     
     def to_representation(self, obj):
-        ret = super(serializers.SeriesBasicDetailSerializer, self).to_representation(obj)
-        ret["media"] = settings.MEDIA_URL
+        ret = super(serializers.ModelSerializer, self).to_representation(obj)
         return ret
 
     class Meta:
         model = library_models.Series
-        exlcude = ["genres"]
+        fields = '__all__'
 
 
 class EpisodesDetailWithoutSeriesSerializer(serializers.ModelSerializer):
@@ -105,12 +102,11 @@ class EpisodesDetailWithoutSeriesSerializer(serializers.ModelSerializer):
     poster_large_horizontal_image = serializers.ImageField(use_url=False)
 
     def to_representation(self, obj):
-        ret = super(EpisodesDetailWithoutSeriesSerializer, self).to_representation(obj)
+        ret = super(serializers.ModelSerializer, self).to_representation(obj)
         if not utils.check_user_logged_in_and_has_membership(
             self.context.get("request", None).user, obj
         ):
             ret.pop("video_link")
-        ret["media"] = settings.MEDIA_URL
         return ret
 
     class Meta:
@@ -131,7 +127,6 @@ class EpisodesDetailSerializer(EpisodesDetailWithoutSeriesSerializer):
             self.context.get("request", None).user, obj
         ):
             ret.pop("video_link")
-        ret["media"] = settings.MEDIA_URL
         return ret
 
     class Meta:
@@ -150,8 +145,7 @@ class SeriesDetailSerializer(serializers.ModelSerializer):
     episodes_set = EpisodesDetailWithoutSeriesSerializer(many=True, read_only=True)
     
     def to_representation(self, obj):
-        ret = super(serializers.SeriesDetailSerializer, self).to_representation(obj)
-        ret["media"] = settings.MEDIA_URL
+        ret = super(serializers.ModelSerializer, self).to_representation(obj)
         return ret
 
     class Meta:
@@ -170,7 +164,6 @@ class UpcomingDetailSerializer(serializers.ModelSerializer):
     
     def to_representation(self, obj):
         ret = super(serializers.UpcomingDetailSerializer, self).to_representation(obj)
-        ret["media"] = settings.MEDIA_URL
         return ret
 
     class Meta:
@@ -192,7 +185,6 @@ class ExtrasDetailSerializer(serializers.ModelSerializer):
             self.context.get("request", None).user, obj
         ):
             ret.pop("video_link")
-        ret["media"] = settings.MEDIA_URL
         return ret
 
     class Meta:

@@ -4,6 +4,7 @@ from . import models as settings_models
 from django.db.models import Q
 from . import serializers
 import json
+from django.conf import settings
 
 
 class WebsiteConfigSettingsAPI(APIView):
@@ -37,6 +38,13 @@ class WebsiteConfigSettingsAPI(APIView):
             q_objects |= Q(field=t)
         qs_obj = settings_models.Settings.objects.filter(q_objects)
         dto = self.serializer(qs_obj, many=True).data
+        dto.append({
+            "field": "media_path",
+            "value": settings.MEDIA_URL,
+            "toggle_value": False,
+            "image": None,
+            "field_description": None
+        })
         return Response({"result": dto})
 
 
