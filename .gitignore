@@ -2,7 +2,7 @@
 *.swp
 *.swo
 .vscode/
-.env
+.env.*
 venv/
 media/
 
