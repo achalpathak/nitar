@@ -53,6 +53,11 @@ class HomePageListSerializer(serializers.Serializer):
 class MovieDetailSerializer(serializers.ModelSerializer):
     age_rating = serializers.ReadOnlyField(source="age_rating.name")
     language = serializers.ReadOnlyField(source="language.name")
+    poster_small_vertical_image = serializers.ImageField()
+    poster_large_vertical_image = serializers.ImageField()
+    poster_small_horizontal_image = serializers.ImageField()
+    poster_large_horizontal_image = serializers.ImageField()
+
     get_genres = serializers.JSONField()
 
     def to_representation(self, obj):
@@ -71,6 +76,10 @@ class MovieDetailSerializer(serializers.ModelSerializer):
 class SeriesBasicDetailSerializer(serializers.ModelSerializer):
     age_rating = serializers.ReadOnlyField(source="age_rating.name")
     language = serializers.ReadOnlyField(source="language.name")
+    poster_small_vertical_image = serializers.ImageField()
+    poster_large_vertical_image = serializers.ImageField()
+    poster_small_horizontal_image = serializers.ImageField()
+    poster_large_horizontal_image = serializers.ImageField()
     get_genres = serializers.JSONField()
 
     class Meta:
@@ -79,6 +88,11 @@ class SeriesBasicDetailSerializer(serializers.ModelSerializer):
 
 
 class EpisodesDetailWithoutSeriesSerializer(serializers.ModelSerializer):
+    poster_small_vertical_image = serializers.ImageField()
+    poster_large_vertical_image = serializers.ImageField()
+    poster_small_horizontal_image = serializers.ImageField()
+    poster_large_horizontal_image = serializers.ImageField()
+
     def to_representation(self, obj):
         ret = super(EpisodesDetailWithoutSeriesSerializer, self).to_representation(obj)
         if not utils.check_user_logged_in_and_has_membership(
@@ -94,6 +108,10 @@ class EpisodesDetailWithoutSeriesSerializer(serializers.ModelSerializer):
 
 class EpisodesDetailSerializer(EpisodesDetailWithoutSeriesSerializer):
     series = SeriesBasicDetailSerializer()
+    poster_small_vertical_image = serializers.ImageField()
+    poster_large_vertical_image = serializers.ImageField()
+    poster_small_horizontal_image = serializers.ImageField()
+    poster_large_horizontal_image = serializers.ImageField()
 
     def to_representation(self, obj):
         ret = super(EpisodesDetailSerializer, self).to_representation(obj)
@@ -111,6 +129,10 @@ class EpisodesDetailSerializer(EpisodesDetailWithoutSeriesSerializer):
 class SeriesDetailSerializer(serializers.ModelSerializer):
     age_rating = serializers.ReadOnlyField(source="age_rating.name")
     language = serializers.ReadOnlyField(source="language.name")
+    poster_small_vertical_image = serializers.ImageField()
+    poster_large_vertical_image = serializers.ImageField()
+    poster_small_horizontal_image = serializers.ImageField()
+    poster_large_horizontal_image = serializers.ImageField()
     genres = GenersSerializer(many=True)
     episodes_set = EpisodesDetailWithoutSeriesSerializer(many=True, read_only=True)
 
@@ -122,6 +144,10 @@ class SeriesDetailSerializer(serializers.ModelSerializer):
 class UpcomingDetailSerializer(serializers.ModelSerializer):
     age_rating = serializers.ReadOnlyField(source="age_rating.name")
     language = serializers.ReadOnlyField(source="language.name")
+    poster_small_vertical_image = serializers.ImageField()
+    poster_large_vertical_image = serializers.ImageField()
+    poster_small_horizontal_image = serializers.ImageField()
+    poster_large_horizontal_image = serializers.ImageField()
     genres = GenersSerializer(many=True)
 
     class Meta:
@@ -131,6 +157,10 @@ class UpcomingDetailSerializer(serializers.ModelSerializer):
 
 class ExtrasDetailSerializer(serializers.ModelSerializer):
     language = serializers.ReadOnlyField(source="language.name")
+    poster_small_vertical_image = serializers.ImageField()
+    poster_large_vertical_image = serializers.ImageField()
+    poster_small_horizontal_image = serializers.ImageField()
+    poster_large_horizontal_image = serializers.ImageField()
     genres = GenersSerializer(many=True)
 
     def to_representation(self, obj):
