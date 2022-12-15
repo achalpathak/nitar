@@ -8,12 +8,13 @@ import {
 	FormControl,
 	FormControlLabel,
 	FormHelperText,
+	Grid,
 	Typography,
 } from "@mui/material";
 import { useAppSelector } from "@redux/hooks";
 import { ICountryList, IError, IResponse, ISuccess } from "@types";
 import { CustomSelectUtils } from "@utils";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import {
 	ChangeEvent,
 	KeyboardEvent,
@@ -39,6 +40,7 @@ const Register = () => {
 	//Register
 	const [name, setName] = useState<string>("");
 	const [email, setEmail] = useState<string>("");
+
 	const [ageRequirement, setAgeRequirement] = useState<boolean>(false);
 	const [termsAndConditions, setTermsAndConditions] =
 		useState<boolean>(false);
@@ -46,12 +48,14 @@ const Register = () => {
 	const [countries, setCountries] = useState<ICountryList[]>([]);
 	const [country, setCountry] = useState<ICountryList>({} as ICountryList);
 
-	const [errors, setErrors] = useState<IError>({
+	const initialErrorState: IError = {
 		full_name: [],
 		email: [],
 		phone: [],
 		age: [],
-	});
+	};
+
+	const [errors, setErrors] = useState<IError>(initialErrorState);
 
 	const [ageError, setAgeError] = useState<boolean>(false);
 	const [termsError, setTermsError] = useState<boolean>(false);
@@ -60,7 +64,7 @@ const Register = () => {
 	useEffect(() => {
 		(async () => {
 			try {
-				const res = await axios.get<ISuccess<ICountryList[]>>(
+				const res = await api.get<ISuccess<ICountryList[]>>(
 					Routes.COUNTRY_LIST
 				);
 
@@ -109,6 +113,8 @@ const Register = () => {
 
 	const register = async () => {
 		try {
+			setErrors(initialErrorState);
+
 			if (!errorHandler()) {
 				return;
 			}
@@ -144,123 +150,189 @@ const Register = () => {
 	};
 
 	return (
-		<>
-			<Box className='main-container'>
-				<Box className='login-container'>
-					<Box className='logo-container' my={1}>
-						<img
-							alt='logo'
-							src={prefs?.logo_url?.image}
-							width='100%'
-							height='100%'
-						></img>
-					</Box>
-					<Box className='input-container' my={1}>
-						<>
-							<label>Fill your details to register</label>
-							<CustomInput
-								type='text'
-								id='full-name'
-								name='full-name'
-								placeholder='Enter Your Full Name'
-								value={name}
-								onChangeCapture={(
-									e: ChangeEvent<HTMLInputElement>
-								) => {
-									setName(e.target.value);
-								}}
-								errors={errors?.full_name}
-							/>
-							<CustomInput
-								type='email'
-								id='email-address'
-								name='email-address'
-								placeholder='Enter your Email Address'
-								value={email}
-								onChangeCapture={(
-									e: ChangeEvent<HTMLInputElement>
-								) => {
-									setEmail(e.target.value);
-								}}
-								errors={errors?.email}
-							/>
-							<Select<ICountryList, false>
-								name='country'
-								id='country'
-								closeMenuOnSelect={true}
-								className='w-100'
-								components={animatedComponents}
-								isMulti={false}
-								isSearchable
-								options={countries}
-								value={country}
-								onChange={(newValue) => {
-									if (newValue) {
-										setCountry(newValue);
+		<Grid container className='d-center'>
+			<Grid item xs={11} md={6} xl={4}>
+				<Grid
+					container
+					display='flex'
+					flexDirection='column'
+					className='input-container w-100'
+				>
+					<Grid item xs={12} className='d-center'>
+						<div className='logo-container d-center'>
+							<img
+								alt='logo'
+								src={prefs?.logo_url?.image}
+								width='100%'
+								height='100%'
+							></img>
+						</div>
+					</Grid>
+					<Grid item xs={12} className='d-center'>
+						<label
+							style={{
+								textAlign: "center",
+							}}
+						>
+							Fill your details to register
+						</label>
+					</Grid>
+					<Grid item xs={12} className='d-center flex-column'>
+						<CustomInput
+							type='text'
+							id='full-name'
+							name='full-name'
+							placeholder='Enter Your Full Name'
+							value={name}
+							onChangeCapture={(
+								e: ChangeEvent<HTMLInputElement>
+							) => {
+								setName(e.target.value);
+							}}
+							errors={errors?.full_name}
+						/>
+					</Grid>
+					<Grid item xs={12} className='d-center flex-column'>
+						<CustomInput
+							type='email'
+							id='email-address'
+							name='email-address'
+							placeholder='Enter your Email Address'
+							value={email}
+							onChangeCapture={(
+								e: ChangeEvent<HTMLInputElement>
+							) => {
+								setEmail(e.target.value);
+							}}
+							errors={errors?.email}
+						/>
+					</Grid>
+					<Grid item xs={12} className='d-center flex-column'>
+						<Select<ICountryList, false>
+							name='country'
+							id='country'
+							closeMenuOnSelect={true}
+							className='w-100'
+							components={animatedComponents}
+							isMulti={false}
+							isSearchable
+							options={countries}
+							value={country}
+							onChange={(newValue) => {
+								if (newValue) {
+									setCountry(newValue);
+								}
+							}}
+							noOptionsMessage={() => <Box>No results found</Box>}
+							getOptionLabel={(option) =>
+								`(${option.code}) ${option.name}`
+							}
+							getOptionValue={(option) => option.name}
+							filterOption={(option, input) =>
+								option.label
+									?.toLowerCase()
+									.includes(input?.toLowerCase())
+							}
+							styles={CustomSelectUtils.customStyles()}
+						/>
+					</Grid>
+					<Grid item xs={12} className='d-center flex-column'>
+						<CustomInput
+							type='number'
+							id='phone'
+							name='phone'
+							placeholder='Enter your Phone Number'
+							value={phone}
+							onChangeCapture={(
+								e: ChangeEvent<HTMLInputElement>
+							) => {
+								const phoneNum = e.target.value;
+								if (
+									phoneNum.length <= 10 &&
+									!isNaN(parseInt(phoneNum))
+								) {
+									setPhone(phoneNum);
+								}
+							}}
+							errors={errors?.phone}
+						/>
+					</Grid>
+					<Grid item xs={12} className='d-center flex-column'>
+						<Box className='custom-label' my={1}>
+							<FormControl error={ageError} margin='none'>
+								<FormControlLabel
+									control={
+										<Checkbox
+											sx={{
+												color: "var(--website-secondary-color)",
+												"&.Mui-checked": {
+													color: "var(--website-primary-color)",
+												},
+											}}
+											checked={ageRequirement}
+											onChangeCapture={(e) => {
+												setAgeRequirement(
+													(val) => !val
+												);
+												if (ageError) {
+													setAgeError(false);
+												}
+											}}
+										/>
 									}
-								}}
-								noOptionsMessage={() => (
-									<Box>No results found</Box>
+									label={
+										<a
+											href=''
+											className='age'
+											onClickCapture={(e) => {
+												e.preventDefault();
+												setAgeRequirement(
+													(val) => !val
+												);
+											}}
+											style={{
+												color: "var(--website-secondary-color)",
+											}}
+										>
+											Your age is
+										</a>
+									}
+								/>
+								{ageError && (
+									<FormHelperText>
+										Please click checkbox to continue
+									</FormHelperText>
 								)}
-								getOptionLabel={(option) =>
-									`(${option.code}) ${option.name}`
-								}
-								getOptionValue={(option) => option.name}
-								filterOption={(option, input) =>
-									option.label
-										?.toLowerCase()
-										.includes(input?.toLowerCase())
-								}
-								styles={CustomSelectUtils.customStyles()}
-							/>
-							<CustomInput
-								type='number'
-								id='phone'
-								name='phone'
-								placeholder='Enter your Phone Number'
-								value={phone}
-								onChangeCapture={(
-									e: ChangeEvent<HTMLInputElement>
-								) => {
-									const phoneNum = e.target.value;
-									if (
-										phoneNum.length <= 10 &&
-										!isNaN(parseInt(phoneNum))
-									) {
-										setPhone(phoneNum);
+							</FormControl>
+							<FormControl error={termsError}>
+								<FormControlLabel
+									control={
+										<Checkbox
+											sx={{
+												color: "var(--website-secondary-color)",
+												"&.Mui-checked": {
+													color: "var(--website-primary-color)",
+												},
+											}}
+											checked={termsAndConditions}
+											onChangeCapture={(e) => {
+												setTermsAndConditions(
+													(val) => !val
+												);
+
+												if (termsError) {
+													setTermsError(false);
+												}
+											}}
+										/>
 									}
-								}}
-								errors={errors?.phone}
-							/>
-							<Box className='custom-label' my={1}>
-								<FormControl error={ageError} margin='none'>
-									<FormControlLabel
-										control={
-											<Checkbox
-												sx={{
-													color: "var(--website-secondary-color)",
-													"&.Mui-checked": {
-														color: "var(--website-primary-color)",
-													},
-												}}
-												checked={ageRequirement}
-												onChangeCapture={(e) => {
-													setAgeRequirement(
-														(val) => !val
-													);
-													if (ageError) {
-														setAgeError(false);
-													}
-												}}
-											/>
-										}
-										label={
+									label={
+										<span>
 											<a
 												href=''
-												className='age'
 												onClickCapture={(e) => {
 													e.preventDefault();
-													setAgeRequirement(
+													setTermsAndConditions(
 														(val) => !val
 													);
 												}}
@@ -268,78 +340,30 @@ const Register = () => {
 													color: "var(--website-secondary-color)",
 												}}
 											>
-												Your age is
+												You agree to the{" "}
 											</a>
-										}
-									/>
-									{ageError && (
-										<FormHelperText>
-											Please click checkbox to continue
-										</FormHelperText>
-									)}
-								</FormControl>
-								<FormControl error={termsError}>
-									<FormControlLabel
-										control={
-											<Checkbox
-												sx={{
-													color: "var(--website-secondary-color)",
-													"&.Mui-checked": {
-														color: "var(--website-primary-color)",
-													},
+											<Link
+												to='/terms-and-conditions'
+												target='_blank'
+												style={{
+													textDecoration: "underline",
+													color: "var(--website-primary-color)",
 												}}
-												checked={termsAndConditions}
-												onChangeCapture={(e) => {
-													setTermsAndConditions(
-														(val) => !val
-													);
-
-													if (termsError) {
-														setTermsError(false);
-													}
-												}}
-											/>
-										}
-										label={
-											<span>
-												<a
-													href=''
-													onClickCapture={(e) => {
-														e.preventDefault();
-														setTermsAndConditions(
-															(val) => !val
-														);
-													}}
-													style={{
-														color: "var(--website-secondary-color)",
-													}}
-												>
-													You agree to the{" "}
-												</a>
-												<Link
-													to='/terms-and-conditions'
-													target='_blank'
-													style={{
-														textDecoration:
-															"underline",
-														color: "var(--website-primary-color)",
-													}}
-												>
-													Terms & Conditions
-												</Link>
-											</span>
-										}
-									/>
-									{termsError && (
-										<FormHelperText>
-											Please accept terms and conditions
-										</FormHelperText>
-									)}
-								</FormControl>
-							</Box>
-						</>
-					</Box>
-					<Box className='btn-container' my={1}>
+											>
+												Terms & Conditions
+											</Link>
+										</span>
+									}
+								/>
+								{termsError && (
+									<FormHelperText>
+										Please accept terms and conditions
+									</FormHelperText>
+								)}
+							</FormControl>
+						</Box>
+					</Grid>
+					<Grid item xs={12} className='d-center'>
 						<Button
 							title={"REGISTER"}
 							onClickCapture={async (
@@ -349,6 +373,8 @@ const Register = () => {
 								register();
 							}}
 						/>
+					</Grid>
+					<Grid item xs={12} className='d-center'>
 						<Typography mt={2}>
 							<>
 								Already have an account?{" "}
@@ -362,6 +388,8 @@ const Register = () => {
 								</Link>
 							</>
 						</Typography>
+					</Grid>
+					<Grid item xs={12} className='d-center'>
 						<button
 							className='cancel-btn'
 							onClickCapture={(e) => {
@@ -384,10 +412,10 @@ const Register = () => {
 								/>
 							</svg>
 						</button>
-					</Box>
-				</Box>
-			</Box>
-		</>
+					</Grid>
+				</Grid>
+			</Grid>
+		</Grid>
 	);
 };
 export default Register;

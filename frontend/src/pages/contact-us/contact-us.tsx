@@ -109,7 +109,7 @@ const ContactUs = () => {
 						item
 						xs={12}
 						sm={10}
-						md={6}
+						md={5}
 						xl={4}
 						className='input-items'
 					>
