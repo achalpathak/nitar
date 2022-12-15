@@ -63,42 +63,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "config.urls"
 
-TEMPLATES = [
-    {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "frontend", "dist")],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "context_processors": [
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
-            ],
-        },
-    },
-]
+
 
 WSGI_APPLICATION = "config.wsgi.application"
-
-
-# Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    },
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': os.environ.get('MYSQL_DATABASE', 'mysql-db'),
-    #     'USER': os.environ.get('MYSQL_USER', 'mysql-user'),
-    #     'PASSWORD': os.environ.get('MYSQL_PASSWORD', 'mysql-password'),
-    #     'HOST': os.environ.get('MYSQL_DATABASE_HOST', 'db'),
-    #     'PORT': os.environ.get('MYSQL_DATABASE_PORT', 3306),
-    # }
-}
 
 
 # Password validation
@@ -135,8 +102,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = "assets/"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "frontend", "dist", "assets")]
+
 
 # Base url to serve media files
 MEDIA_URL = "/media/"

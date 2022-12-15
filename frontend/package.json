@@ -4,8 +4,9 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
+		"start": "vite",
 		"dev": "vite --port 3000",
-		"local": "vite --port 3001",
+		"local": "vite --host 0.0.0.0 --port 3001",
 		"build": "tsc && vite build",
 		"preview": "vite preview"
 	},

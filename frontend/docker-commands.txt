@@ -1,7 +1,0 @@
-yarn run build --mode development
-docker build -t taak-frontend .
-docker run -d -p 80:80 --name taak-frontend -it taak-frontend
-
-//Stop using below commands
-docker stop taak-frontend
-docker rm taak-frontend 

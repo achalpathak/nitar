@@ -24,10 +24,16 @@ export default defineConfig({
 		},
 	},
 	server: {
+		watch: {
+			usePolling: true,
+		},
+		host: true, // needed for the Docker Container port mapping to work
+		strictPort: true,
+		port: 5173, // you can replace this port with any port
 		proxy: {
-			"/api/": "http://127.0.0.1:8000",
-			"/backend/": "http://127.0.0.1:8000",
-			"/media/": "http://127.0.0.1:8000",
+			"/api/": "http://backend:8000",
+			"/backend/": "http://backend:8000",
+			"/media/": "http://backend:8000",
 		},
 	},
 });

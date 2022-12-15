@@ -5,13 +5,6 @@ ENV PYTHONDONTWRITEBYTECODE=1
 
 RUN apt-get update && apt-get -y dist-upgrade
 RUN apt install -y netcat
-RUN apt install nodejs -y
-RUN apt-get update && apt-get install -y \
-    software-properties-common \
-    npm
-RUN npm install npm@latest -g && \
-    npm install n -g && \
-    n latest
 
 
 
@@ -27,3 +20,4 @@ USER docker_user
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
+EXPOSE 8000
