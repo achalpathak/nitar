@@ -11,6 +11,8 @@ class GenersSerializer(serializers.ModelSerializer):
 
 
 class BannerInfoSerializer(serializers.ModelSerializer):
+    website_banner = serializers.ImageField(use_url=False)
+    mobile_banner = serializers.ImageField(use_url=False)
     class Meta:
         model = library_models.Banner
         fields = "__all__"
@@ -173,10 +175,10 @@ class UpcomingDetailSerializer(serializers.ModelSerializer):
 
 class ExtrasDetailSerializer(serializers.ModelSerializer):
     language = serializers.ReadOnlyField(source="language.name")
-    poster_small_vertical_image = serializers.ImageField()
-    poster_large_vertical_image = serializers.ImageField()
-    poster_small_horizontal_image = serializers.ImageField()
-    poster_large_horizontal_image = serializers.ImageField()
+    poster_small_vertical_image = serializers.ImageField(use_url=False)
+    poster_large_vertical_image = serializers.ImageField(use_url=False)
+    poster_small_horizontal_image = serializers.ImageField(use_url=False)
+    poster_large_horizontal_image = serializers.ImageField(use_url=False)
     genres = GenersSerializer(many=True)
 
     def to_representation(self, obj):

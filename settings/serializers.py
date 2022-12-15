@@ -5,7 +5,7 @@ class WebsiteConfigSettingsAPI(serializers.Serializer):
     field = serializers.CharField()
     value = serializers.CharField()
     toggle_value = serializers.BooleanField()
-    image = serializers.ImageField()
+    image = serializers.ImageField(use_url=False)
     field_description = serializers.CharField()
 class AgeSerializer(serializers.ModelSerializer):
     class Meta:
