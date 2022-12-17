@@ -124,6 +124,13 @@ CSRF_COOKIE_SAMESITE = "Strict"
 # Enable on https servers
 # CSRF_COOKIE_SECURE = True
 # SESSION_COOKIE_SECURE = True
+import socket
+def get_ipaddress(): 
+    host_name = socket.gethostname()
+    ip_address = socket.gethostbyname(host_name.local)
+    return "http://"+ip_address
+
+CSRF_TRUSTED_ORIGINS = [get_ipaddress()]
 
 
 CORS_ALLOW_HEADERS = [
@@ -137,10 +144,6 @@ CORS_ALLOW_HEADERS = [
     "x-csrftoken",
     "x-requested-with",
 ]
-
-# CSRF_TRUSTED_ORIGINS = [
-#     "http://localhost:3001"
-# ]
 
 RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID")
 RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET")
