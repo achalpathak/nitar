@@ -142,7 +142,15 @@ const Login = () => {
 
 	return (
 		<Grid container className='d-center'>
-			<Grid item xs={10} md={6} xl={4}>
+			<Grid
+				item
+				xs={10}
+				md={4}
+				xl={4}
+				style={{
+					maxWidth: "600px",
+				}}
+			>
 				<Grid
 					container
 					display='flex'
