@@ -64,7 +64,6 @@ MIDDLEWARE = [
 ROOT_URLCONF = "config.urls"
 
 
-
 WSGI_APPLICATION = "config.wsgi.application"
 
 
@@ -103,7 +102,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 
-
 # Base url to serve media files
 MEDIA_URL = "/media/"
 # Path where media is stored
@@ -125,9 +123,9 @@ CSRF_COOKIE_SAMESITE = "Strict"
 # CSRF_COOKIE_SECURE = True
 # SESSION_COOKIE_SECURE = True
 import socket
-def get_ipaddress(): 
+def get_ipaddress():
     host_name = socket.gethostname()
-    ip_address = socket.gethostbyname(host_name.local)
+    ip_address = socket.gethostbyname(host_name)
     return "http://"+ip_address
 
 CSRF_TRUSTED_ORIGINS = [get_ipaddress()]
