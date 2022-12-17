@@ -38,13 +38,6 @@ class WebsiteConfigSettingsAPI(APIView):
             q_objects |= Q(field=t)
         qs_obj = settings_models.Settings.objects.filter(q_objects)
         dto = self.serializer(qs_obj, many=True).data
-        dto.append({
-            "field": "media_path",
-            "value": settings.MEDIA_URL,
-            "toggle_value": False,
-            "image": None,
-            "field_description": None
-        })
         return Response({"result": dto})
 
 

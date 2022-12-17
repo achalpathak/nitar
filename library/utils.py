@@ -4,6 +4,7 @@ import random
 import uuid
 import string
 from django.utils.text import slugify
+from django.conf import settings
 
 
 def image_path(instance, filename):
@@ -64,3 +65,11 @@ def show_price_in_dollar(user_obj, data):
             return True
     except AttributeError:  # default inr price will be shown for non-logged in users
         return False
+
+def format_image_url(path):
+    media_url = settings.MEDIA_URL
+    if not path: # for None cases
+        return path
+    path = path.split("/")
+    f_path = "/".join([path[-2],path[-1]])
+    return f"{media_url}{f_path}"
