@@ -30,3 +30,5 @@ TEMPLATES = [
 
 STATIC_URL = "assets/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "frontend", "dist", "assets")]
+
+CSRF_TRUSTED_ORIGINS = [os.environ["SERVER_DOMAIN"]]

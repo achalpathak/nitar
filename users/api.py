@@ -13,6 +13,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
+from rest_framework.authtoken.models import Token
 
 User = get_user_model()
 
@@ -36,7 +37,9 @@ class SendOTP(APIView):
     serializer_class = user_serializers.PhoneOtpSerializer
 
     def post(self, request):
-        serialized_data = self.serializer_class(data=self.request.data, context={"request": request})
+        serialized_data = self.serializer_class(
+            data=self.request.data, context={"request": request}
+        )
         if serialized_data.is_valid(raise_exception=True):
             serialized_data.save()
         return Response({"message": f"OTP is sent. Valid for next 15minutes."})
@@ -62,21 +65,26 @@ class VerifyOTP(APIView):
         serialized_data = self.serializer_class(data=self.request.data)
         if serialized_data.is_valid(raise_exception=True):
             user_obj = serialized_data.save()
-            login(
-                request, user_obj, backend="django.contrib.auth.backends.ModelBackend"
-            )
-            return Response(
-                {
-                    "result": {
-                        "full_name": user_obj.full_name,
-                        "phone": user_obj.phone,
-                        "phone_code": user_obj.phone_code,
-                        "phone_verified": user_obj.phone_verified,
-                        "email": user_obj.email,
-                        "has_active_membership": user_obj.has_active_membership,
-                    }
+            data = {
+                "result": {
+                    "full_name": user_obj.full_name,
+                    "phone": user_obj.phone,
+                    "phone_code": user_obj.phone_code,
+                    "phone_verified": user_obj.phone_verified,
+                    "email": user_obj.email,
+                    "has_active_membership": user_obj.has_active_membership,
                 }
-            )
+            }
+            if self.request.data.get("device_type") == "mobile":
+                token, created = Token.objects.get_or_create(user=user_obj)
+                data["result"]["token"] = token.key
+            else:
+                login(
+                    request,
+                    user_obj,
+                    backend="django.contrib.auth.backends.ModelBackend",
+                )
+            return Response(data)
         return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
 
 

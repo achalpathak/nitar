@@ -52,32 +52,33 @@ class HomePageAPI(APIView):
     serializer = serializers.HomePageListSerializer
 
     def get(self, request):
-        data = {"categories": [],"extra_categories": [],}
+        data = {
+            "categories": [],
+            "extra_categories": [],
+        }
         categories = (
             library_models.Category.objects.filter(published=True)
             .values("name", "poster_type")
             .order_by("rankings")
         )
-        extra_categories = (
-            library_models.ExtrasCategory.objects.filter(published=True)
-            .values("name", "poster_type")
-        )
+        extra_categories = library_models.ExtrasCategory.objects.filter(
+            published=True
+        ).values("name", "poster_type")
         for ec in extra_categories:
             _dto = {
                 "name": ec.get("name"),
                 "poster_type": ec.get("poster_type"),
                 "data": [],
             }
-            category_objs = (
-                library_models.Extras.objects
-                .filter(extras_category__name=ec.get("name"))
+            category_objs = library_models.Extras.objects.filter(
+                extras_category__name=ec.get("name")
             )
             # TODO: optimize later if possible
             for obj in category_objs:
                 obj.content_type = "extras"
                 _dto["data"].append(self.serializer(obj).data)
             data["extra_categories"].append(_dto)
-            
+
         for category in categories:
             _dto = {
                 "name": category.get("name"),
@@ -117,6 +118,8 @@ class UpcomingAPI(APIView):
 
 
 class SearchAPI(APIView):
+    serializer = serializers.SearchSerializer
+
     def get(self, request):
         try:
             query = request.GET["q"]
@@ -166,6 +169,7 @@ class SearchAPI(APIView):
                     upcoming_results,
                 )
             )
+            data = self.serializer(data, many=True).data
             return Response({"result": data})
 
         except KeyError as e:

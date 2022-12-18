@@ -96,6 +96,22 @@ class HomePageListSerializer(serializers.Serializer):
         return ret
 
 
+class SearchSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    description = serializers.CharField()
+    poster_small_vertical_image = serializers.ImageField()
+    content_type = serializers.CharField()
+    slug = serializers.CharField()
+
+    def to_representation(self, obj):
+        ret = super(SearchSerializer, self).to_representation(obj)
+        print(ret["poster_small_vertical_image"])
+        ret["poster_small_vertical_image"] = utils.format_image_url(
+            ret["poster_small_vertical_image"]
+        )
+        return ret
+
+
 class MovieDetailSerializer(serializers.ModelSerializer):
     age_rating = serializers.ReadOnlyField(source="age_rating.name")
     language = serializers.ReadOnlyField(source="language.name")

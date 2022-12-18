@@ -1,3 +1,4 @@
+import os
 from .settings import BASE_DIR
 
 DATABASES = {
@@ -25,3 +26,4 @@ TEMPLATES = [
 
 STATIC_URL = "assets/"
 STATICFILES_DIRS = []
+CSRF_TRUSTED_ORIGINS = [os.environ["SERVER_DOMAIN"]]

@@ -84,7 +84,12 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",  # <-- And here
+    ],
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
@@ -122,14 +127,6 @@ CSRF_COOKIE_SAMESITE = "Strict"
 # Enable on https servers
 # CSRF_COOKIE_SECURE = True
 # SESSION_COOKIE_SECURE = True
-import socket
-def get_ipaddress():
-    host_name = socket.gethostname()
-    ip_address = socket.gethostbyname(host_name)
-    return "http://"+ip_address
-
-CSRF_TRUSTED_ORIGINS = [get_ipaddress()]
-
 
 CORS_ALLOW_HEADERS = [
     "accept",
