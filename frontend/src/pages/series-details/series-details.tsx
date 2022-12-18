@@ -486,21 +486,19 @@ const ExtraDetails = (props: any) => {
 				closeAfterTransition
 				onClose={() => setShowTrailer(false)}
 			>
-				<Box
-					width='100%'
-					height='100%'
-					className='d-center'
-					onClickCapture={(e) => {
-						e.preventDefault();
-						setShowTrailer(false);
-					}}
-				>
-					<Box width='90vw' height='70vw'>
+				<Box width='100%' height='100%' className='d-center'>
+					<Box
+						sx={{
+							width: "100%",
+							height: "100%",
+						}}
+						className='d-center'
+					>
 						<Player
 							url={movie?.trailer_link}
 							name={movie?.name ?? ""}
 							description={movie?.description ?? ""}
-							closePlayer={() => setShowMovie(false)}
+							closePlayer={() => setShowTrailer(false)}
 						/>
 					</Box>
 				</Box>

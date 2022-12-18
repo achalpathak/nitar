@@ -151,7 +151,15 @@ const Register = () => {
 
 	return (
 		<Grid container className='d-center'>
-			<Grid item xs={11} md={6} xl={4}>
+			<Grid
+				item
+				xs={11}
+				md={6}
+				xl={4}
+				style={{
+					maxWidth: "600px",
+				}}
+			>
 				<Grid
 					container
 					display='flex'
