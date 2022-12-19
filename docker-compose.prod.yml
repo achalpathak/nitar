@@ -4,25 +4,38 @@ services:
   backend:
     build: .
     container_name: django_container
-    command : bash -c "python manage.py runserver 0.0.0.0:8000"
-    env_file: .env
+    # entrypoint: ["./run_server.sh"]
+    env_file: .env.prod
     restart: always
     volumes:
       - .:/application
-    ports:
-      - "8000:8000"
+      # - ./logs/gunicorn.logs:/tmp/gunicorn_logs.log
+      - ./static:/application/static
+      - ./media:/application/media
     stdin_open: true
     tty: true
 
-  frontend:
-    restart: always
-    command : npm start
-    container_name: react_container
+  nginx:
     build:
-      context: ./frontend/
-      dockerfile: Dockerfile
+        context: ./nginx
+        dockerfile: Dockerfile
+    container_name: nginx_container
+    volumes:
+      - ./static:/application/static
+      - ./media:/application/media
     ports:
-      - "80:5173"
-    stdin_open: true
+      - 80:80
+    depends_on:
+      - backend
+
+  mysqldb:
+    image: mysql:8.0
+    container_name: mysql_container
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    restart: unless-stopped
+    env_file: .env.prod
+    ports:
+      - "3306:3306"
     depends_on:
       - backend

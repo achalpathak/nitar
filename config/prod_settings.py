@@ -7,7 +7,7 @@ DATABASES = {
         "NAME": os.environ.get("MYSQL_DATABASE", "mysql-db"),
         "USER": os.environ.get("MYSQL_USER", "mysql-user"),
         "PASSWORD": os.environ.get("MYSQL_PASSWORD", "mysql-password"),
-        "HOST": os.environ.get("MYSQL_DATABASE_HOST", "db"),
+        "HOST": os.environ.get("MYSQL_DATABASE_HOST", "mysqldb"),
         "PORT": os.environ.get("MYSQL_DATABASE_PORT", 3306),
     }
 }
@@ -28,7 +28,10 @@ TEMPLATES = [
     },
 ]
 
-STATIC_URL = "assets/"
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "static"
+
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "frontend", "dist", "assets")]
+
 
 CSRF_TRUSTED_ORIGINS = [os.environ["SERVER_DOMAIN"]]

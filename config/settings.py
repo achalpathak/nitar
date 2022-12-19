@@ -24,7 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-rhs!u1j0!@(eo&*lb%4j8q@sskqfvhfq!r)2cl0c%3-m%q9md&"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.environ["MODE"] == "PROD":
+    DEBUG = False
+else:
+    DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -46,6 +49,7 @@ INSTALLED_APPS = [
     "settings",
     "library",
     "payments",
+    "storages",
     "django_cleanup.apps.CleanupConfig",  # should be placed as the last app
 ]
 
