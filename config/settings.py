@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     "settings",
     "library",
     "payments",
-    "storages",
     "django_cleanup.apps.CleanupConfig",  # should be placed as the last app
 ]
 

@@ -36,4 +36,8 @@ export default defineConfig({
 			"/media/": "http://backend:8000",
 		},
 	},
+	build: {
+		chunkSizeWarningLimit: 1000,
+		assetsDir: "static",
+	},
 });

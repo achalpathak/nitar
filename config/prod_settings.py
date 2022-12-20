@@ -31,7 +31,7 @@ TEMPLATES = [
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "static"
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "frontend", "dist", "assets")]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "frontend", "dist", "static")]
 
 
 CSRF_TRUSTED_ORIGINS = [os.environ["SERVER_DOMAIN"]]
