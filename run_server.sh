@@ -12,4 +12,7 @@ cd ../
 echo ".............Starting Server............."
 python manage.py makemigrations
 python manage.py collectstatic --noinput --clear
+echo ".............Running Gunicorn............."
 gunicorn -c config/gunicorn.py
+echo ".............Gunicorn Started Successfully............."
+tail -f /dev/null #Keeps the docker container running

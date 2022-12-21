@@ -4,7 +4,7 @@ services:
   backend:
     build: .
     container_name: django_container
-    # entrypoint: ["./run_server.sh"]
+    entrypoint: ["./run_server.sh"]
     env_file: .env.prod
     restart: always
     volumes:
@@ -12,8 +12,8 @@ services:
       # - ./logs/gunicorn.logs:/tmp/gunicorn_logs.log
       - ./static:/application/static
       - ./media:/application/media
-    stdin_open: true
-    tty: true
+    # stdin_open: true
+    # tty: true
 
   nginx:
     build:

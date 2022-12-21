@@ -21,8 +21,8 @@ RUN chmod -R 755 /application
 
 RUN chmod -R 775 /application/run_server.sh
 
-USER docker_user
 RUN npm i -g npm@latest yarn
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir --disable-pip-version-check --requirement requirements.txt
+USER docker_user
 EXPOSE 8000
