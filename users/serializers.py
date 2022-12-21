@@ -11,6 +11,7 @@ from django.conf import settings
 
 User = get_user_model()
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth import authenticate
 
 
 class RegisterUserSerializer(serializers.Serializer):
@@ -55,24 +56,22 @@ class RegisterUserSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         with transaction.atomic():
-            user = UserSerializer(data=validated_data)
-            if user.is_valid(raise_exception=True):
-                user.save()
+            user_obj, _ = User.objects.update_or_create(
+                email=validated_data["email"], defaults=validated_data
+            )
+            user_obj.set_password(validated_data["password"])
+            user_obj.save()
+            data = {
+                "otp": randint(100000, 999999),
+                "valid_till": datetime.now() + timedelta(minutes=15),
+                "attempts_remaining": 3,
+            }
+            otp_obj, created = user_models.LoginEmailOtp.objects.update_or_create(
+                user=user_obj, defaults=data
+            )
+            otp_obj.save()
+            print("EMAIL OTP=>", data["otp"])
         return validated_data
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = "__all__"
-
-    def create(self, validated_data):
-        user_obj, _ = User.objects.update_or_create(
-            email=validated_data["email"], defaults=validated_data
-        )
-        user_obj.set_password(validated_data["password"])
-        user_obj.save()
-        return user_obj
 
 
 class ContactUsSerializer(serializers.ModelSerializer):
@@ -110,57 +109,42 @@ class PlansSerializer(serializers.ModelSerializer):
         exclude = ["membership_features"]
 
 
-class PhoneOtpSerializer(serializers.Serializer):
-    phone = serializers.CharField(required=True)
+class EmailOtpSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
 
-    def validate_phone(self, phone):
-        if len(phone) != 10:
-            raise serializers.ValidationError("Phone number should be 10 digits.")
-        if not phone.isnumeric():
-            raise serializers.ValidationError(
-                "Phone number should only contain numbers."
-            )
-        return phone
+    def validate_email(self, email):
+        if email:
+            if User.objects.filter(email=email, email_verified=True).exists():
+                raise serializers.ValidationError("Email is already verified.")
+        return email
 
     def create(self, validated_data):
         try:
             with transaction.atomic():
-                user_obj = self.context.get("request", None).user
-                if type(user_obj) in [AnonymousUser, None]:
-                    user_obj = user_models.User.objects.filter(
-                        phone=validated_data["phone"]
-                    ).last()
-                    if user_obj is None:
-                        raise user_models.User.DoesNotExist()
+                user_obj = user_models.User.objects.filter(
+                    email=validated_data["email"]
+                ).last()
+                if user_obj is None:
+                    raise user_models.User.DoesNotExist()
 
                 data = {
                     "otp": randint(100000, 999999),
                     "valid_till": datetime.now() + timedelta(minutes=15),
                     "attempts_remaining": 3,
                 }
-                otp_obj, created = user_models.LoginPhoneOtp.objects.update_or_create(
+                otp_obj, created = user_models.LoginEmailOtp.objects.update_or_create(
                     user=user_obj, defaults=data
                 )
                 otp_obj.save()
+                print("EMAIL OTP=>", data["otp"])
                 return otp_obj
         except user_models.User.DoesNotExist:
-            raise serializers.ValidationError(
-                {"message": "Phone number is not registered."}
-            )
+            raise serializers.ValidationError({"message": "Email is not registered."})
 
 
 class VerifyOtpSerializer(serializers.Serializer):
-    phone = serializers.CharField(required=True)
+    email = serializers.EmailField(required=True)
     otp = serializers.IntegerField(required=True)
-
-    def validate_phone(self, phone):
-        if len(phone) != 10:
-            raise serializers.ValidationError("Phone number should be 10 digits.")
-        if not phone.isnumeric():
-            raise serializers.ValidationError(
-                "Phone number should only contain numbers."
-            )
-        return phone
 
     def validate_otp(self, otp):
         if len(str(otp)) != 6:
@@ -169,46 +153,38 @@ class VerifyOtpSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         try:
-            phone_otp_obj = user_models.LoginPhoneOtp.objects.get(
-                user__phone=validated_data["phone"]
+            email_otp_obj = user_models.LoginEmailOtp.objects.get(
+                user__email=validated_data["email"]
             )
-            if phone_otp_obj.attempts_remaining >= 1:
-                if timezone.now() > phone_otp_obj.valid_till:
+            if email_otp_obj.attempts_remaining >= 1:
+                if timezone.now() > email_otp_obj.valid_till:
                     raise serializers.ValidationError(
                         {"message": "OTP has expired. Retry with new OTP."}
                     )
 
-                if validated_data["otp"] != int(phone_otp_obj.otp):
-                    phone_otp_obj.attempts_remaining = (
-                        phone_otp_obj.attempts_remaining - 1
+                if validated_data["otp"] != int(email_otp_obj.otp):
+                    email_otp_obj.attempts_remaining = (
+                        email_otp_obj.attempts_remaining - 1
                     )
-                    phone_otp_obj.save()
+                    email_otp_obj.save()
                     raise serializers.ValidationError(
                         {
-                            "message": f"Wrong OTP. { phone_otp_obj.attempts_remaining} attempts remaining."
+                            "message": f"Wrong OTP. { email_otp_obj.attempts_remaining} attempts remaining."
                         }
                     )
                 # OTP is verifed
-                phone_otp_obj.user.phone_verified = True
-                phone_otp_obj.user.is_active = True
-                phone_otp_obj.user.save()
-                phone_otp_obj.delete()
-                some_other_user = User.objects.filter(
-                    phone=validated_data["phone"], phone_verified=False
-                )
-                if (
-                    some_other_user
-                ):  # removes phone number for any other user non-verified
-                    some_other_user.update(phone=None)
-                return phone_otp_obj.user
+                email_otp_obj.user.email_verified = True
+                email_otp_obj.user.is_active = True
+                email_otp_obj.user.save()
+                email_otp_obj.delete()
+
+                return email_otp_obj.user
             else:
                 raise serializers.ValidationError(
                     {"message": "OTP attempts exhausted. Retry with new OTP."}
                 )
-        except user_models.LoginPhoneOtp.DoesNotExist:
-            raise serializers.ValidationError(
-                {"message": "Phone number is not registered."}
-            )
+        except user_models.LoginEmailOtp.DoesNotExist:
+            raise serializers.ValidationError({"message": "Email is not registered."})
 
 
 class UpdatePhoneSerializer(serializers.Serializer):
@@ -250,6 +226,30 @@ class UpdatePasswordSerializer(serializers.Serializer):
         return user
 
 
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+    password = serializers.CharField(min_length=4, required=True)
+
+    def validate_email(self, email):
+        if email:
+            if User.objects.filter(email=email, email_verified=False).exists():
+                raise serializers.ValidationError("Email is not verified.")
+        return email
+
+    def create(self, validated_data):
+        user = authenticate(
+            username=validated_data["email"],
+            password=validated_data["password"],
+        )
+        if user is not None:
+            return user
+        else:
+            raise serializers.ValidationError(
+                "Login Failed. Please check the email/password."
+            )
+
+
 class ForgotPasswordSendEmailSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
 
@@ -274,7 +274,7 @@ class ForgotPasswordSendEmailSerializer(serializers.Serializer):
 
 
 class ForgotPasswordVerifySerializer(serializers.Serializer):
-    token = serializers.TextField(required=True)
+    token = serializers.CharField(required=True)
     password = serializers.CharField(min_length=4, required=True)
 
     def create(self, validated_data):

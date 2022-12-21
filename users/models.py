@@ -65,7 +65,7 @@ class User(AbstractUser, TimeStampedModel):
     first_name = None
     last_name = None
     full_name = models.CharField(max_length=30, blank=True, null=True)
-    password = models.EmailField(_("password"), blank=True, null=True)
+    password = models.CharField(_("password"), max_length=250, blank=True, null=True)
     email = models.EmailField(_("email address"), unique=True, blank=True, null=True)
     phone = models.CharField(
         max_length=10,
@@ -105,14 +105,14 @@ class User(AbstractUser, TimeStampedModel):
     objects = UserManager()
 
 
-class LoginPhoneOtp(TimeStampedModel):
+class LoginEmailOtp(TimeStampedModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     otp = models.CharField(max_length=6, validators=[MinLengthValidator(6)])
     attempts_remaining = models.PositiveIntegerField(default=3)
     valid_till = models.DateTimeField()
 
     def __str__(self):
-        return self.user.phone
+        return self.user.email
 
     class Meta:
         verbose_name_plural = "OTPs"

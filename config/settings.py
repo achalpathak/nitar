@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if os.environ["MODE"] == "PROD":
+if os.environ.get("MODE") == "PROD":
     DEBUG = False
 else:
     DEBUG = True

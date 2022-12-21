@@ -30,19 +30,21 @@ class RegisterUser(APIView):
         serialized_data = self.serializer_class(data=self.request.data)
         if serialized_data.is_valid(raise_exception=True):
             serialized_data.save()
-        return Response({"message": "User is registered."})
+        return Response(
+            {
+                "message": "User is registered. OTP is sent on email. Valid for next 15minutes."
+            }
+        )
 
 
 class SendOTP(APIView):
-    serializer_class = user_serializers.PhoneOtpSerializer
+    serializer_class = user_serializers.EmailOtpSerializer
 
     def post(self, request):
-        serialized_data = self.serializer_class(
-            data=self.request.data, context={"request": request}
-        )
+        serialized_data = self.serializer_class(data=self.request.data)
         if serialized_data.is_valid(raise_exception=True):
             serialized_data.save()
-        return Response({"message": f"OTP is sent. Valid for next 15minutes."})
+        return Response({"message": f"OTP is sent on email. Valid for next 15minutes."})
 
 
 class UpdatePhoneAPI(APIView):
@@ -78,9 +80,14 @@ class ForgotPasswordSendEmailAPI(APIView):
         serialized_data = self.serializer_class(data=self.request.data)
         if serialized_data.is_valid(raise_exception=True):
             serialized_data.save()
-            return Response({"message": f"Password reset link send, please check your mailbox. Link is valid for 1hr."})
+            return Response(
+                {
+                    "message": f"Password reset link send, please check your mailbox. Link is valid for 1hr."
+                }
+            )
         return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 class ForgotPasswordVerifyAPI(APIView):
     serializer_class = user_serializers.ForgotPasswordVerifySerializer
 
@@ -105,6 +112,38 @@ class VerifyOTP(APIView):
                     "phone": user_obj.phone,
                     "phone_code": user_obj.phone_code,
                     "phone_verified": user_obj.phone_verified,
+                    "email_verified": user_obj.email_verified,
+                    "email": user_obj.email,
+                    "has_active_membership": user_obj.has_active_membership,
+                }
+            }
+            if self.request.data.get("device_type") == "mobile":
+                token, created = Token.objects.get_or_create(user=user_obj)
+                data["result"]["token"] = token.key
+            else:
+                login(
+                    request,
+                    user_obj,
+                    backend="django.contrib.auth.backends.ModelBackend",
+                )
+            return Response(data)
+        return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginAPI(APIView):
+    serializer_class = user_serializers.LoginSerializer
+
+    def post(self, request):
+        serialized_data = self.serializer_class(data=self.request.data)
+        if serialized_data.is_valid(raise_exception=True):
+            user_obj = serialized_data.save()
+            data = {
+                "result": {
+                    "full_name": user_obj.full_name,
+                    "phone": user_obj.phone,
+                    "phone_code": user_obj.phone_code,
+                    "phone_verified": user_obj.phone_verified,
+                    "email_verified": user_obj.email_verified,
                     "email": user_obj.email,
                     "has_active_membership": user_obj.has_active_membership,
                 }

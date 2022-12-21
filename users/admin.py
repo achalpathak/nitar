@@ -20,7 +20,18 @@ class UserAdmin(DjangoUserAdmin):
 
     fieldsets = (
         (_("Login info"), {"fields": ("email", "password")}),
-        (_("Personal info"), {"fields": ("full_name", "phone", "phone_code")}),
+        (
+            _("Personal info"),
+            {
+                "fields": (
+                    "full_name",
+                    "phone",
+                    "phone_code",
+                    "email_verified",
+                    "phone_verified",
+                )
+            },
+        ),
         (
             _("Permissions"),
             {
@@ -44,18 +55,25 @@ class UserAdmin(DjangoUserAdmin):
             },
         ),
     )
-    list_display = ("full_name", "email", "phone", "is_staff", "is_superuser")
+    list_display = (
+        "full_name",
+        "email",
+        "phone",
+        "email_verified",
+        "is_staff",
+        "is_superuser",
+    )
     search_fields = ("email", "full_name")
     ordering = ("email",)
 
 
-class LoginPhoneOtpAdmin(admin.ModelAdmin):
-    list_display = ["get_phone", "otp"]
+class LoginOtpAdmin(admin.ModelAdmin):
+    list_display = ["get_email", "otp", "valid_till"]
 
-    def get_phone(self, obj):
-        return obj.user.phone
+    def get_email(self, obj):
+        return obj.user.email
 
-    get_phone.short_description = "Phone Number"
+    get_email.short_description = "Email"
 
 
 class MembershipAdmin(admin.ModelAdmin):
@@ -88,7 +106,7 @@ class UserMembershipAdmin(admin.ModelAdmin):
     get_name.short_description = "Full Name"
 
 
-admin.site.register(user_models.LoginPhoneOtp, LoginPhoneOtpAdmin)
+admin.site.register(user_models.LoginEmailOtp, LoginOtpAdmin)
 admin.site.register(user_models.ContactUs)
 admin.site.register(user_models.MembershipFeatures)
 admin.site.register(user_models.Memberships, MembershipAdmin)
