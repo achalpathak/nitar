@@ -4,7 +4,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 
 
 RUN apt-get update && apt-get -y dist-upgrade
-RUN apt install -y netcat
+RUN apt install -y netcat htop
 
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - 
 RUN apt-get install -y nodejs
@@ -25,4 +25,3 @@ RUN npm i -g npm@latest yarn
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir --disable-pip-version-check --requirement requirements.txt
 USER docker_user
-EXPOSE 8000
