@@ -20,4 +20,4 @@ Deploy/
 node_modules/
 db.sqlite3
 mysql-data/
-logs/
+var/

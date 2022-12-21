@@ -9,11 +9,9 @@ services:
     restart: always
     volumes:
       - .:/application
-      # - ./logs/gunicorn.logs:/tmp/gunicorn_logs.log
+      - ./var/log/:/var/log
       - ./static:/application/static
       - ./media:/application/media
-    # stdin_open: true
-    # tty: true
 
   nginx:
     build:

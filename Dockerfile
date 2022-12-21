@@ -9,8 +9,6 @@ RUN apt install -y netcat htop
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - 
 RUN apt-get install -y nodejs
 
-# RUN touch /tmp/gunicorn_logs.log
-
 RUN useradd -ms /bin/bash docker_user
 WORKDIR /application
 COPY . .

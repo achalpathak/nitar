@@ -58,6 +58,40 @@ class UpdatePhoneAPI(APIView):
         return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UpdatePasswordAPI(APIView):
+    serializer_class = user_serializers.UpdatePasswordSerializer
+
+    def post(self, request):
+        serialized_data = self.serializer_class(
+            data=self.request.data, context={"request": request}
+        )
+        if serialized_data.is_valid(raise_exception=True):
+            serialized_data.save()
+            return Response({"message": f"Password has been updated."})
+        return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ForgotPasswordSendEmailAPI(APIView):
+    serializer_class = user_serializers.ForgotPasswordSendEmailSerializer
+
+    def post(self, request):
+        serialized_data = self.serializer_class(data=self.request.data)
+        if serialized_data.is_valid(raise_exception=True):
+            serialized_data.save()
+            return Response({"message": f"Password reset link send, please check your mailbox. Link is valid for 1hr."})
+        return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
+    
+class ForgotPasswordVerifyAPI(APIView):
+    serializer_class = user_serializers.ForgotPasswordVerifySerializer
+
+    def post(self, request):
+        serialized_data = self.serializer_class(data=self.request.data)
+        if serialized_data.is_valid(raise_exception=True):
+            serialized_data.save()
+            return Response({"message": f"Password has been updated."})
+        return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
+
+
 class VerifyOTP(APIView):
     serializer_class = user_serializers.VerifyOtpSerializer
 

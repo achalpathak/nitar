@@ -3,10 +3,11 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-
+import jwt
 from library import utils
 from . import models as user_models
 from django.db import transaction
+from django.conf import settings
 
 User = get_user_model()
 from django.contrib.auth.models import AnonymousUser
@@ -15,7 +16,7 @@ from django.contrib.auth.models import AnonymousUser
 class RegisterUserSerializer(serializers.Serializer):
     phone = serializers.CharField(required=True)
     full_name = serializers.CharField(max_length=30, required=True)
-    email = serializers.EmailField(required=False)
+    email = serializers.EmailField(required=True)
     age_above_18 = serializers.BooleanField(required=True)
     phone_code = serializers.CharField(required=True)
     terms_conditions_agreed = serializers.BooleanField(required=True)
@@ -235,3 +236,58 @@ class UpdatePhoneSerializer(serializers.Serializer):
         user.phone_code = validated_data["phone_code"]
         user.save()
         return user
+
+
+class UpdatePasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(required=True)
+
+    def create(self, validated_data):
+        user = self.context.get("request", None).user
+        user.set_password(validated_data["password"])
+        user.save()
+        return user
+
+
+class ForgotPasswordSendEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+    def create(self, validated_data):
+        user = User.objects.filter(
+            email=validated_data["email"], is_active=True
+        ).first()
+        if user:
+            exp = datetime.now() + timedelta(hours=1)
+            encoded_jwt = jwt.encode(
+                {
+                    "email": validated_data["email"],
+                    "full_name": user.full_name,
+                    "exp": exp,
+                },
+                settings.SECRET_KEY,
+                algorithm="HS256",
+            )
+            # send email here
+            print("TOKEN==>", encoded_jwt)
+        return True
+
+
+class ForgotPasswordVerifySerializer(serializers.Serializer):
+    token = serializers.TextField(required=True)
+    password = serializers.CharField(required=True)
+
+    def create(self, validated_data):
+        try:
+            decode_token = jwt.decode(
+                validated_data["token"], settings.SECRET_KEY, algorithms=["HS256"]
+            )
+            user = User.objects.filter(
+                email=decode_token["email"], is_active=True
+            ).first()
+            user.set_password(validated_data["password"])
+            user.save()
+            return True
+        except Exception as e:
+            print(f"Token Error-{str(e)}")
+            raise serializers.ValidationError(
+                {"message": "Invalid Token. Please reset password again."}
+            )
