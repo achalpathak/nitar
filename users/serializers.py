@@ -20,6 +20,7 @@ class RegisterUserSerializer(serializers.Serializer):
     age_above_18 = serializers.BooleanField(required=True)
     phone_code = serializers.CharField(required=True)
     terms_conditions_agreed = serializers.BooleanField(required=True)
+    password = serializers.CharField(min_length=4, required=True)
 
     def validate_phone(self, phone):
         if len(phone) != 10:
@@ -28,8 +29,6 @@ class RegisterUserSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 "Phone number should only contain numbers."
             )
-        if User.objects.filter(phone=phone).exists():
-            raise serializers.ValidationError("Phone number is already registered.")
         return phone
 
     def validate_email(self, email):
@@ -67,8 +66,9 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_obj, _ = User.objects.update_or_create(
-            phone=validated_data["phone"], defaults=validated_data
+            email=validated_data["email"], defaults=validated_data
         )
+        user_obj.set_password(validated_data["password"])
         user_obj.save()
         return user_obj
 
@@ -239,7 +239,7 @@ class UpdatePhoneSerializer(serializers.Serializer):
 
 
 class UpdatePasswordSerializer(serializers.Serializer):
-    password = serializers.CharField(required=True)
+    password = serializers.CharField(min_length=4, required=True)
 
     def create(self, validated_data):
         user = self.context.get("request", None).user
@@ -273,7 +273,7 @@ class ForgotPasswordSendEmailSerializer(serializers.Serializer):
 
 class ForgotPasswordVerifySerializer(serializers.Serializer):
     token = serializers.TextField(required=True)
-    password = serializers.CharField(required=True)
+    password = serializers.CharField(min_length=4, required=True)
 
     def create(self, validated_data):
         try:

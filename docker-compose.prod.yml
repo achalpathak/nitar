@@ -9,7 +9,7 @@ services:
     restart: always
     volumes:
       - .:/application
-      - ./var/log/:/var/log
+      - ./logs/:/var/log
       - ./static:/application/static
       - ./media:/application/media
 
