@@ -29,11 +29,13 @@ class RegisterUserSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 "Phone number should only contain numbers."
             )
+        # if User.objects.filter(phone=phone).exists():
+        #     raise serializers.ValidationError("Phone number is already registered.")
         return phone
 
     def validate_email(self, email):
         if email:
-            if User.objects.filter(email=email).exists():
+            if User.objects.filter(email=email, email_verified=True).exists():
                 raise serializers.ValidationError("Email is already registered.")
         return email
 
