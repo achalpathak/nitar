@@ -19,7 +19,6 @@ const rootReducer = (state: any, action: IReducer) => {
 	if (action.type === Actions.LOGOUT) {
 		// for all keys defined in your persistConfig(s)
 		storage.removeItem("persist:root");
-		// storage.removeItem('persist:otherKey')
 
 		return appReducer(undefined, action);
 	}

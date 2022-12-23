@@ -22,6 +22,7 @@ import Constants from "@constants";
 
 const Login = lazy(() => import("@pages/login"));
 const Register = lazy(() => import("@pages/register"));
+const ResetPassword = lazy(() => import("@pages/reset-password"));
 const _404 = lazy(() => import("@pages/miscellaneous/_404"));
 
 const router = createBrowserRouter([
@@ -42,6 +43,14 @@ const router = createBrowserRouter([
 		element: (
 			<UnauthenticatedRoute>
 				<Register />
+			</UnauthenticatedRoute>
+		),
+	},
+	{
+		path: "/reset-password",
+		element: (
+			<UnauthenticatedRoute>
+				<ResetPassword />
 			</UnauthenticatedRoute>
 		),
 	},

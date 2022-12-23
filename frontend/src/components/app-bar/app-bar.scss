@@ -142,3 +142,56 @@
 	text-align: left;
 	line-height: 1rem;
 }
+
+//Update Password Modal
+.input-container {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+
+	label {
+		color: var(--website-secondary-color);
+		font-weight: bold;
+		font-size: medium;
+		text-align: center;
+		word-wrap: break-word;
+	}
+	input {
+		box-sizing: border-box;
+		height: 2.5rem;
+		width: 100%;
+		color: var(--website-secondary-color);
+		border-radius: 5px;
+		border: 0.5px solid var(--website-primary-color);
+		margin-top: 15px;
+		padding: 0 10px;
+		background-color: transparent;
+		font-size: 1rem;
+
+		div {
+			margin: 5px;
+		}
+	}
+}
+
+.cancel-btn {
+	width: 4rem !important;
+	height: 4rem !important;
+	border: 3px solid var(--website-primary-color) !important;
+	border-radius: 100% !important;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: transparent !important;
+	margin: 25px !important;
+	svg {
+		width: 50px !important;
+	}
+}
+
+.cancel-btn:hover {
+	box-shadow: 1px 1px 10px 1px var(--website-primary-color);
+	svg {
+		color: var(--website-secondary-color);
+	}
+}

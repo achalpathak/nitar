@@ -4,7 +4,7 @@ import "./Login.scss";
 import api, { Routes } from "@api";
 import { Button, CustomInput } from "@components";
 import { useAlert } from "@hooks";
-import { Alert, AlertTitle, Grid, Typography } from "@mui/material";
+import { Alert, Link as MLink, Grid, Typography } from "@mui/material";
 import Actions from "@redux/actions";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import { IError, IMessage, IResponse, IUser } from "@types";
@@ -17,7 +17,8 @@ import { Google } from "@assets";
 type ILocationProps = {
 	pathname: string;
 	state: {
-		phone: string;
+		email: string;
+		password: string;
 	};
 };
 
@@ -33,10 +34,11 @@ const Login = () => {
 	// * --- states start here ----------////
 
 	const [process, setProcess] = useState<"login" | "otp">(
-		location?.state?.phone ? "otp" : "login"
+		location?.state?.email ? "otp" : "login"
 	);
 	const [otp, setOtp] = useState<string>("");
-	const [phone, setPhone] = useState<string>("");
+	const [email, setEmail] = useState<string>("");
+	const [password, setPassword] = useState<string>("");
 
 	const [message, setMessage] = useState<IMessage | null>(null);
 	const [errors, setErrors] = useState<IError>({
@@ -77,14 +79,67 @@ const Login = () => {
 		}
 	}, [timer]);
 
-	const sendOtp = async (phoneNum: string = phone) => {
+	const sendResetPasswordToken = async () => {
 		try {
-			if (location?.state?.phone) {
-				location.state.phone = "";
+			const res = await api.post<IResponse>(
+				Routes.FORGOT_PASSWORD_EMAIL,
+				{
+					email,
+				}
+			);
+
+			if (res.status === 200) {
+				showAlert("success", "Success", res.data?.message);
+			}
+		} catch (error) {
+			const err = error as AxiosError<IResponse>;
+			const data = err?.response?.data;
+			if (data?.message) {
+				showAlert("error", "Error", data?.message);
+			} else if (data) {
+				setErrors(data);
+			}
+		}
+	};
+
+	const signIn = async (_email: string = email, _password = password) => {
+		try {
+			if (location?.state?.email) {
+				location.state.email = "";
+				location.state.password = "";
 			}
 
-			const res = await api.post<IResponse>(Routes.SEND_OTP, {
-				phone: phoneNum,
+			const res = await api.post<IResponse>(Routes.LOGIN, {
+				email: _email,
+				password: _password,
+			});
+
+			if (res.status === 200) {
+				showAlert("success", "Success", "Login Successful");
+				dispatch({
+					type: Actions.LOGIN,
+					payload: res.data?.result,
+				});
+				navigate("/");
+			}
+		} catch (error) {
+			const err = error as AxiosError<IResponse>;
+			const data = err?.response?.data;
+			if (data?.message) {
+				showAlert("error", "Error", data?.message);
+			} else if (data) {
+				setErrors(data);
+				if (data?.email?.includes("Email is not verified.")) {
+					sendOtp();
+				}
+			}
+		}
+	};
+
+	const sendOtp = async (_email: string = email) => {
+		try {
+			const res = await api.post<IResponse<IUser>>(Routes.SEND_OTP, {
+				email: _email,
 			});
 
 			if (res.status === 200) {
@@ -108,7 +163,7 @@ const Login = () => {
 	const verifyOtp = async () => {
 		try {
 			const res = await api.post<IResponse<IUser>>(Routes.VERIFY_OTP, {
-				phone,
+				email,
 				otp: parseInt(otp),
 			});
 
@@ -133,10 +188,11 @@ const Login = () => {
 
 	//? If login is redirected from register -> Send OTP
 	useEffect(() => {
-		if (location?.state?.phone) {
+		if (location?.state?.email) {
 			console.log(location);
-			setPhone(location?.state?.phone);
-			sendOtp(location?.state?.phone);
+			setEmail(location?.state?.email);
+			setPassword(location?.state?.password);
+			sendOtp(location?.state?.email);
 		}
 	}, []);
 
@@ -178,20 +234,30 @@ const Login = () => {
 									Enter your phone number below to continue
 								</label>
 								<CustomInput
-									type='number'
-									id='phone-number'
-									name='phone-number'
-									placeholder='Enter your phone number'
-									value={phone}
+									type='email'
+									id='email'
+									name='email'
+									placeholder='Enter your email address'
+									value={email}
 									onChangeCapture={(
 										e: ChangeEvent<HTMLInputElement>
 									) => {
-										const phoneNum = e.target.value;
-										if (phoneNum.length <= 10) {
-											setPhone(e.target.value);
-										}
+										setEmail(e.target.value);
 									}}
-									errors={errors?.phone}
+									errors={errors?.email}
+								/>
+								<CustomInput
+									type='password'
+									id='password'
+									name='password'
+									placeholder='Enter your password'
+									value={password}
+									onChangeCapture={(
+										e: ChangeEvent<HTMLInputElement>
+									) => {
+										setPassword(e.target.value);
+									}}
+									errors={errors?.password}
 								/>
 							</Grid>
 							<Grid item xs={12} className='d-center'>
@@ -209,12 +275,30 @@ const Login = () => {
 									</>
 								</Typography>
 							</Grid>
+							<Grid item xs={12} className='d-center'>
+								<Typography mt={1}>
+									<>
+										Forgot your password?{" "}
+										<MLink
+											href='#'
+											onClickCapture={(e) => {
+												e.preventDefault();
+												sendResetPasswordToken();
+											}}
+											style={{
+												color: "var(--website-primary-color)",
+											}}
+										>
+											Reset
+										</MLink>
+									</>
+								</Typography>
+							</Grid>
 						</>
 					) : (
 						<Grid item xs={12} className='d-center flex-column'>
 							<label>
-								Enter verification code sent on your mobile
-								number
+								Enter verification code sent on your email
 							</label>
 							<OtpInput
 								value={otp}
@@ -237,7 +321,7 @@ const Login = () => {
 							onClickCapture={async (e) => {
 								e.preventDefault();
 								if (process === "login") {
-									await sendOtp();
+									await signIn();
 								} else if (process === "otp") {
 									verifyOtp();
 								}

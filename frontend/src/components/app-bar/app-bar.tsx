@@ -1,15 +1,28 @@
+import { ChangeEvent, MouseEvent, useState, useEffect } from "react";
 import api, { Routes } from "@api";
 import { AndroidLogo, AppleLogo } from "@assets";
 import { useAlert } from "@hooks";
-import { Close, Menu, SearchOutlined } from "@mui/icons-material";
+import {
+	AccountCircle,
+	Close,
+	LockReset,
+	Logout,
+	Menu as MenuIcon,
+	SearchOutlined,
+} from "@mui/icons-material";
 import {
 	AppBar as MuiAppBar,
 	Box,
+	Grid,
 	IconButton,
 	List,
 	ListItem,
 	ListItemButton,
+	ListItemIcon,
 	ListItemText,
+	Menu,
+	MenuItem,
+	Modal,
 	SwipeableDrawer,
 	Toolbar,
 	Tooltip,
@@ -17,14 +30,26 @@ import {
 } from "@mui/material";
 import Actions from "@redux/actions";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
-import { IRoutes, ISearchResult, ISuccess } from "@types";
+import {
+	IError,
+	IResponse,
+	IRoutes,
+	ISearchResult,
+	ISuccess,
+	IUser,
+} from "@types";
 import { CustomSelectUtils } from "@utils";
 import { AxiosError } from "axios";
-import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import makeAnimated from "react-select/animated";
 import AsyncSelect from "react-select/async";
 import "./app-bar.scss";
+import SwalOrignal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import CustomInput from "@components/input";
+import { Button } from "@components";
+
+const Swal = withReactContent(SwalOrignal);
 
 let routes: IRoutes[] = [
 	{
@@ -79,11 +104,104 @@ const AppBar = () => {
 	const [isSearching, setSearching] = useState<boolean>(false);
 	const [isDrawerOpen, setDrawerOpen] = useState<boolean>(false);
 
+	const [password, setPassword] = useState<string>("");
+	const [confirmPassword, setConfirmPassword] = useState<string>("");
+	const [showUpdatePassword, setShowUpdatePassword] =
+		useState<boolean>(false);
+
+	const initialErrorState: IError = {
+		password: [],
+		confirmPassword: [],
+	};
+
+	const [errors, setErrors] = useState<IError>(initialErrorState);
+
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+
+	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
 	const drawerWidth = 240;
+
+	useEffect(() => {
+		if (!showUpdatePassword) {
+			setPassword("");
+			setConfirmPassword("");
+		}
+	}, [showUpdatePassword]);
 
 	if (payment?.status) {
 		routes = routes.filter((v) => v.title !== "Plans");
 	}
+
+	const errorHandler = () => {
+		if (!password) {
+			setErrors((val) => ({
+				...val,
+				password: ["Password cannot be empty"],
+			}));
+		}
+		if (!confirmPassword) {
+			setErrors((val) => ({
+				...val,
+				confirmPassword: ["Confirm Password cannot be empty"],
+			}));
+		}
+		if (password && confirmPassword) {
+			if (password?.length < 4) {
+				setErrors((val) => ({
+					...val,
+					password: [
+						"Password length cannot be less than 4 characters",
+					],
+				}));
+			} else if (password !== confirmPassword) {
+				setErrors((val) => ({
+					...val,
+					confirmPassword: [
+						"Password and Confirm Password do not match",
+					],
+				}));
+			}
+		}
+		return password && confirmPassword && password === confirmPassword;
+	};
+
+	const updatePassword = async () => {
+		try {
+			setErrors(initialErrorState);
+
+			if (!errorHandler()) {
+				return;
+			}
+
+			const res = await api.post<IResponse<IUser>>(
+				Routes.UPDATE_PASSWORD,
+				{
+					password,
+				}
+			);
+
+			if (res.status === 200) {
+				showAlert("success", "Success", res?.data?.message);
+				setShowUpdatePassword(false);
+			}
+		} catch (error) {
+			const err = error as AxiosError<IResponse>;
+			const data = err?.response?.data;
+			if (data?.message) {
+				showAlert("error", "Error", data?.message);
+			} else if (data) {
+				setErrors(data);
+			}
+		}
+	};
 
 	const loadSuggestions = async (searchKey: string) => {
 		try {
@@ -114,10 +232,13 @@ const AppBar = () => {
 			const res = await api.get<ISuccess>(Routes.LOGOUT);
 
 			if (res.status === 200) {
+				//Reload the page
+				navigate(0);
+
+				//Clear Redux
 				dispatch({
 					type: Actions.LOGOUT,
 				});
-				window.location.reload();
 			}
 		} catch (error) {
 			const err = error as AxiosError<ISuccess>;
@@ -270,7 +391,7 @@ const AppBar = () => {
 									color: "var(--website-secondary-color)",
 								}}
 							>
-								<Menu />
+								<MenuIcon />
 							</IconButton>
 							<Box
 								sx={{
@@ -476,7 +597,7 @@ const AppBar = () => {
 													},
 												}}
 											>
-												<a
+												{/* <a
 													href='#'
 													className='login-btn'
 													onClickCapture={(e) => {
@@ -485,7 +606,34 @@ const AppBar = () => {
 													}}
 												>
 													Logout
-												</a>
+												</a> */}
+												<Tooltip title='Account settings'>
+													<IconButton
+														className='custom-btn'
+														onClick={handleClick}
+														size='small'
+														sx={{ ml: 2 }}
+														aria-controls={
+															open
+																? "account-menu"
+																: undefined
+														}
+														aria-haspopup='true'
+														aria-expanded={
+															open
+																? "true"
+																: undefined
+														}
+													>
+														<AccountCircle
+															sx={{
+																width: 32,
+																height: 32,
+																color: "white",
+															}}
+														/>
+													</IconButton>
+												</Tooltip>
 											</Box>
 										</Box>
 									</>
@@ -521,6 +669,170 @@ const AppBar = () => {
 					</SwipeableDrawer>
 				</Box>
 			</Box>
+			<Menu
+				anchorEl={anchorEl}
+				id='account-menu'
+				open={open}
+				onClose={handleClose}
+				onClick={handleClose}
+				PaperProps={{
+					elevation: 0,
+					sx: {
+						overflow: "visible",
+						filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+						mt: 1.5,
+						"& .MuiAvatar-root": {
+							width: 32,
+							height: 32,
+							ml: -0.5,
+							mr: 1,
+						},
+						"&:before": {
+							content: '""',
+							display: "block",
+							position: "absolute",
+							top: 0,
+							right: 14,
+							width: 10,
+							height: 10,
+							bgcolor: "var(--website-secondary-color)",
+							transform: "translateY(-50%) rotate(45deg)",
+							zIndex: 0,
+						},
+					},
+				}}
+				transformOrigin={{ horizontal: "right", vertical: "top" }}
+				anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+			>
+				<MenuItem
+					onClickCapture={(e) => {
+						e.preventDefault();
+						setShowUpdatePassword(true);
+					}}
+				>
+					<ListItemIcon>
+						<LockReset fontSize='small' />
+					</ListItemIcon>
+					Update Password
+				</MenuItem>
+				<MenuItem
+					onClickCapture={(e) => {
+						e.preventDefault();
+						logout();
+					}}
+				>
+					<ListItemIcon>
+						<Logout fontSize='small' />
+					</ListItemIcon>
+					Logout
+				</MenuItem>
+			</Menu>
+			<Modal
+				open={showUpdatePassword}
+				closeAfterTransition
+				onClose={() => setShowUpdatePassword(false)}
+			>
+				<Grid
+					container
+					className='input-container d-center'
+					sx={{
+						height: "100%",
+					}}
+				>
+					<Grid item xs={12} md={6} xl={4}>
+						<Grid
+							container
+							className='d-center'
+							sx={{
+								backgroundColor:
+									"var(--website-alternate-color)",
+							}}
+							p={3}
+							borderRadius='5px'
+						>
+							<Grid item xs={12} className='d-center'>
+								<Typography
+									fontFamily='inter'
+									fontSize='1.5rem'
+								>
+									Update Password
+								</Typography>
+							</Grid>
+							<Grid item xs={12} className='d-center flex-column'>
+								<CustomInput
+									type='password'
+									name='password'
+									placeholder='Enter New Password'
+									value={password}
+									onChangeCapture={(
+										e: ChangeEvent<HTMLInputElement>
+									) => {
+										setPassword(e.target.value);
+									}}
+									errors={errors?.password}
+								/>
+							</Grid>
+							<Grid item xs={12} className='d-center flex-column'>
+								<CustomInput
+									type='password'
+									name='confirm-password'
+									placeholder='Confirm New Password'
+									value={confirmPassword}
+									onChangeCapture={(
+										e: ChangeEvent<HTMLInputElement>
+									) => {
+										setConfirmPassword(e.target.value);
+									}}
+									errors={errors?.confirmPassword}
+								/>
+							</Grid>
+							<Grid
+								item
+								xs={12}
+								mt={2}
+								className='d-center flex-column'
+							>
+								<Button
+									title={"Update Password"}
+									style={{
+										backgroundColor:
+											"var(--website-primary-color)",
+										color: "var(--website-secondary-color)",
+									}}
+									onClickCapture={(
+										e: MouseEvent<HTMLButtonElement>
+									) => {
+										e.preventDefault();
+										updatePassword();
+									}}
+								/>
+							</Grid>
+							<Grid
+								item
+								xs={12}
+								mt={2}
+								className='d-center flex-column'
+							>
+								<Button
+									title={"Cancel"}
+									style={{
+										backgroundColor:
+											"var(--website-alternate-color)",
+										color: "var(--website-secondary-color)",
+										border: "1px solid var(--website-primary-color)",
+									}}
+									onClickCapture={(
+										e: MouseEvent<HTMLButtonElement>
+									) => {
+										e.preventDefault();
+										setShowUpdatePassword(false);
+									}}
+								/>
+							</Grid>
+						</Grid>
+					</Grid>
+				</Grid>
+			</Modal>
 		</>
 	);
 };

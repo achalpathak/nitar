@@ -219,6 +219,7 @@ export type IUser = {
 	email: string;
 	phone: string;
 	phone_verified: boolean;
+	email_verified: boolean;
 	phone_code: string;
 	has_active_membership: boolean;
 	newsletter_subscribed: boolean;

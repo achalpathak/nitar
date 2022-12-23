@@ -12,6 +12,7 @@ const Upcoming = lazy(() => import("@pages/upcoming"));
 const MovieDetails = lazy(() => import("@pages/movie-details"));
 const SeriesDetails = lazy(() => import("@pages/series-details"));
 const ExtrasDetails = lazy(() => import("@pages/extras-details"));
+const ResetPassword = lazy(() => import("@pages/reset-password"));
 
 export {
 	Login,
@@ -24,5 +25,7 @@ export {
 	ContactUs,
 	Upcoming,
 	MovieDetails,
+	SeriesDetails,
 	ExtrasDetails,
+	ResetPassword,
 };
