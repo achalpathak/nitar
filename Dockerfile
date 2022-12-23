@@ -23,3 +23,8 @@ RUN npm i -g npm@latest yarn
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir --disable-pip-version-check --requirement requirements.txt
 USER docker_user
+
+RUN mkdir /application/media
+RUN mkdir /application/logs
+RUN mkdir /application/static
+RUN mkdir /application/mysql-data
