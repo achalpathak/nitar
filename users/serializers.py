@@ -1,3 +1,4 @@
+import os
 from random import randint
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -12,7 +13,7 @@ from django.conf import settings
 User = get_user_model()
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth import authenticate
-from django.contrib.auth import update_session_auth_hash
+from config.mail import send_email_otp, send_email_forgot_password
 
 
 class RegisterUserSerializer(serializers.Serializer):
@@ -71,7 +72,7 @@ class RegisterUserSerializer(serializers.Serializer):
                 user=user_obj, defaults=data
             )
             otp_obj.save()
-            print("EMAIL OTP=>", data["otp"])
+            send_email_otp(to_email=validated_data["email"], otp=data["otp"])
         return validated_data
 
 
@@ -137,7 +138,7 @@ class EmailOtpSerializer(serializers.Serializer):
                     user=user_obj, defaults=data
                 )
                 otp_obj.save()
-                print("EMAIL OTP=>", data["otp"])
+                send_email_otp(to_email=validated_data["email"], otp=data["otp"])
                 return otp_obj
         except user_models.User.DoesNotExist:
             raise serializers.ValidationError({"message": "Email is not registered."})
@@ -247,8 +248,8 @@ class LoginSerializer(serializers.Serializer):
         if user is not None:
             return user
         else:
-            raise serializers.ValidationError({"message":
-                "Login Failed. Please check the email/password."}
+            raise serializers.ValidationError(
+                {"message": "Login Failed. Please check the email/password."}
             )
 
 
@@ -271,7 +272,8 @@ class ForgotPasswordSendEmailSerializer(serializers.Serializer):
                 algorithm="HS256",
             )
             # send email here
-            print("TOKEN==>", encoded_jwt)
+            reset_link = f"{os.environ['SERVER_DOMAIN']}/forgot-password?token={encoded_jwt}"
+            send_email_forgot_password(to_email=validated_data["email"],reset_link=reset_link)
         return True
 
 

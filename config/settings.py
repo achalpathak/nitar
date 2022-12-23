@@ -170,3 +170,7 @@ GOOGLE_DTO = {
     "redirect_url": "http://localhost/backend/api/users/google_callback/",
 }
 ###################################
+
+EMAIL_AUTH_KEY = os.environ.get("EMAIL_AUTH_KEY")
+EMAIL_OTP_TEMPLATE_ID = os.environ.get("EMAIL_OTP_TEMPLATE_ID")
+EMAIL_FORGOT_PASSWORD_TEMPLATE_ID = os.environ.get("EMAIL_FORGOT_PASSWORD_TEMPLATE_ID")
