@@ -10,7 +10,7 @@ while ! nc -z mysqldb 3306 ; do
 done
 cd ../
 echo ".............Starting Server............."
-python manage.py makemigrations
+python manage.py migrate
 python manage.py collectstatic --noinput --clear
 echo ".............Running Gunicorn............."
 gunicorn -c config/gunicorn.py
