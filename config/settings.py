@@ -29,6 +29,7 @@ else:
     DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
+SESSION_COOKIE_AGE = 60 * 60 * 24 #! Expires in 24 hours
 
 
 # Application definition

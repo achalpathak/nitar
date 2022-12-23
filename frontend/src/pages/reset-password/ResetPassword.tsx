@@ -160,7 +160,7 @@ const Register = () => {
 											textAlign: "center",
 										}}
 									>
-										Reset your password
+										Forgot your password
 									</label>
 								</Grid>
 								<Grid

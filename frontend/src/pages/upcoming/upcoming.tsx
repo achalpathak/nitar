@@ -17,46 +17,47 @@ const Upcoming = () => {
 	const [trendingMovies, setTrendingMovies] = useState<ICategory>();
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-	useEffect(() => {
-		(async () => {
-			try {
-				const res = await api.get<ISuccess<ICategories>>(
-					Routes.HOME_PAGE_LISTINGS
+	const getHomePageListing = async () => {
+		try {
+			const res = await api.get<ISuccess<ICategories>>(
+				Routes.HOME_PAGE_LISTINGS
+			);
+
+			if (res.status === 200) {
+				setTrendingMovies(
+					res.data?.result?.categories?.find(
+						(v) => v.name?.toLowerCase() === "trending now"
+					)
 				);
-
-				if (res.status === 200) {
-					setTrendingMovies(
-						res.data?.result?.categories?.find(
-							(v) => v.name?.toLowerCase() === "trending now"
-						)
-					);
-					console.log("Movies", res.data?.result);
-				}
-			} catch (error) {
-				const err = error as AxiosError<ISuccess>;
-				console.error(err?.response);
-				showAlert("error", "Error", err?.response?.data?.message);
+				console.log("Movies", res.data?.result);
 			}
-		})();
-	}, []);
+		} catch (error) {
+			const err = error as AxiosError<ISuccess>;
+			console.error(err?.response);
+			showAlert("error", "Error", err?.response?.data?.message);
+		}
+	};
+
+	const getUpcoming = async () => {
+		try {
+			const res = await api.get<ISuccess<ICategoryItem[]>>(
+				Routes.UPCOMING
+			);
+
+			if (res.status === 200) {
+				setUpcomingMovies(res.data?.result);
+				console.log("Upcoming Movies", res.data?.result);
+			}
+		} catch (error) {
+			const err = error as AxiosError<ISuccess>;
+			console.error(err?.response);
+			showAlert("error", "Error", err?.response?.data?.message);
+		}
+	};
 
 	useEffect(() => {
-		(async () => {
-			try {
-				const res = await api.get<ISuccess<ICategoryItem[]>>(
-					Routes.UPCOMING
-				);
-
-				if (res.status === 200) {
-					setUpcomingMovies(res.data?.result);
-					console.log("Upcoming Movies", res.data?.result);
-				}
-			} catch (error) {
-				const err = error as AxiosError<ISuccess>;
-				console.error(err?.response);
-				showAlert("error", "Error", err?.response?.data?.message);
-			}
-		})();
+		getHomePageListing();
+		getUpcoming();
 	}, []);
 
 	useEffect(() => {

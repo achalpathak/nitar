@@ -1,5 +1,11 @@
 import { lazy, Suspense, useEffect, useLayoutEffect, useState } from "react";
-import { createBrowserRouter, Link, RouterProvider } from "react-router-dom";
+import {
+	createBrowserRouter,
+	Link,
+	RouterProvider,
+	useLocation,
+	useNavigate,
+} from "react-router-dom";
 import { Layout } from "@container";
 import { Alert, Loader } from "@components";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
@@ -15,10 +21,10 @@ import {
 import { AxiosError } from "axios";
 import Actions from "@redux/actions";
 import "react-carousel-animated/dist/style.css";
-import { Box, Modal } from "@mui/material";
-import { Close } from "@mui/icons-material";
 import { UnauthenticatedRoute } from "@router";
 import Constants from "@constants";
+import { useAlert } from "@hooks";
+import Swal from "sweetalert2";
 
 const Login = lazy(() => import("@pages/login"));
 const Register = lazy(() => import("@pages/register"));
@@ -47,7 +53,7 @@ const router = createBrowserRouter([
 		),
 	},
 	{
-		path: "/reset-password",
+		path: "/forgot-password",
 		element: (
 			<UnauthenticatedRoute>
 				<ResetPassword />
@@ -62,11 +68,10 @@ const router = createBrowserRouter([
 
 const App = () => {
 	const dispatch = useAppDispatch();
-	const preferences = useAppSelector((state) => state.preferences);
+
 	const loading = useAppSelector((state) => state.loading);
 
 	const [welcomeBanner, setWelcomeBanner] = useState<IWelcomeBanner>();
-	const [isOpen, setOpen] = useState<boolean>(false);
 
 	const hexToRgb = (hex: string | undefined) => {
 		let c: any;
@@ -171,26 +176,6 @@ const App = () => {
 			} catch (error) {
 				const err = error as AxiosError<ISuccess>;
 				console.error(err.response);
-			}
-		})();
-	}, []);
-
-	useLayoutEffect(() => {
-		(async () => {
-			try {
-				const res = await api.get<ISuccess<IUser>>(
-					Routes.GET_USER_INFO
-				);
-
-				if (res.status === 200) {
-					dispatch({
-						type: Actions.LOGIN,
-						payload: res.data?.result,
-					});
-				}
-			} catch (error) {
-				const err = error as AxiosError<ISuccess>;
-				console.error(err?.response);
 			}
 		})();
 	}, []);

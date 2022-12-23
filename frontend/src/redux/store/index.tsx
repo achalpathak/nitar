@@ -33,14 +33,14 @@ const persistConfig = {
 //Redux persist with encryption
 const persistedReducer = persistReducer(
 	{
-		// transforms: [
-		// 	encryptTransform({
-		// 		secretKey: "9ej%7b6%lh67-j02spn)4l8yhrkc-b3f4qenlaakyig@-ndx8d",
-		// 		onError: function (error) {
-		// 			// Handle the error.
-		// 		},
-		// 	}),
-		// ],
+		transforms: [
+			encryptTransform({
+				secretKey: "9ej%7b6%lh67-j02spn)4l8yhrkc-b3f4qenlaakyig@-ndx8d",
+				onError: function (error) {
+					// Handle the error.
+				},
+			}),
+		],
 		...persistConfig,
 	},
 	rootReducer

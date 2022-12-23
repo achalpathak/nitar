@@ -10,6 +10,11 @@ import { persistor, store } from "@redux/store";
 
 const root = document.getElementById("root");
 
+//Remove console.log in other environments
+if (import.meta.env.MODE !== "development") {
+	console.log = () => {};
+}
+
 ReactDOM.createRoot(root as HTMLElement).render(
 	<React.StrictMode>
 		<Provider store={store}>

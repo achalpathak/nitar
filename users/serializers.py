@@ -12,6 +12,7 @@ from django.conf import settings
 User = get_user_model()
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth import authenticate
+from django.contrib.auth import update_session_auth_hash
 
 
 class RegisterUserSerializer(serializers.Serializer):
@@ -222,6 +223,7 @@ class UpdatePasswordSerializer(serializers.Serializer):
     def create(self, validated_data):
         user = self.context.get("request", None).user
         user.set_password(validated_data["password"])
+        update_session_auth_hash(self.context.get("request", None), user)
         user.save()
         return user
 
@@ -245,8 +247,8 @@ class LoginSerializer(serializers.Serializer):
         if user is not None:
             return user
         else:
-            raise serializers.ValidationError(
-                "Login Failed. Please check the email/password."
+            raise serializers.ValidationError({"message":
+                "Login Failed. Please check the email/password."}
             )
 
 
