@@ -15,7 +15,7 @@ import SeriesDetails from "@pages/series-details";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import Swal from "sweetalert2";
 import { AxiosError } from "axios";
-import { IPreferences, ISuccess, IUser } from "@types";
+import { IPreferences, IPrefs, ISuccess, IUser } from "@types";
 import Actions from "@redux/actions";
 import api from "@api";
 import { Routes as ApiRoutes } from "@api";
