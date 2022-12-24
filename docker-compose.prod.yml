@@ -7,20 +7,20 @@ services:
     entrypoint: ["./run_server.sh"]
     env_file: .env.prod
     restart: always
-    volumes:
-      - .:/home/docker_user/application
-      - ./logs/:/var/log
-      - ./static:/home/docker_user/application/static
-      - ./media:/home/docker_user/application/media
+    # volumes:
+    #   - .:/home/docker_user/application
+      # - ./logs/:/var/log
+      # - ./static:/home/docker_user/application/static
+      # - ./media:/home/docker_user/application/media
 
   nginx:
     build:
         context: ./nginx
         dockerfile: Dockerfile
     container_name: nginx_container
-    volumes:
-      - ./static:/home/docker_user/application/static
-      - ./media:/home/docker_user/application/media
+    # volumes:
+    #   - ./static:/home/docker_user/application/static
+    #   - ./media:/home/docker_user/application/media
     ports:
       - 80:80
     depends_on:
@@ -29,11 +29,16 @@ services:
   mysqldb:
     image: mysql:8.0
     container_name: mysql_container
+    # volumes:
+    #   - ./mysql-data:/var/lib/mysql
     volumes:
-      - ./mysql-data:/var/lib/mysql
+      - db-data:/var/lib/mysql
     restart: unless-stopped
     env_file: .env.prod
     ports:
       - "3306:3306"
     depends_on:
       - backend
+volumes:
+  db-data:
+      driver: local
