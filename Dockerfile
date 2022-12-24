@@ -18,7 +18,7 @@ COPY . .
 # RUN chmod -R 755 /application
 
 # RUN chmod -R 775 /application/run_server.sh
-RUN chmod +x /application/run_server.sh
+RUN chmod +x run_server.sh
 
 RUN npm i -g npm@latest yarn
 RUN pip install --upgrade pip
