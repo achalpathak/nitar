@@ -1,10 +1,6 @@
 #!/bin/bash
-# changing media folder permission
-# chown -R docker_user:docker_user media
-# chown -R docker_user:docker_user logs
-# chown -R docker_user:docker_user static
-# chown -R docker_user:docker_user mysql-data
 
+set -e # prevents other commands to stop in case of error
 echo ".............Installing NPM modules............."
 cd frontend
 yarn install
