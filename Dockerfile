@@ -23,15 +23,15 @@ RUN npm i -g npm@latest yarn
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir --disable-pip-version-check --requirement requirements.txt
 
-RUN mkdir /application/media
-RUN mkdir /application/logs
-RUN mkdir /application/static
-RUN mkdir /application/mysql-data
+# RUN mkdir /application/media
+# RUN mkdir /application/logs
+# RUN mkdir /application/static
+# RUN mkdir /application/mysql-data
 
-#media permissions not working
-RUN chown -R docker_user:docker_user /application/media 
-RUN chown -R docker_user:docker_user /application/logs
-RUN chown -R docker_user:docker_user /application/static
-RUN chown -R docker_user:docker_user /application/mysql-data
+# #media permissions not working
+# RUN chown -R docker_user:docker_user /application/media 
+# RUN chown -R docker_user:docker_user /application/logs
+# RUN chown -R docker_user:docker_user /application/static
+# RUN chown -R docker_user:docker_user /application/mysql-data
 
 USER docker_user

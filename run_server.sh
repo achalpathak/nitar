@@ -1,6 +1,10 @@
 #!/bin/bash
 # changing media folder permission
 chown -R docker_user:docker_user media
+chown -R docker_user:docker_user logs
+chown -R docker_user:docker_user static
+chown -R docker_user:docker_user mysql-data
+
 echo ".............Installing NPM modules............."
 cd frontend
 yarn install
