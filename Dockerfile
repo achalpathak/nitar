@@ -12,7 +12,7 @@ RUN apt-get install -y nodejs
 RUN useradd -ms /bin/bash docker_user
 WORKDIR /home/docker_user/application
 COPY . .
-# RUN chown -R docker_user:docker_user /application
+RUN chown -R docker_user:docker_user /home/docker_user/application
 # RUN chown -R docker_user:docker_user /usr/lib/node_modules
 # RUN chown -R docker_user:docker_user /usr/bin
 # RUN chmod -R 755 /application
