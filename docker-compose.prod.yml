@@ -12,15 +12,19 @@ services:
       # - ./logs/:/var/log
       # - ./static:/home/docker_user/application/static
       # - ./media:/home/docker_user/application/media
+    volumes:
+      - static-data:/home/docker_user/application/static
+      - media-data:/home/docker_user/application/media
+      - log-data:/var/log
 
   nginx:
     build:
         context: ./nginx
         dockerfile: Dockerfile
     container_name: nginx_container
-    # volumes:
-    #   - ./static:/home/docker_user/application/static
-    #   - ./media:/home/docker_user/application/media
+    volumes:
+      - static-data:/home/docker_user/application/static
+      - media-data:/home/docker_user/application/media
     ports:
       - 80:80
     depends_on:
@@ -41,4 +45,10 @@ services:
       - backend
 volumes:
   db-data:
+      driver: local
+  static-data:
+      driver: local
+  media-data:
+      driver: local
+  log-data:
       driver: local
