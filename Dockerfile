@@ -9,10 +9,9 @@ RUN apt install -y netcat htop
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - 
 RUN apt-get install -y nodejs
 
-#RUN useradd -ms /bin/bash docker_user
-WORKDIR /application
+RUN useradd -ms /bin/bash docker_user
+WORKDIR /home/docker_user/application
 COPY . .
-RUN adduser -D docker_user
 # RUN chown -R docker_user:docker_user /application
 # RUN chown -R docker_user:docker_user /usr/lib/node_modules
 # RUN chown -R docker_user:docker_user /usr/bin
