@@ -36,8 +36,6 @@ class InitiatePayments(APIView):
                 amount = memberhip_obj.price_in_inr
             else:
                 amount = memberhip_obj.price_in_dollar
-            amount = 1.99
-
             if gateway == "razor_pay":
                 razorpay_order = razorpay_client.order.create(
                     {
