@@ -1,4 +1,6 @@
 #!/bin/bash
+# changing media folder permission
+chown -R docker_user:docker_user media
 echo ".............Installing NPM modules............."
 cd frontend
 yarn install
