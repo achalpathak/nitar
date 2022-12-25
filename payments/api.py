@@ -187,6 +187,7 @@ class RazorPayCallback(APIView):
                 return Response(
                     {"result": "Failed"}, status=status.HTTP_400_BAD_REQUEST
                 )
+                
         except Exception as e:
             # for any error
             traceback.print_exc()
