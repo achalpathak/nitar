@@ -23,6 +23,10 @@ const APIS: IAPI = {
 		name: "Refund Policy",
 		api: Routes.REFUND_POLICY,
 	},
+	"about-us": {
+		name: "About Us",
+		api: Routes.ABOUT_US,
+	},
 };
 
 const Policy = () => {

@@ -201,6 +201,7 @@ const Login = () => {
 			<Grid
 				item
 				xs={10}
+				sm={8}
 				md={4}
 				xl={4}
 				style={{
@@ -229,6 +230,7 @@ const Login = () => {
 								<label
 									style={{
 										textAlign: "center",
+										whiteSpace: "nowrap",
 									}}
 								>
 									Enter your phone number below to continue
@@ -260,7 +262,7 @@ const Login = () => {
 									errors={errors?.password}
 								/>
 							</Grid>
-							<Grid item xs={12} className='d-center'>
+							<Grid item xs={12} mt={2} className='d-center'>
 								<Typography mt={1}>
 									<>
 										Don't have an account?{" "}
@@ -368,6 +370,21 @@ const Login = () => {
 						</>
 					)}
 					<Grid item xs={12} className='d-center'>
+						<Button
+							title={"Cancel"}
+							onClickCapture={async (e) => {
+								e.preventDefault();
+								stopTimer();
+								if (process === "login") {
+									navigate("/");
+								} else {
+									setProcess("login");
+								}
+							}}
+							style={{ margin: "1rem 0" }}
+						/>
+					</Grid>
+					{/* <Grid item xs={12} className='d-center'>
 						<button
 							className='cancel-btn'
 							onClickCapture={(e) => {
@@ -395,7 +412,7 @@ const Login = () => {
 								/>
 							</svg>
 						</button>
-					</Grid>
+					</Grid> */}
 				</Grid>
 			</Grid>
 		</Grid>

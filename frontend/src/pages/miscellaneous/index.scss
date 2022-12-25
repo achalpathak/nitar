@@ -9,17 +9,16 @@
 .footer-main-container {
 	height: fit-content;
 	margin-top: 2rem;
+	border-top: solid 1px var(--website-primary-color);
+	border-top-left-radius: 20px;
+	border-top-right-radius: 20px;
+	height: fit-content;
 }
 .about-us-container {
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
 	flex-direction: column;
-	height: fit-content;
-	border-top: solid 1px var(--website-primary-color);
-	border-radius: 20px;
-	margin-bottom: 25px;
-	width: 99vw;
 }
 .privacy-container {
 	min-width: 60vw;
@@ -124,8 +123,7 @@
 	align-items: center;
 	justify-content: center;
 	margin-top: 10px;
-	border-bottom: var(--website-primary-color) solid 1px;
-	width: 100vw;
+	// width: 100vw;
 	svg {
 		color: var(--website-secondary-color);
 		cursor: pointer;
@@ -143,7 +141,19 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-around;
-	width: 80vw;
+	border-top: var(--website-primary-color) solid 1px;
+	padding-top: 20px;
+	a {
+		color: var(--website-secondary-color);
+	}
+	a:hover {
+		color: var(--website-primary-color);
+	}
+}
+.links {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	margin-top: 20px;
 	a {
 		color: var(--website-secondary-color);
@@ -159,7 +169,7 @@
 
 @media only screen and (max-width: 500px) {
 	.about-us {
-		width: 70vw;
+		// width: 70vw;
 		display: flex;
 		span {
 			font-size: 0.8rem;

@@ -73,8 +73,8 @@ const TheContent = () => {
 			);
 
 			const prefsObj: IPreferences = res.data?.result
-				.map((v) => ({ [v.field]: v }))
-				.reduce((c, acc) => ({ ...acc, ...c }));
+				.map((v): IPreferences => ({ [v.field]: v }))
+				.reduce((c, acc): IPreferences => ({ ...acc, ...c }));
 
 			setCSSVariables(prefsObj);
 
@@ -166,6 +166,7 @@ const TheContent = () => {
 								element={<Policy />}
 							/>
 							<Route path='/contact-us' element={<Policy />} />
+							<Route path='/about-us' element={<Policy />} />
 							<Route
 								path='/privacy-policy'
 								element={<Policy />}

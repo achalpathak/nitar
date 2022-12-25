@@ -472,7 +472,7 @@ const AppBar = () => {
 									</Box>
 								))}
 							</Box>
-							<Box
+							{/* <Box
 								className='d-center'
 								mr={2}
 								sx={{
@@ -498,7 +498,7 @@ const AppBar = () => {
 										<AppleLogo height={20} />
 									</a>
 								</Box>
-							</Box>
+							</Box> */}
 							<Box
 								className={`d-center search-container ${
 									isSearching ? "active" : ""

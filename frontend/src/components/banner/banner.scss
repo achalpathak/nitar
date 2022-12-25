@@ -53,9 +53,10 @@
 
 .slider .banner-picture img {
 	border-radius: 2rem;
-	width: auto;
+	width: 100%;
 	height: 100% !important;
 	aspect-ratio: 16 / 9;
+	max-width: 100% !important;
 }
 
 // @media only screen and (min-width: 1700px) {

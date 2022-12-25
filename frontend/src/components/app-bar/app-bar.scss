@@ -23,29 +23,29 @@
 			position: relative;
 			padding-bottom: 3px;
 
-			&::before {
-				align-self: flex-start;
-				content: "";
-				width: 80%;
-				height: 1px;
-				background-color: var(--website-primary-color);
-				position: absolute;
-				bottom: 0;
-				left: 0;
-				opacity: 0;
-			}
+			// &::before {
+			// 	align-self: flex-start;
+			// 	content: "";
+			// 	width: 80%;
+			// 	height: 1px;
+			// 	background-color: var(--website-primary-color);
+			// 	position: absolute;
+			// 	bottom: 0;
+			// 	left: 0;
+			// 	opacity: 0;
+			// }
 
-			&::after {
-				align-self: flex-start;
-				content: "";
-				width: 60%;
-				height: 1px;
-				background-color: var(--website-primary-color);
-				position: absolute;
-				bottom: -5px;
-				left: 0;
-				opacity: 0;
-			}
+			// &::after {
+			// 	align-self: flex-start;
+			// 	content: "";
+			// 	width: 60%;
+			// 	height: 1px;
+			// 	background-color: var(--website-primary-color);
+			// 	position: absolute;
+			// 	bottom: -5px;
+			// 	left: 0;
+			// 	opacity: 0;
+			// }
 
 			&.active {
 				&::before,

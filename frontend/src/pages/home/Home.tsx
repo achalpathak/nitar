@@ -46,11 +46,11 @@ const Home = () => {
 			{movies?.slice(0, 2)?.map((m) => (
 				<MovieList key={m?.name} {...m} />
 			))}
-			{!user?.full_name ? (
+			{/* {!user?.full_name ? (
 				!(user?.newsletter_subscribed ?? false) ? (
 					<SubscribeButton />
 				) : null
-			) : null}
+			) : null} */}
 			{movies?.slice(2)?.map((m) => (
 				<MovieList key={m?.name} {...m} />
 			))}

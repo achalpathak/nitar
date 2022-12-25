@@ -468,6 +468,16 @@ const Register = () => {
 						</Typography>
 					</Grid>
 					<Grid item xs={12} className='d-center'>
+						<Button
+							title={"Cancel"}
+							onClickCapture={async (e) => {
+								e.preventDefault();
+								navigate("/");
+							}}
+							style={{ margin: "1rem 0" }}
+						/>
+					</Grid>
+					{/* <Grid item xs={12} className='d-center'>
 						<button
 							className='cancel-btn'
 							onClickCapture={(e) => {
@@ -490,7 +500,7 @@ const Register = () => {
 								/>
 							</svg>
 						</button>
-					</Grid>
+					</Grid> */}
 				</Grid>
 			</Grid>
 		</Grid>

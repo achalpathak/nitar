@@ -21,10 +21,10 @@
 	// flex-direction: column;
 	justify-content: center;
 	.card {
-		border: var(--website-primary-color) 1px solid;
+		border: var(--website-secondary-color) 1px solid;
 		padding: 25px 15px;
 		border-radius: 20px;
-		box-shadow: 1px 1px 10px 1px var(--website-primary-color);
+		// box-shadow: 1px 1px 10px 1px var(--website-primary-color);
 		margin-bottom: 20px;
 		max-width: 19rem;
 		> div {
@@ -54,7 +54,7 @@
 		}
 	}
 	.plans-card-list {
-		border-top: var(--website-primary-color) 1px solid;
+		border-top: var(--website-secondary-color) 1px solid;
 		ul {
 			list-style-type: none;
 			padding: 0;
@@ -82,14 +82,15 @@
 }
 button {
 	span {
-		font-family: "Playfair Display";
+		font-family: "inter";
 		font-weight: bold;
 	}
 }
 
 .description {
-	border: 1px solid var(--website-primary-color);
+	border: 1px solid var(--website-secondary-color);
 	padding: 1rem;
+	padding-bottom: 2rem;
 	text-align: center;
 	position: relative;
 

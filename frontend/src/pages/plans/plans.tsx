@@ -191,6 +191,7 @@ const Plans = () => {
 	const initiatePayment = async (type: IPaymentGateways) => {
 		try {
 			showRenderingGateway(true);
+			showPaymentGateways(false);
 			if (type === "razor_pay" || type === "stripe") {
 				const res = await api.post<ISuccess<any>>(Routes.PAYMENT, {
 					membership_id: currentPlan?.id,
@@ -205,7 +206,7 @@ const Plans = () => {
 							type: Actions.SET_PAYMENT,
 							payload: {
 								type: type,
-								timestamp: moment().toDate(),
+								timestamp: moment().toDate()?.toString(),
 								status: null,
 							},
 						});
@@ -273,6 +274,21 @@ const Plans = () => {
 				theme: {
 					color: prefs?.color_primary?.value ?? "#fff",
 					backdrop_color: "rgba(0, 0, 0, 0.5)",
+				},
+				modal: {
+					escape: false,
+					animation: true,
+					backdropclose: false,
+					confirm_close: true,
+					ondismiss: (() => {
+						console.log("Cancelled");
+						handlePaymentConfirmation(
+							{
+								error: "Payment Cancelled",
+							},
+							"failure"
+						);
+					}) as any,
 				},
 			};
 
@@ -421,11 +437,42 @@ const Plans = () => {
 	return (
 		<>
 			<Grid container>
+				<Grid container className='d-center' my={10}>
+					<Grid item xs={12} sm={12} md={10} className='description'>
+						<div className='info'>
+							<Typography
+								variant='h5'
+								color='var(--website-secondary-color)'
+							>
+								Information
+							</Typography>
+						</div>
+						<span
+							style={{
+								color: "var(--website-secondary-color)",
+							}}
+						>
+							{pay_description}
+						</span>
+						{/* <Grid item className='contact-us-btn'>
+							<Button
+								title='Contact us'
+								onClickCapture={(e) => {
+									e.preventDefault();
+									navigate("/contact-us");
+								}}
+							/>
+						</Grid> */}
+					</Grid>
+				</Grid>
 				<Grid container className='plans-container'>
 					<Grid item xs={12} sm={12} md={6} mb={2}>
 						<Typography
 							variant='h2'
 							color='var(--website-secondary-color)'
+							style={{
+								textDecoration: "underline",
+							}}
 						>
 							Our Subscription Plans
 						</Typography>
@@ -476,15 +523,25 @@ const Plans = () => {
 								<Grid item className='plans-card-list'>
 									<ul>
 										{plans?.features?.map((f) => (
-											<li key={f}>
+											<li
+												key={f}
+												style={{
+													paddingLeft: "1rem",
+												}}
+											>
 												{d?.get_membership_features?.includes(
 													f
 												) ? (
-													<CheckCircleOutlineIcon color='success' />
+													f
 												) : (
-													<CancelOutlinedIcon className='cancel-icon' />
-												)}{" "}
-												{f}
+													<div
+														style={{
+															color: "transparent",
+														}}
+													>
+														.
+													</div>
+												)}
 											</li>
 										))}
 									</ul>
@@ -525,34 +582,6 @@ const Plans = () => {
 						</Grid>
 					))}
 				</Grid>
-				<Grid container className='d-center' my={10}>
-					<Grid item xs={12} sm={12} md={10} className='description'>
-						<div>
-							<Typography
-								variant='h5'
-								color='var(--website-secondary-color)'
-							>
-								Information
-							</Typography>
-						</div>
-						<span
-							style={{
-								color: "var(--website-secondary-color)",
-							}}
-						>
-							{pay_description}
-						</span>
-						<Grid item className='contact-us-btn'>
-							<Button
-								title='Contact us'
-								onClickCapture={(e) => {
-									e.preventDefault();
-									navigate("/contact-us");
-								}}
-							/>
-						</Grid>
-					</Grid>
-				</Grid>
 			</Grid>
 			<Modal
 				open={paymentGateways}
@@ -573,7 +602,7 @@ const Plans = () => {
 						>
 							<IconButton
 								onClickCapture={(e) => {
-									e.preventDefault;
+									e.preventDefault();
 									showPaymentGateways(false);
 									setCurrentPlan(undefined);
 								}}

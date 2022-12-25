@@ -90,7 +90,7 @@ const Upcoming = () => {
 							<Grid
 								item
 								xs={12}
-								sm={4}
+								sm={3}
 								mb={2}
 								className='movie-item-container'
 								sx={{

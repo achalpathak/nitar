@@ -130,19 +130,20 @@ input[type="number"] {
 }
 
 .login-btn {
-	padding: 6px 15px;
-	border: 1px solid var(--website-primary-color);
-	color: var(--website-primary-color);
+	padding: 6px 25px;
+	border: 1px solid var(--website-secondary-color);
+	color: var(--website-secondary-color);
 	text-transform: uppercase;
 	// background-color: rgba($color: #fff, $alpha: 0.15);
 	font-family: "Barlow Condensed";
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	border-radius: 5px;
 
 	&:hover {
-		color: var(--website-secondary-color);
-		box-shadow: 0px 0px 5px 1px var(--website-primary-color);
+		color: var(--website-primary-color);
+		border: 1px solid var(--website-primary-color);
 	}
 }
 
