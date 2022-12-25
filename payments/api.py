@@ -9,6 +9,7 @@ from .models import Order, PaymentStatus
 from users.models import Memberships
 from django.conf import settings
 from users.models import UserMemberships
+import traceback
 
 razorpay_client = razorpay.Client(
     auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET)
@@ -24,7 +25,6 @@ class InitiatePayments(APIView):
             membership_id = request.data["membership_id"]
             gateway = request.data["gateway"]
             user = request.user
-            print(user)
             if not user.phone_number:
                 return Response(
                     {"message": f"Phone number is not updated."},
@@ -115,6 +115,12 @@ class InitiatePayments(APIView):
                 {"message": f"{e} field is required."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+        except Exception as e:
+            traceback.print_exc()
+            return Response(
+                {"message": "Server Error. Contact Admin."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class RazorPayCallback(APIView):
@@ -183,5 +189,6 @@ class RazorPayCallback(APIView):
                 )
         except Exception as e:
             # for any error
+            traceback.print_exc()
             print("[x] Some other error", str(e))
             return Response({"result": "Failed"}, status=status.HTTP_400_BAD_REQUEST)
