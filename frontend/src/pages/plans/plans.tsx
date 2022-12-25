@@ -74,36 +74,7 @@ const Plans = () => {
 		phone: [],
 	});
 
-	const [otp, setOtp] = useState<string>("");
-	const [process, setProcess] = useState<"login" | "otp">("login");
-	const interval = useRef<NodeJS.Timer>();
-	const [timer, setTimer] = useState<number>(60);
-
 	const loading = useAppSelector((state) => state.loading);
-
-	const startTimer = () => {
-		setTimer(60);
-		const id = setInterval(() => {
-			setTimer((t) => t - 1);
-		}, 1000);
-
-		interval.current = id;
-	};
-
-	const stopTimer = () => {
-		clearInterval(interval.current);
-		interval.current = undefined;
-	};
-
-	useEffect(() => {
-		return () => stopTimer();
-	}, []);
-
-	useEffect(() => {
-		if (timer <= 0) {
-			stopTimer();
-		}
-	}, [timer]);
 
 	useEffect(() => {
 		(async () => {
@@ -355,61 +326,33 @@ const Plans = () => {
 		}
 	};
 
-	const sendOtp = async (phoneNum: string = phone) => {
+	const getUserInfo = async () => {
 		try {
-			const res = await api.post<IResponse>(Routes.SEND_OTP, {
-				phone: phoneNum,
-			});
-
-			if (res.status === 200) {
-				console.log("OTP Sent");
-				setProcess("otp");
-				showAlert("success", "Success", res?.data?.message);
-
-				startTimer();
-			}
-		} catch (error) {
-			const err = error as AxiosError<IResponse>;
-			const data = err?.response?.data;
-			if (data?.message) {
-				showAlert("error", "Error", data?.message);
-			} else if (data) {
-				setErrors(data);
-			}
-		}
-	};
-
-	const verifyOtp = async () => {
-		try {
-			const res = await api.post<IResponse<IUser>>(Routes.VERIFY_OTP, {
-				phone,
-				otp: parseInt(otp),
-			});
+			const res = await api.get<ISuccess<IUser>>(ApiRoutes.GET_USER_INFO);
 
 			if (res.status === 200) {
 				dispatch({
 					type: Actions.LOGIN,
 					payload: res.data?.result,
 				});
-				showPhoneVerification(false);
-				Swal.fire({
-					title: "Success",
-					text:
-						res.data?.message ??
-						"Phone Number Updated Successfully",
-					icon: "success",
-					confirmButtonText: "Continue to Payment",
-				}).then(async () => {
-					showPaymentGateways(true);
-				});
 			}
 		} catch (error) {
-			const err = error as AxiosError<IResponse>;
-			const data = err?.response?.data;
-			if (data?.message) {
-				showAlert("error", "Error", data?.message);
-			} else if (data) {
-				setErrors(data);
+			const err = error as AxiosError<ISuccess>;
+			console.error(err?.response);
+			if (user?.email) {
+				//Session Expired
+				Swal.fire({
+					title: "Session Expired",
+					text: "Please login again! Page will redirect to home in 5 seconds",
+					icon: "warning",
+				});
+				setTimeout(() => {
+					dispatch({
+						type: Actions.LOGOUT,
+					});
+					navigate("/");
+					Swal.close();
+				}, 5000);
 			}
 		}
 	};
@@ -422,7 +365,18 @@ const Plans = () => {
 			});
 
 			if (res.status === 200) {
-				sendOtp();
+				await getUserInfo();
+				showPhoneVerification(false);
+				Swal.fire({
+					title: "Success",
+					text:
+						res.data?.message ??
+						"Phone Number Updated Successfully",
+					icon: "success",
+					confirmButtonText: "Continue to Payment",
+				}).then(async () => {
+					showPaymentGateways(true);
+				});
 			}
 		} catch (error) {
 			const err = error as AxiosError<IResponse>;
@@ -525,7 +479,7 @@ const Plans = () => {
 													}
 												});
 											} else {
-												if (!user.phone_verified) {
+												if (!user.phone) {
 													showPhoneVerification(true);
 												} else {
 													console.log(
@@ -744,97 +698,61 @@ const Plans = () => {
 							paddingBottom={4}
 						>
 							<div className='d-center flex-column'>
-								{process === "login" ? (
-									<>
-										<Typography variant='h6'>
-											Update your phone number
-										</Typography>
-										<Box className='d-center flex-column'>
-											<Select<ICountryList, false>
-												name='country'
-												id='country'
-												closeMenuOnSelect={true}
-												className='w-100'
-												components={animatedComponents}
-												isMulti={false}
-												isSearchable
-												options={countries}
-												value={country}
-												onChange={(newValue) => {
-													if (newValue) {
-														setCountry(newValue);
-													}
-												}}
-												noOptionsMessage={() => (
-													<Box>No results found</Box>
-												)}
-												getOptionLabel={(option) =>
-													`(${option.code}) ${option.name}`
-												}
-												getOptionValue={(option) =>
-													option.name
-												}
-												filterOption={(option, input) =>
-													option.label
-														?.toLowerCase()
-														.includes(
-															input?.toLowerCase()
-														)
-												}
-												styles={CustomSelectUtils.customStyles()}
-											/>
-											<CustomInput
-												type='number'
-												id='phone'
-												name='phone'
-												placeholder='Enter your Phone Number'
-												value={phone}
-												onChangeCapture={(
-													e: ChangeEvent<HTMLInputElement>
-												) => {
-													const phoneNum =
-														e.target.value;
-													if (
-														phoneNum.length <= 10 &&
-														!isNaN(
-															parseInt(phoneNum)
-														)
-													) {
-														setPhone(phoneNum);
-													}
-												}}
-												errors={errors?.phone}
-											/>
-										</Box>
-									</>
-								) : (
-									<div className='d-center flex-column'>
-										<label>
-											Enter verification code sent on your
-											mobile number
-										</label>
-										<OtpInput
-											value={otp}
-											onChange={setOtp}
-											numInputs={6}
-											// isInputSecure={true}
-											inputStyle={{
-												width: "2rem",
-												height: "2rem",
-												padding: 5,
-												backgroundSize: "cover",
-											}}
-											className='otp-container'
-											isInputNum
-										/>
-									</div>
-								)}
+								<Typography variant='h6'>
+									Update your phone number
+								</Typography>
+								<Box className='d-center flex-column'>
+									<Select<ICountryList, false>
+										name='country'
+										id='country'
+										closeMenuOnSelect={true}
+										className='w-100'
+										components={animatedComponents}
+										isMulti={false}
+										isSearchable
+										options={countries}
+										value={country}
+										onChange={(newValue) => {
+											if (newValue) {
+												setCountry(newValue);
+											}
+										}}
+										noOptionsMessage={() => (
+											<Box>No results found</Box>
+										)}
+										getOptionLabel={(option) =>
+											`(${option.code}) ${option.name}`
+										}
+										getOptionValue={(option) => option.name}
+										filterOption={(option, input) =>
+											option.label
+												?.toLowerCase()
+												.includes(input?.toLowerCase())
+										}
+										styles={CustomSelectUtils.customStyles()}
+									/>
+									<CustomInput
+										type='number'
+										id='phone'
+										name='phone'
+										placeholder='Enter your Phone Number'
+										value={phone}
+										onChangeCapture={(
+											e: ChangeEvent<HTMLInputElement>
+										) => {
+											const phoneNum = e.target.value;
+											if (
+												phoneNum.length <= 10 &&
+												!isNaN(parseInt(phoneNum))
+											) {
+												setPhone(phoneNum);
+											}
+										}}
+										errors={errors?.phone}
+									/>
+								</Box>
 								<Button
-									title={
-										process === "login"
-											? "CONTINUE"
-											: "VERIFY"
-									}
+									title='CONTINUE'
 									style={{
 										fontFamily: "Barlow Condensed",
 										marginTop: "1rem",
@@ -843,11 +761,7 @@ const Plans = () => {
 										e: MouseEvent<HTMLButtonElement>
 									) => {
 										e.preventDefault();
-										if (process === "login") {
-											updatePhone();
-										} else {
-											verifyOtp();
-										}
+										updatePhone();
 									}}
 								/>
 							</div>

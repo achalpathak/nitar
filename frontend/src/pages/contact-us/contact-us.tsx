@@ -109,8 +109,11 @@ const ContactUs = () => {
 						item
 						xs={12}
 						sm={10}
-						md={5}
-						xl={4}
+						md={6}
+						xl={6}
+						style={{
+							maxWidth: "1000px",
+						}}
 						className='input-items'
 					>
 						<Grid container className='input d-center'>
