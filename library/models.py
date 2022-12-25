@@ -5,8 +5,6 @@ from django.contrib.contenttypes.fields import GenericRelation, GenericForeignKe
 from settings.models import AgeChoices, LanguageChoices
 from django.core.exceptions import ValidationError
 from . import utils
-from django.dispatch import receiver
-from django.db.models import signals
 
 BANNER_DEFAULT = "Banner Default"
 POSTER_DEFAULT = "poster_small_vertical_image"
@@ -189,6 +187,11 @@ class Movies(TimeStampedModel):
     class Meta:
         verbose_name_plural = "Movies"
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = utils.unique_slug_generator(self)
+        super(Movies, self).save(*args, **kwargs)
+
 
 class Series(TimeStampedModel):
     name = models.CharField(max_length=255, null=True, blank=True)
@@ -236,6 +239,11 @@ class Series(TimeStampedModel):
 
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = utils.unique_slug_generator(self)
+        super(Series, self).save(*args, **kwargs)
 
 
 class Episodes(TimeStampedModel):
@@ -283,6 +291,10 @@ class Episodes(TimeStampedModel):
     class Meta:
         verbose_name_plural = "Episodes"
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = utils.unique_slug_generator(self, episodes=True)
+        super(Episodes, self).save(*args, **kwargs)
 
 class CategoryMovieSeriesMapping(TimeStampedModel):
     movies = models.ForeignKey(Movies, null=True, blank=True, on_delete=models.CASCADE)
@@ -362,6 +374,12 @@ class Extras(TimeStampedModel):
 
     class Meta:
         verbose_name_plural = "Extras"
+    
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = utils.unique_slug_generator(self)
+        super(Extras, self).save(*args, **kwargs)
 
 
 class Upcoming(TimeStampedModel):
@@ -410,6 +428,11 @@ class Upcoming(TimeStampedModel):
 
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = utils.unique_slug_generator(self)
+        super(Upcoming, self).save(*args, **kwargs)
 
 
 class NewsLetterSubscription(TimeStampedModel):
@@ -418,33 +441,3 @@ class NewsLetterSubscription(TimeStampedModel):
 
     def __str__(self):
         return self.email
-
-
-@receiver(signals.pre_save, sender=Movies)
-def populate_slug(sender, instance, **kwargs):
-    if not instance.slug:
-        instance.slug = utils.unique_slug_generator(instance)
-
-
-@receiver(signals.pre_save, sender=Series)
-def populate_slug(sender, instance, **kwargs):
-    if not instance.slug:
-        instance.slug = utils.unique_slug_generator(instance)
-
-
-@receiver(signals.pre_save, sender=Extras)
-def populate_slug(sender, instance, **kwargs):
-    if not instance.slug:
-        instance.slug = utils.unique_slug_generator(instance)
-
-
-@receiver(signals.pre_save, sender=Episodes)
-def populate_slug(sender, instance, **kwargs):
-    if not instance.slug:
-        instance.slug = utils.unique_slug_generator(instance, episodes=True)
-
-
-@receiver(signals.pre_save, sender=Upcoming)
-def populate_slug(sender, instance, **kwargs):
-    if not instance.slug:
-        instance.slug = utils.unique_slug_generator(instance)

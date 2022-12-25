@@ -5,8 +5,6 @@ from django.contrib.auth.models import User, AbstractUser, BaseUserManager
 
 from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
-from django.dispatch import receiver
-from django.db.models import signals
 from django.utils import timezone
 from datetime import timedelta
 import json
@@ -194,12 +192,11 @@ class UserMemberships(TimeStampedModel):
 
     class Meta:
         verbose_name_plural = "User Memberships"
-
-
-@receiver(signals.pre_save, sender=UserMemberships)
-def populate_slug(sender, instance, **kwargs):
-    if not instance.expiry_at:
-        plan_expiry = timezone.now() + timedelta(
-            days=instance.membership.validity_in_days
-        )
-        instance.expiry_at = plan_expiry
+        
+    def save(self, *args, **kwargs):
+        if not self.expiry_at:
+            plan_expiry = timezone.now() + timedelta(
+                days=self.membership.validity_in_days
+            )
+            self.expiry_at = plan_expiry
+        super(UserMemberships, self).save(*args, **kwargs)
