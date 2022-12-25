@@ -104,7 +104,7 @@ const ContactUs = () => {
 					submitForm(e);
 				}}
 			>
-				<Grid container className='input-container d-center'>
+				<Grid container className='input-container contact-us d-center'>
 					<Grid
 						item
 						xs={12}
