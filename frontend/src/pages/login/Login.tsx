@@ -229,6 +229,7 @@ const Login = () => {
 								<label
 									style={{
 										textAlign: "center",
+										whiteSpace: "nowrap",
 									}}
 								>
 									Enter your phone number below to continue
@@ -260,7 +261,7 @@ const Login = () => {
 									errors={errors?.password}
 								/>
 							</Grid>
-							<Grid item xs={12} className='d-center'>
+							<Grid item xs={12} mt={2} className='d-center'>
 								<Typography mt={1}>
 									<>
 										Don't have an account?{" "}

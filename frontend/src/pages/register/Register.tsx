@@ -220,6 +220,7 @@ const Register = () => {
 						<label
 							style={{
 								textAlign: "center",
+								whiteSpace: "nowrap",
 							}}
 						>
 							Fill your details to register
@@ -452,7 +453,7 @@ const Register = () => {
 							}}
 						/>
 					</Grid>
-					<Grid item xs={12} className='d-center'>
+					<Grid item xs={12} mt={2} className='d-center'>
 						<Typography mt={2}>
 							<>
 								Already have an account?{" "}

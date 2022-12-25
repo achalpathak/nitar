@@ -191,6 +191,8 @@ const Plans = () => {
 	const initiatePayment = async (type: IPaymentGateways) => {
 		try {
 			showRenderingGateway(true);
+			showPaymentGateways(false);
+
 			if (type === "razor_pay" || type === "stripe") {
 				const res = await api.post<ISuccess<any>>(Routes.PAYMENT, {
 					membership_id: currentPlan?.id,
@@ -205,7 +207,7 @@ const Plans = () => {
 							type: Actions.SET_PAYMENT,
 							payload: {
 								type: type,
-								timestamp: moment().toDate(),
+								timestamp: moment().toDate()?.toString(),
 								status: null,
 							},
 						});
@@ -273,6 +275,21 @@ const Plans = () => {
 				theme: {
 					color: prefs?.color_primary?.value ?? "#fff",
 					backdrop_color: "rgba(0, 0, 0, 0.5)",
+				},
+				modal: {
+					escape: false,
+					animation: true,
+					backdropclose: false,
+					confirm_close: true,
+					ondismiss: (() => {
+						console.log("Cancelled");
+						handlePaymentConfirmation(
+							{
+								error: "Payment Cancelled",
+							},
+							"failure"
+						);
+					}) as any,
 				},
 			};
 
@@ -573,7 +590,7 @@ const Plans = () => {
 						>
 							<IconButton
 								onClickCapture={(e) => {
-									e.preventDefault;
+									e.preventDefault();
 									showPaymentGateways(false);
 									setCurrentPlan(undefined);
 								}}
@@ -630,7 +647,7 @@ const Plans = () => {
 									{prefs?.razor_pay?.toggle_value ? (
 										<IconButton
 											onClickCapture={(e) => {
-												e.preventDefault;
+												e.preventDefault();
 												initiatePayment("razor_pay");
 											}}
 											className='custom-btn d-flex w-100'
@@ -653,7 +670,7 @@ const Plans = () => {
 									{prefs?.paytm?.toggle_value ? (
 										<IconButton
 											onClickCapture={(e) => {
-												e.preventDefault;
+												e.preventDefault();
 												initiatePayment("paytm");
 											}}
 											className='custom-btn d-flex w-100'
@@ -676,7 +693,7 @@ const Plans = () => {
 									{prefs?.stripe?.toggle_value ? (
 										<IconButton
 											onClickCapture={(e) => {
-												e.preventDefault;
+												e.preventDefault();
 												initiatePayment("stripe");
 											}}
 											className='custom-btn d-flex w-100'
