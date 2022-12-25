@@ -1,7 +1,7 @@
 bind = "0.0.0.0:8000"
 wsgi_app = "config.wsgi:application"
 loglevel = "info"
-accesslog = errorlog = "/var/log/gunicorn_logs.log"
+accesslog = errorlog = "logs/gunicorn_logs.log"
 capture_output = True
 pidfile = "/tmp/gunicorn.pid"
 reuse_port = True
