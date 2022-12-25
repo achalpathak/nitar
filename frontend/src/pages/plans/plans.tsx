@@ -659,7 +659,7 @@ const Plans = () => {
 									{prefs?.razor_pay?.toggle_value ? (
 										<IconButton
 											onClickCapture={(e) => {
-												e.preventDefault;
+												e.preventDefault();
 												initiatePayment("razor_pay");
 											}}
 											className='custom-btn d-flex w-100'
@@ -682,7 +682,7 @@ const Plans = () => {
 									{prefs?.paytm?.toggle_value ? (
 										<IconButton
 											onClickCapture={(e) => {
-												e.preventDefault;
+												e.preventDefault();
 												initiatePayment("paytm");
 											}}
 											className='custom-btn d-flex w-100'
@@ -705,7 +705,7 @@ const Plans = () => {
 									{prefs?.stripe?.toggle_value ? (
 										<IconButton
 											onClickCapture={(e) => {
-												e.preventDefault;
+												e.preventDefault();
 												initiatePayment("stripe");
 											}}
 											className='custom-btn d-flex w-100'
