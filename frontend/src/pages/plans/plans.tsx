@@ -326,7 +326,7 @@ const Plans = () => {
 
 	const getUserInfo = async () => {
 		try {
-			const res = await api.get<ISuccess<IUser>>(ApiRoutes.GET_USER_INFO);
+			const res = await api.get<ISuccess<IUser>>(Routes.GET_USER_INFO);
 
 			if (res.status === 200) {
 				dispatch({
