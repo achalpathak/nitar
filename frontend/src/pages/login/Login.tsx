@@ -40,7 +40,6 @@ const Login = () => {
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 
-	const [message, setMessage] = useState<IMessage | null>(null);
 	const [errors, setErrors] = useState<IError>({
 		full_name: [],
 		email: [],
@@ -192,7 +191,15 @@ const Login = () => {
 			console.log(location);
 			setEmail(location?.state?.email);
 			setPassword(location?.state?.password);
-			sendOtp(location?.state?.email);
+
+			// Otp is send using backend for register flow
+			showAlert(
+				"success",
+				"Success",
+				"OTP is sent on email. Valid for next 15minutes."
+			);
+
+			startTimer();
 		}
 	}, []);
 
