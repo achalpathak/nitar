@@ -3,7 +3,7 @@ from random import randint
 from datetime import datetime, timedelta
 from django.utils import timezone
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate, update_session_auth_hash
 import jwt
 from library import utils
 from . import models as user_models
@@ -12,7 +12,6 @@ from django.conf import settings
 
 User = get_user_model()
 from django.contrib.auth.models import AnonymousUser
-from django.contrib.auth import authenticate
 from config.mail import send_email_otp, send_email_forgot_password
 
 
