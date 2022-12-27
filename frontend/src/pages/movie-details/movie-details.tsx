@@ -103,184 +103,6 @@ const MovieDetails = (props: any) => {
 						alignSelf: "center",
 					}}
 				>
-					<Grid
-						container
-						display='flex'
-						sx={{
-							paddingLeft: {
-								md: "10rem",
-							},
-							justifyContent: {
-								xs: "center",
-								md: "flex-start",
-							},
-						}}
-					>
-						<Grid
-							item
-							xs={11}
-							sm={8}
-							md={6}
-							sx={{
-								backgroundColor: "rgba(0,0,0,0.7)",
-								maxHeight: "600px",
-								maxWidth: "550px",
-							}}
-							p={4}
-						>
-							<Grid item xs={12}>
-								<Typography
-									fontFamily='Playfair Display'
-									fontSize={40}
-								>
-									{movie?.name}
-								</Typography>
-							</Grid>
-							<Grid item xs={12} my={1}>
-								<Typography fontFamily='inter' fontSize={16}>
-									{movie?.description}
-								</Typography>
-							</Grid>
-							<Grid item xs={12} my={1}>
-								<Box display='flex'>
-									<Box
-										mr={2}
-										className='genre'
-										sx={{
-											backgroundColor: "black",
-										}}
-										p={1}
-									>
-										<Typography
-											fontFamily='Barlow Condensed'
-											fontSize={16}
-										>
-											{movie?.age_rating}
-										</Typography>
-									</Box>
-									{movie?.genres?.map((g, i) => (
-										<Box
-											key={g?.id}
-											mr={2}
-											className='genre'
-											sx={{
-												backgroundColor: "black",
-											}}
-											p={1}
-										>
-											<Typography
-												fontFamily='Barlow Condensed'
-												fontSize={16}
-											>
-												{g?.name}
-											</Typography>
-										</Box>
-									))}
-								</Box>
-							</Grid>
-							<Grid item xs={12}>
-								<Grid container>
-									{movie?.director_name ? (
-										<Grid item xs={4}>
-											<Box
-												display='flex'
-												flexDirection='column'
-											>
-												<Typography
-													variant='h5'
-													fontFamily='Barlow Condensed'
-												>
-													Director
-												</Typography>
-												<Typography>
-													{movie?.director_name ?? ""}
-												</Typography>
-											</Box>
-										</Grid>
-									) : null}
-									{movie?.language ? (
-										<Grid item xs={4}>
-											<Box
-												display='flex'
-												flexDirection='column'
-											>
-												<Typography
-													variant='h5'
-													fontFamily='Barlow Condensed'
-												>
-													Language
-												</Typography>
-												<Typography>
-													{movie?.language ?? ""}
-												</Typography>
-											</Box>
-										</Grid>
-									) : null}
-								</Grid>
-							</Grid>
-							<Grid item xs={12} my={1}>
-								{movie?.star_cast ? (
-									<Grid container>
-										<Typography
-											variant='h5'
-											fontFamily='Barlow Condensed'
-											mb={1}
-										>
-											Star Cast
-										</Typography>
-										<Grid item xs={12}>
-											<Grid container>
-												{movie?.star_cast
-													?.split(",")
-													?.map((sc, sc_i) => (
-														<Grid item xs={6}>
-															<Typography
-																key={sc_i}
-															>
-																{sc?.trim()}
-															</Typography>
-														</Grid>
-													))}
-											</Grid>
-										</Grid>
-									</Grid>
-								) : null}
-							</Grid>
-							<Grid item xs={12} my={1}>
-								<a
-									style={{
-										color: "var(--website-secondary-color)",
-										cursor: "pointer",
-									}}
-									onClickCapture={(e) => {
-										e.preventDefault();
-										if (movie?.trailer_link) {
-											console.log("Watching Trailer");
-											setShowTrailer(true);
-										} else {
-											Swal.fire({
-												title: "Trailer not available",
-												text: "Please contact admin",
-												icon: "warning",
-												allowOutsideClick: () => true,
-											});
-										}
-									}}
-								>
-									<Grid container>
-										<Grid item mr={1}>
-											<PlayCircleOutlineOutlined />
-										</Grid>
-										<Grid item>
-											<Typography fontFamily='Barlow Condensed'>
-												Watch Trailer
-											</Typography>
-										</Grid>
-									</Grid>
-								</a>
-							</Grid>
-						</Grid>
-					</Grid>
 					<Box
 						sx={{
 							position: "absolute",
@@ -388,6 +210,182 @@ const MovieDetails = (props: any) => {
 							/>
 						</a>
 					</Box>
+				</Grid>
+				<Grid
+					container
+					display='flex'
+					sx={{
+						paddingLeft: {
+							md: "10rem",
+						},
+						justifyContent: {
+							xs: "center",
+							md: "flex-start",
+						},
+					}}
+				>
+					<Grid
+						item
+						xs={11}
+						sm={8}
+						md={6}
+						sx={{
+							// backgroundColor: "rgba(0,0,0,0.7)",
+							maxHeight: "600px",
+							maxWidth: "550px",
+						}}
+						p={4}
+					>
+						<Grid item xs={12}>
+							<Typography
+								fontFamily='Playfair Display'
+								fontSize={40}
+							>
+								{movie?.name}
+							</Typography>
+						</Grid>
+						<Grid item xs={12} my={1}>
+							<Typography fontFamily='inter' fontSize={16}>
+								{movie?.description}
+							</Typography>
+						</Grid>
+						<Grid item xs={12} my={1}>
+							<Box display='flex'>
+								<Box
+									mr={2}
+									className='genre'
+									sx={{
+										backgroundColor: "black",
+									}}
+									p={1}
+								>
+									<Typography
+										fontFamily='Barlow Condensed'
+										fontSize={16}
+									>
+										{movie?.age_rating}
+									</Typography>
+								</Box>
+								{movie?.genres?.map((g, i) => (
+									<Box
+										key={g?.id}
+										mr={2}
+										className='genre'
+										sx={{
+											backgroundColor: "black",
+										}}
+										p={1}
+									>
+										<Typography
+											fontFamily='Barlow Condensed'
+											fontSize={16}
+										>
+											{g?.name}
+										</Typography>
+									</Box>
+								))}
+							</Box>
+						</Grid>
+						<Grid item xs={12}>
+							<Grid container>
+								{movie?.director_name ? (
+									<Grid item xs={4}>
+										<Box
+											display='flex'
+											flexDirection='column'
+										>
+											<Typography
+												variant='h5'
+												fontFamily='Barlow Condensed'
+											>
+												Director
+											</Typography>
+											<Typography>
+												{movie?.director_name ?? ""}
+											</Typography>
+										</Box>
+									</Grid>
+								) : null}
+								{movie?.language ? (
+									<Grid item xs={4}>
+										<Box
+											display='flex'
+											flexDirection='column'
+										>
+											<Typography
+												variant='h5'
+												fontFamily='Barlow Condensed'
+											>
+												Language
+											</Typography>
+											<Typography>
+												{movie?.language ?? ""}
+											</Typography>
+										</Box>
+									</Grid>
+								) : null}
+							</Grid>
+						</Grid>
+						<Grid item xs={12} my={1}>
+							{movie?.star_cast ? (
+								<Grid container>
+									<Typography
+										variant='h5'
+										fontFamily='Barlow Condensed'
+										mb={1}
+									>
+										Star Cast
+									</Typography>
+									<Grid item xs={12}>
+										<Grid container>
+											{movie?.star_cast
+												?.split(",")
+												?.map((sc, sc_i) => (
+													<Grid item xs={6}>
+														<Typography key={sc_i}>
+															{sc?.trim()}
+														</Typography>
+													</Grid>
+												))}
+										</Grid>
+									</Grid>
+								</Grid>
+							) : null}
+						</Grid>
+						<Grid item xs={12} my={1}>
+							<a
+								style={{
+									color: "var(--website-secondary-color)",
+									cursor: "pointer",
+								}}
+								onClickCapture={(e) => {
+									e.preventDefault();
+									if (movie?.trailer_link) {
+										console.log("Watching Trailer");
+										setShowTrailer(true);
+									} else {
+										Swal.fire({
+											title: "Trailer not available",
+											text: "Please contact admin",
+											icon: "warning",
+											allowOutsideClick: () => true,
+										});
+									}
+								}}
+							>
+								<Grid container>
+									<Grid item mr={1}>
+										<PlayCircleOutlineOutlined />
+									</Grid>
+									<Grid item>
+										<Typography fontFamily='Barlow Condensed'>
+											Watch Trailer
+										</Typography>
+									</Grid>
+								</Grid>
+							</a>
+						</Grid>
+					</Grid>
 				</Grid>
 				<Grid item xs={12}>
 					{similarMovies ? (

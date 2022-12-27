@@ -62,28 +62,7 @@ const BannerCarousel: FC = () => {
 				}}
 				className='banner-container'
 			>
-				<Slider
-					autoplay={2000}
-					infinite
-					previousButton={
-						<ChevronLeftOutlined
-							style={{
-								width: "2rem",
-								height: "2rem",
-								color: "var(--website-secondary-color)",
-							}}
-						/>
-					}
-					nextButton={
-						<ChevronRightOutlined
-							style={{
-								width: "2rem",
-								height: "2rem",
-								color: "var(--website-secondary-color)",
-							}}
-						/>
-					}
-				>
+				<Slider autoplay={2000} infinite>
 					{banner?.poster_banner?.map((item, index) => (
 						<div className='slider-content d-center'>
 							<Link

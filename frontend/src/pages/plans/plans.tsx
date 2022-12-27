@@ -390,34 +390,6 @@ const Plans = () => {
 	return (
 		<>
 			<Grid container>
-				<Grid container className='d-center' my={10}>
-					<Grid item xs={12} sm={12} md={10} className='description'>
-						<div className='info'>
-							<Typography
-								variant='h5'
-								color='var(--website-secondary-color)'
-							>
-								Information
-							</Typography>
-						</div>
-						<span
-							style={{
-								color: "var(--website-secondary-color)",
-							}}
-						>
-							{pay_description}
-						</span>
-						{/* <Grid item className='contact-us-btn'>
-							<Button
-								title='Contact us'
-								onClickCapture={(e) => {
-									e.preventDefault();
-									navigate("/contact-us");
-								}}
-							/>
-						</Grid> */}
-					</Grid>
-				</Grid>
 				<Grid container className='plans-container'>
 					<Grid item xs={12} sm={12} md={6} mb={2}>
 						<Typography
@@ -427,7 +399,7 @@ const Plans = () => {
 								textDecoration: "underline",
 							}}
 						>
-							Our Subscription Plans
+							Choose Subscription Plan
 						</Typography>
 					</Grid>
 				</Grid>

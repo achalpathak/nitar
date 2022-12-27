@@ -262,6 +262,7 @@ const ContactUs = () => {
 										display='flex'
 										flexDirection='column'
 										className='call-button'
+										visibility='hidden'
 										mb={2}
 									>
 										<a href={`tel:${prefs?.phone?.value}`}>
@@ -277,6 +278,7 @@ const ContactUs = () => {
 										display='flex'
 										flexDirection='column'
 										className='call-button'
+										visibility='hidden'
 									>
 										<a
 											href={`mailto:${prefs?.email?.value}`}

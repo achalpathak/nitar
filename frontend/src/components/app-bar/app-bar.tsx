@@ -61,12 +61,8 @@ let routes: IRoutes[] = [
 		path: "/upcoming",
 	},
 	{
-		title: "Plans",
+		title: "Subscribe",
 		path: "/plans",
-	},
-	{
-		title: "Contact Us",
-		path: "/contact-us",
 	},
 ];
 

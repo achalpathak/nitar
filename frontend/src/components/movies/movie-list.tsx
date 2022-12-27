@@ -57,7 +57,6 @@ const MovieList: FC<IMovieListProps> = ({
 			container
 			display='flex'
 			alignItems='center'
-			// justifyContent='flex-end'
 			mt={5}
 			className='movie-list'
 			maxWidth='100vw'
@@ -65,13 +64,8 @@ const MovieList: FC<IMovieListProps> = ({
 			<Grid item xs={12}>
 				<Grid container display='flex' justifyContent='center'>
 					<Grid item xs={10}>
-						<Grid
-							container
-							display='flex'
-							alignItems='cener'
-							justifyContent='space-between'
-						>
-							<Grid item>
+						<Grid container display='flex' alignItems='center'>
+							<Grid item mr={2}>
 								<Typography
 									fontSize={25}
 									fontFamily='Barlow Condensed'

@@ -35,25 +35,19 @@ const Footer = () => {
 		prefs?.youtube?.value,
 		prefs?.instagram?.value,
 	];
-	// useEffect(() => {
-	// 	(async () => {
-	// 		try {
-	// 			const res = await api.get<ISuccess>(Routes.ABOUT_US);
-
-	// 			if (res.status === 200) {
-	// 				setHtml(res.data?.message);
-	// 			}
-	// 		} catch (error) {
-	// 			const err = error as AxiosError<IError>;
-	// 			console.log(err.response?.data);
-	// 		}
-	// 	})();
-	// }, []);
 
 	return (
 		<>
 			<div className='footer-main-container'>
-				<Grid container my={3}>
+				<Grid
+					container
+					py={3}
+					sx={{
+						backgroundColor: "var(--website-primary-color)",
+						borderTopLeftRadius: "20px",
+						borderTopRightRadius: "20px",
+					}}
+				>
 					<Grid item xs={12} md={6}>
 						<div className='about-us-container'>
 							<div className='logo-container flex-row'>
@@ -106,9 +100,9 @@ const Footer = () => {
 										<a href={playstore} target='_blank'>
 											<GooglePlay height={40} />
 										</a>
-										<a href={appstore} target='_blank'>
+										{/* <a href={appstore} target='_blank'>
 											<AppStore height={40} />
-										</a>
+										</a> */}
 									</div>
 								)}
 								<div
@@ -139,6 +133,28 @@ const Footer = () => {
 											</a>
 										)}
 									</div>
+								</div>
+								<div>
+									<a
+										href={`tel:${prefs?.phone?.value}`}
+										style={{
+											color: "white",
+											display: "block",
+											textAlign: "center",
+										}}
+									>
+										Call On: {prefs?.phone?.value}
+									</a>
+									<a
+										href={`mailto:${prefs?.email?.value}`}
+										style={{
+											color: "white",
+											display: "block",
+											textAlign: "center",
+										}}
+									>
+										Email: {prefs?.email?.value}
+									</a>
 								</div>
 							</div>
 						</div>
