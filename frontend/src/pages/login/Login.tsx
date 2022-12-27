@@ -240,7 +240,8 @@ const Login = () => {
 										whiteSpace: "nowrap",
 									}}
 								>
-									Enter your phone number below to continue
+									Enter your email and password below to
+									continue
 								</label>
 								<CustomInput
 									type='email'
