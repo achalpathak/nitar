@@ -1,6 +1,6 @@
 import json
 from django.contrib.auth import login
-from rest_framework import status
+from rest_framework import status, exceptions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from . import models as user_models
@@ -15,6 +15,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from rest_framework.authtoken.models import Token
 import traceback
+
 User = get_user_model()
 
 GOOGLE_DTO = settings.GOOGLE_DTO
@@ -27,210 +28,148 @@ class RegisterUser(APIView):
     serializer_class = user_serializers.RegisterUserSerializer
 
     def post(self, request):
-        try:
-            serialized_data = self.serializer_class(data=self.request.data)
-            if serialized_data.is_valid(raise_exception=True):
-                serialized_data.save()
-            return Response(
-                {
-                    "message": "User is registered. OTP is sent on email. Valid for next 15minutes."
-                }
-            )
-        except Exception as e:
-            traceback.print_exc()
-            return Response(
-                {"message": "Server Error. Contact Admin."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        serialized_data = self.serializer_class(data=self.request.data)
+        if serialized_data.is_valid(raise_exception=True):
+            serialized_data.save()
+        return Response(
+            {
+                "message": "User is registered. OTP is sent on email. Valid for next 15minutes."
+            }
+        )
 
 
 class SendOTP(APIView):
     serializer_class = user_serializers.EmailOtpSerializer
 
     def post(self, request):
-        try:
-            serialized_data = self.serializer_class(data=self.request.data)
-            if serialized_data.is_valid(raise_exception=True):
-                serialized_data.save()
-            return Response({"message": f"OTP is sent on email. Valid for next 15minutes."})
-        except Exception as e:
-            traceback.print_exc()
-            return Response(
-                {"message": "Server Error. Contact Admin."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
+        serialized_data = self.serializer_class(data=self.request.data)
+        if serialized_data.is_valid(raise_exception=True):
+            serialized_data.save()
+        return Response(
+            {"message": f"OTP is sent on email. Valid for next 15minutes."}
+        )
 
 class UpdatePhoneAPI(APIView):
     serializer_class = user_serializers.UpdatePhoneSerializer
 
     def post(self, request):
-        try:
-            serialized_data = self.serializer_class(
-                data=self.request.data, context={"request": request}
-            )
-            if serialized_data.is_valid(raise_exception=True):
-                serialized_data.save()
-                return Response({"message": f"Phone number is updated."})
-            return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            traceback.print_exc()
-            return Response(
-                {"message": "Server Error. Contact Admin."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        serialized_data = self.serializer_class(
+            data=self.request.data, context={"request": request}
+        )
+        if serialized_data.is_valid(raise_exception=True):
+            serialized_data.save()
+            return Response({"message": f"Phone number is updated."})
+        return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UpdatePasswordAPI(APIView):
     serializer_class = user_serializers.UpdatePasswordSerializer
 
     def post(self, request):
-        try:
-            serialized_data = self.serializer_class(
-                data=self.request.data, context={"request": request}
-            )
-            if serialized_data.is_valid(raise_exception=True):
-                serialized_data.save()
-                return Response({"message": f"Password has been updated."})
-            return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            traceback.print_exc()
-            return Response(
-                {"message": "Server Error. Contact Admin."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        serialized_data = self.serializer_class(
+            data=self.request.data, context={"request": request}
+        )
+        if serialized_data.is_valid(raise_exception=True):
+            serialized_data.save()
+            return Response({"message": f"Password has been updated."})
+        return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ForgotPasswordSendEmailAPI(APIView):
     serializer_class = user_serializers.ForgotPasswordSendEmailSerializer
 
     def post(self, request):
-        try:
-            serialized_data = self.serializer_class(data=self.request.data)
-            if serialized_data.is_valid(raise_exception=True):
-                serialized_data.save()
-                return Response(
-                    {
-                        "message": f"Password reset link send, please check your mailbox. Link is valid for 1hr."
-                    }
-                )
-            return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            traceback.print_exc()
+        serialized_data = self.serializer_class(data=self.request.data)
+        if serialized_data.is_valid(raise_exception=True):
+            serialized_data.save()
             return Response(
-                {"message": "Server Error. Contact Admin."},
-                status=status.HTTP_400_BAD_REQUEST,
+                {
+                    "message": f"Password reset link send, please check your mailbox. Link is valid for 1hr."
+                }
             )
+        return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ForgotPasswordVerifyAPI(APIView):
     serializer_class = user_serializers.ForgotPasswordVerifySerializer
 
     def post(self, request):
-        try:
-            serialized_data = self.serializer_class(data=self.request.data)
-            if serialized_data.is_valid(raise_exception=True):
-                serialized_data.save()
-                return Response({"message": f"Password has been updated."})
-            return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            traceback.print_exc()
-            return Response(
-                {"message": "Server Error. Contact Admin."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        serialized_data = self.serializer_class(data=self.request.data)
+        if serialized_data.is_valid(raise_exception=True):
+            serialized_data.save()
+            return Response({"message": f"Password has been updated."})
+        return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class VerifyOTP(APIView):
     serializer_class = user_serializers.VerifyOtpSerializer
 
     def post(self, request):
-        try:
-            serialized_data = self.serializer_class(data=self.request.data)
-            if serialized_data.is_valid(raise_exception=True):
-                user_obj = serialized_data.save()
-                data = {
-                    "result": {
-                        "full_name": user_obj.full_name,
-                        "phone": user_obj.phone,
-                        "phone_code": user_obj.phone_code,
-                        "phone_verified": user_obj.phone_verified,
-                        "email_verified": user_obj.email_verified,
-                        "email": user_obj.email,
-                        "has_active_membership": user_obj.has_active_membership,
-                    }
+        serialized_data = self.serializer_class(data=self.request.data)
+        if serialized_data.is_valid(raise_exception=True):
+            user_obj = serialized_data.save()
+            data = {
+                "result": {
+                    "full_name": user_obj.full_name,
+                    "phone": user_obj.phone,
+                    "phone_code": user_obj.phone_code,
+                    "phone_verified": user_obj.phone_verified,
+                    "email_verified": user_obj.email_verified,
+                    "email": user_obj.email,
+                    "has_active_membership": user_obj.has_active_membership,
                 }
-                if self.request.data.get("device_type") == "mobile":
-                    token, created = Token.objects.get_or_create(user=user_obj)
-                    data["result"]["token"] = token.key
-                else:
-                    login(
-                        request,
-                        user_obj,
-                        backend="django.contrib.auth.backends.ModelBackend",
-                    )
-                return Response(data)
-            return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            traceback.print_exc()
-            return Response(
-                {"message": "Server Error. Contact Admin."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
+            }
+            if self.request.data.get("device_type") == "mobile":
+                token, created = Token.objects.get_or_create(user=user_obj)
+                data["result"]["token"] = token.key
+            else:
+                login(
+                    request,
+                    user_obj,
+                    backend="django.contrib.auth.backends.ModelBackend",
+                )
+            return Response(data)
+        return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginAPI(APIView):
     serializer_class = user_serializers.LoginSerializer
 
     def post(self, request):
-        try:
-            serialized_data = self.serializer_class(data=self.request.data)
-            if serialized_data.is_valid(raise_exception=True):
-                user_obj = serialized_data.save()
-                data = {
-                    "result": {
-                        "full_name": user_obj.full_name,
-                        "phone": user_obj.phone,
-                        "phone_code": user_obj.phone_code,
-                        "phone_verified": user_obj.phone_verified,
-                        "email_verified": user_obj.email_verified,
-                        "email": user_obj.email,
-                        "has_active_membership": user_obj.has_active_membership,
-                    }
+        serialized_data = self.serializer_class(data=self.request.data)
+        if serialized_data.is_valid(raise_exception=True):
+            user_obj = serialized_data.save()
+            data = {
+                "result": {
+                    "full_name": user_obj.full_name,
+                    "phone": user_obj.phone,
+                    "phone_code": user_obj.phone_code,
+                    "phone_verified": user_obj.phone_verified,
+                    "email_verified": user_obj.email_verified,
+                    "email": user_obj.email,
+                    "has_active_membership": user_obj.has_active_membership,
                 }
-                if self.request.data.get("device_type") == "mobile":
-                    token, created = Token.objects.get_or_create(user=user_obj)
-                    data["result"]["token"] = token.key
-                else:
-                    login(
-                        request,
-                        user_obj,
-                        backend="django.contrib.auth.backends.ModelBackend",
-                    )
-                return Response(data)
-            return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            traceback.print_exc()
-            return Response(
-                {"message": "Server Error. Contact Admin."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            }
+            if self.request.data.get("device_type") == "mobile":
+                token, created = Token.objects.get_or_create(user=user_obj)
+                data["result"]["token"] = token.key
+            else:
+                login(
+                    request,
+                    user_obj,
+                    backend="django.contrib.auth.backends.ModelBackend",
+                )
+            return Response(data)
+        return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ContactUsAPI(APIView):
     serializer_class = user_serializers.ContactUsSerializer
 
     def post(self, request):
-        try:
-            serialized_data = self.serializer_class(data=self.request.data)
-            if serialized_data.is_valid(raise_exception=True):
-                serialized_data.save()
-                return Response({"message": "Thank you for contacting us."})
-        except Exception as e:
-            traceback.print_exc()
-            return Response(
-                {"message": "Server Error. Contact Admin."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        serialized_data = self.serializer_class(data=self.request.data)
+        if serialized_data.is_valid(raise_exception=True):
+            serialized_data.save()
+            return Response({"message": "Thank you for contacting us."})
 
 
 class PlansAPI(APIView):
@@ -256,19 +195,12 @@ class LogoutAPI(APIView):
 
 class GoogleLoginAPI(APIView):
     def get(self, request):
-        try:
-            request_uri = google_client.prepare_request_uri(
-                GOOGLE_DTO.get("authorization_url"),
-                redirect_uri=request.build_absolute_uri(reverse("google_callback")),
-                scope=["openid", "email", "profile"],
-            )
-            return redirect(request_uri)
-        except Exception as e:
-            traceback.print_exc()
-            return Response(
-                {"message": "Server Error. Contact Admin."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        request_uri = google_client.prepare_request_uri(
+            GOOGLE_DTO.get("authorization_url"),
+            redirect_uri=request.build_absolute_uri(reverse("google_callback")),
+            scope=["openid", "email", "profile"],
+        )
+        return redirect(request_uri)
 
 
 class UserInfo(APIView):
@@ -293,35 +225,30 @@ class UserInfo(APIView):
 
 class GoogleCallbackAPI(APIView):
     def get(self, request):
-        try:
-            code = self.request.GET.get("code")
-            token_url, headers, body = google_client.prepare_token_request(
-                GOOGLE_DTO.get("token_url"),
-                redirect_url=request.build_absolute_uri(reverse("google_callback")),
-                code=code,
-            )
-            token_response = requests.post(
-                token_url,
-                headers=headers,
-                data=body,
-                auth=(GOOGLE_DTO.get("client_id"), GOOGLE_DTO.get("client_secret")),
-            )
-            # Parse the tokens!
-            google_client.parse_request_body_response(json.dumps(token_response.json()))
+        code = self.request.GET.get("code")
+        token_url, headers, body = google_client.prepare_token_request(
+            GOOGLE_DTO.get("token_url"),
+            redirect_url=request.build_absolute_uri(reverse("google_callback")),
+            code=code,
+        )
+        token_response = requests.post(
+            token_url,
+            headers=headers,
+            data=body,
+            auth=(GOOGLE_DTO.get("client_id"), GOOGLE_DTO.get("client_secret")),
+        )
+        # Parse the tokens!
+        google_client.parse_request_body_response(json.dumps(token_response.json()))
 
-            # Get user info
-            uri, headers, body = google_client.add_token(GOOGLE_DTO.get("userinfo_url"))
-            userinfo_response = requests.get(uri, headers=headers, data=body).json()
-            validated_data = {"full_name": userinfo_response["name"]}
-            user_obj, _ = User.objects.update_or_create(
-                email=userinfo_response["email"], defaults=validated_data
-            )
-            user_obj.save()
-            login(request, user_obj, backend="django.contrib.auth.backends.ModelBackend")
-            return redirect(request.build_absolute_uri(reverse("home")))
-        except Exception as e:
-            traceback.print_exc()
-            return Response(
-                {"message": "Server Error. Contact Admin."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        # Get user info
+        uri, headers, body = google_client.add_token(GOOGLE_DTO.get("userinfo_url"))
+        userinfo_response = requests.get(uri, headers=headers, data=body).json()
+        validated_data = {"full_name": userinfo_response["name"]}
+        user_obj, _ = User.objects.update_or_create(
+            email=userinfo_response["email"], defaults=validated_data
+        )
+        user_obj.save()
+        login(
+            request, user_obj, backend="django.contrib.auth.backends.ModelBackend"
+        )
+        return redirect(request.build_absolute_uri(reverse("home")))

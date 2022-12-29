@@ -192,7 +192,7 @@ class UserMemberships(TimeStampedModel):
 
     class Meta:
         verbose_name_plural = "User Memberships"
-        
+
     def save(self, *args, **kwargs):
         if not self.expiry_at:
             plan_expiry = timezone.now() + timedelta(
