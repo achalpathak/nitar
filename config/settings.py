@@ -29,7 +29,7 @@ else:
     DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-SESSION_COOKIE_AGE = 60 * 60 * 24 #! Expires in 24 hours
+SESSION_COOKIE_AGE = 60 * 60 * 24  #! Expires in 24 hours
 
 
 # Application definition
@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     "settings",
     "library",
     "payments",
-    "django_cleanup.apps.CleanupConfig",  # should be placed as the last app
+    "django_cleanup.apps.CleanupConfig",  # NOTE=> should be placed as the last app
 ]
 
 MIDDLEWARE = [
@@ -61,7 +61,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "config.middleware.GetCurrentUserMiddleware",
+    "config.middleware.Error500ResponseLogger",  # NOTE=> should be placed as the last middleware
 ]
 
 ROOT_URLCONF = "config.urls"
