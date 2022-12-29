@@ -50,7 +50,11 @@ const PlayerOverlay: React.FC<
 					</Typography>
 				</Fade>
 				<Fade in>
-					<Typography variant='overline' color={"white"}>
+					<Typography
+						variant='overline'
+						color='white'
+						textTransform='capitalize'
+					>
 						{description?.substring(0, 255)}
 						{description?.length > 255 ? "..." : ""}
 					</Typography>

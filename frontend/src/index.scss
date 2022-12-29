@@ -26,12 +26,14 @@
 }
 
 #root {
-	// background-image: url("/src/assets/common/background.png");
-	// background-size: cover;
 	display: flex;
 	flex: 1;
 	background-color: rgba($color: #000000, $alpha: 1);
 	position: relative;
+	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+		Helvetica Neue, Arial, Noto Sans, Liberation Sans, sans-serif,
+		"Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol,
+		"Noto Color Emoji";
 }
 
 a {
@@ -280,4 +282,32 @@ span {
 
 .flex-column {
 	flex-direction: column !important;
+}
+
+.color-primary {
+	color: var(--website-primary-color) !important;
+}
+
+.color-secondary {
+	color: var(--website-secondary-color) !important;
+}
+
+.color-alternate {
+	color: var(--website-alternate-color) !important;
+}
+
+.bg-color-primary {
+	background-color: var(--website-primary-color) !important;
+}
+
+.bg-color-secondary {
+	background-color: var(--website-secondary-color) !important;
+}
+
+.bg-color-alternate {
+	background-color: var(--website-alternate-color) !important;
+}
+
+.border-none {
+	border: none;
 }

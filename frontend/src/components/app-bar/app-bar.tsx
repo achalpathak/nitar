@@ -253,74 +253,92 @@ const AppBar = () => {
 	};
 
 	const drawer = (
-		<Box
-			onClick={handleDrawerToggle}
-			sx={{ textAlign: "center" }}
-			className='drawer-container'
-		>
-			<Link to='/' className='d-center'>
+		<Grid container className='d-center'>
+			<Grid item xs={8}>
 				<Box
-					sx={{
-						my: 2,
-						height: 70,
-						width: 70,
-					}}
+					onClick={handleDrawerToggle}
+					sx={{ textAlign: "center" }}
+					className='drawer-container'
 				>
-					<img
-						alt='logo'
-						src={prefs?.logo_url?.image}
-						height='100%'
-						width='100%'
-						style={{
-							objectFit: "contain",
-						}}
-					/>
+					<Link to='/' className='d-center'>
+						<Box
+							sx={{
+								my: 2,
+								width: "100%",
+								height: 50,
+							}}
+						>
+							<img
+								alt='logo'
+								src={prefs?.logo_url?.image}
+								height='100%'
+								width='100%'
+								style={{
+									objectFit: "contain",
+								}}
+							/>
+						</Box>
+					</Link>
+					<Box>
+						<List>
+							{user?.full_name
+								? routesMobileAuth.map((item) => (
+										<ListItem
+											key={item.title}
+											disablePadding
+										>
+											<ListItemButton
+												sx={{
+													textAlign: "left",
+												}}
+												onClickCapture={(e) => {
+													e.preventDefault;
+													if (
+														item?.path === "/logout"
+													) {
+														logout();
+													} else {
+														navigate(item?.path);
+													}
+												}}
+											>
+												<ListItemText
+													primary={item.title}
+												/>
+											</ListItemButton>
+										</ListItem>
+								  ))
+								: routesMobileUnauth.map((item) => (
+										<ListItem
+											key={item.title}
+											disablePadding
+										>
+											<ListItemButton
+												sx={{
+													textAlign: "left",
+												}}
+												onClickCapture={(e) => {
+													e.preventDefault;
+													if (
+														item?.path === "/logout"
+													) {
+														logout();
+													} else {
+														navigate(item?.path);
+													}
+												}}
+											>
+												<ListItemText
+													primary={item.title}
+												/>
+											</ListItemButton>
+										</ListItem>
+								  ))}
+						</List>
+					</Box>
 				</Box>
-			</Link>
-			<Box className='d-center'>
-				<List>
-					{user?.full_name
-						? routesMobileAuth.map((item) => (
-								<ListItem key={item.title} disablePadding>
-									<ListItemButton
-										sx={{
-											textAlign: "left",
-										}}
-										onClickCapture={(e) => {
-											e.preventDefault;
-											if (item?.path === "/logout") {
-												logout();
-											} else {
-												navigate(item?.path);
-											}
-										}}
-									>
-										<ListItemText primary={item.title} />
-									</ListItemButton>
-								</ListItem>
-						  ))
-						: routesMobileUnauth.map((item) => (
-								<ListItem key={item.title} disablePadding>
-									<ListItemButton
-										sx={{
-											textAlign: "left",
-										}}
-										onClickCapture={(e) => {
-											e.preventDefault;
-											if (item?.path === "/logout") {
-												logout();
-											} else {
-												navigate(item?.path);
-											}
-										}}
-									>
-										<ListItemText primary={item.title} />
-									</ListItemButton>
-								</ListItem>
-						  ))}
-				</List>
-			</Box>
-		</Box>
+			</Grid>
+		</Grid>
 	);
 
 	const formatOptionLabel = (v: ISearchResult) => {
@@ -406,7 +424,7 @@ const AppBar = () => {
 								<Link
 									to='/'
 									style={{
-										width: 50,
+										width: "100%",
 										height: 50,
 									}}
 								>
@@ -435,7 +453,7 @@ const AppBar = () => {
 							<Link
 								to='/'
 								style={{
-									width: 50,
+									width: "100%",
 									height: 50,
 								}}
 							>
