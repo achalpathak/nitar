@@ -6,7 +6,6 @@
 venv/
 media/
 static/
-
 frontend/node_modules/
 frontend/build
 frontend/x.git
