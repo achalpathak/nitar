@@ -2,7 +2,7 @@ import api, { Routes } from "@api";
 import { MovieList } from "@components/movies";
 import Player from "@components/Player";
 import { useAlert } from "@hooks";
-import { PlayCircleOutlineOutlined } from "@mui/icons-material";
+import { PlayArrow, PlayCircleOutlineOutlined } from "@mui/icons-material";
 import { Box, Grid, Modal, Typography } from "@mui/material";
 import { useAppSelector } from "@redux/hooks";
 import { ICategories, ICategory, ICategoryItem, ISuccess } from "@types";
@@ -67,324 +67,329 @@ const ExtraDetails = (props: any) => {
 
 	return (
 		<>
-			<Grid container className='movie-details'>
+			<Grid
+				container
+				display='flex'
+				className='movie-details d-center'
+				px={2}
+			>
 				<Grid
 					item
 					xs={12}
+					md={8}
 					sx={{
 						position: "relative",
-						backgroundImage: {
-							xs: `url(${movie?.poster_large_vertical_image})`,
-							sm: `url(${movie?.poster_large_horizontal_image})`,
-						},
-						backgroundRepeat: "no-repeat",
-						backgroundSize: "cover",
-						backgroundPosition: {
-							xs: "center center",
-							sm: "top",
-						},
-						height: {
-							md: "35rem",
-							sm: "25rem",
-							xs: "100vh",
-						},
+						borderRadius: 15,
 						display: "flex",
 						flexDirection: "column",
 						alignItems: "center",
 						justifyContent: "center",
+						alignSelf: "center",
 					}}
 				>
-					<Grid
-						container
-						display='flex'
-						sx={{
-							paddingLeft: {
-								md: "10rem",
-							},
-							justifyContent: {
-								xs: "center",
-								md: "flex-start",
-							},
+					<img
+						src={movie?.poster_large_vertical_image}
+						alt={movie?.name}
+						style={{
+							width: "100%",
+							height: "100%",
+							objectFit: "contain",
+							borderRadius: 15,
 						}}
-					>
-						<Grid
-							item
-							xs={11}
-							sm={8}
-							md={6}
-							sx={{
-								backgroundColor: "rgba(0,0,0,0.5)",
-								maxHeight: "600px",
-								maxWidth: "550px",
-							}}
-							p={4}
-						>
-							<Grid item xs={12}>
-								<Typography
-									fontFamily='Playfair Display'
-									fontSize={40}
-								>
+					/>
+				</Grid>
+				<Grid container className='d-center' mt={2}>
+					<Grid item xs={12} md={8}>
+						<Grid container>
+							<Grid
+								item
+								xs={12}
+								display='flex'
+								alignItems={{
+									xs: "flex-start",
+									sm: "center",
+								}}
+								justifyContent='space-between'
+								flexDirection={{
+									xs: "column",
+									sm: "row",
+								}}
+							>
+								<Typography fontSize={40}>
 									{movie?.name}
 								</Typography>
-							</Grid>
-							<Grid item xs={12} my={1}>
-								<Typography fontFamily='inter' fontSize={16}>
-									{movie?.description}
-								</Typography>
-							</Grid>
-							<Grid item xs={12} my={1}>
 								<Box display='flex'>
-									<Box
-										mr={2}
-										className='genre'
-										sx={{
-											backgroundColor: "black",
-										}}
-										p={1}
-									>
-										<Typography
-											fontFamily='Barlow Condensed'
-											fontSize={16}
-										>
-											{movie?.age_rating}
-										</Typography>
-									</Box>
 									{movie?.genres?.map((g, i) => (
 										<Box
-											key={g.id}
-											mr={2}
+											key={g?.id}
 											className='genre'
-											sx={{
-												backgroundColor: "black",
-											}}
-											p={1}
+											mr={2}
 										>
 											<Typography
-												fontFamily='Barlow Condensed'
 												fontSize={16}
+												textTransform='capitalize'
 											>
-												{g.name}
+												{g?.name}
 											</Typography>
 										</Box>
 									))}
 								</Box>
 							</Grid>
-							<Grid item xs={12}>
-								<Grid container>
-									<Grid item xs={4}>
-										<Box
-											display='flex'
-											flexDirection='column'
-										>
-											<Typography
-												variant='h5'
-												fontFamily='Barlow Condensed'
-											>
-												Director
-											</Typography>
-											<Typography>
-												{movie?.director_name ?? ""}
-											</Typography>
-										</Box>
-									</Grid>
-									<Grid item xs={4}>
-										<Box
-											display='flex'
-											flexDirection='column'
-										>
-											<Typography
-												variant='h5'
-												fontFamily='Barlow Condensed'
-											>
-												Production
-											</Typography>
-											<Typography>
-												{movie?.director_name ?? ""}
-											</Typography>
-										</Box>
-									</Grid>
-									<Grid item xs={4}>
-										<Box
-											display='flex'
-											flexDirection='column'
-										>
-											<Typography
-												variant='h5'
-												fontFamily='Barlow Condensed'
-											>
-												Language
-											</Typography>
-											<Typography>
-												{movie?.language ?? ""}
-											</Typography>
-										</Box>
-									</Grid>
-								</Grid>
-							</Grid>
-							<Grid item xs={12} my={1}>
-								<Grid container>
-									<Typography
-										variant='h5'
-										fontFamily='Barlow Condensed'
-										mb={1}
-									>
-										Star Cast
-									</Typography>
-									<Grid item xs={12}>
-										<Grid container>
-											{movie?.star_cast
-												?.split(",")
-												?.map((sc, sc_i) => (
-													<Grid item xs={6}>
-														<Typography key={sc_i}>
-															{sc?.trim()}
-														</Typography>
-													</Grid>
-												))}
-										</Grid>
-									</Grid>
-								</Grid>
-							</Grid>
-							<Grid item xs={12} my={1}>
-								<a
-									style={{
-										color: "var(--website-secondary-color)",
-										cursor: "pointer",
-									}}
-									onClickCapture={(e) => {
-										e.preventDefault();
-										if (movie?.trailer_link) {
-											console.log("Watching Trailer");
-											setShowTrailer(true);
-										} else {
-											Swal.fire({
-												title: "Trailer not available",
-												text: "Please contact admin",
-												icon: "warning",
-												allowOutsideClick: () => true,
-											});
-										}
-									}}
-								>
-									<Grid container>
-										<Grid item mr={1}>
-											<PlayCircleOutlineOutlined />
-										</Grid>
-										<Grid item>
-											<Typography fontFamily='Barlow Condensed'>
-												Watch Trailer
-											</Typography>
-										</Grid>
-									</Grid>
-								</a>
-							</Grid>
-						</Grid>
-					</Grid>
-					<Box
-						sx={{
-							position: "absolute",
-							transform: "translate(50%, -50%)",
-						}}
-					>
-						<a
-							href=''
-							onClickCapture={(e) => {
-								e.preventDefault();
-								console.log("Playing");
+							<Grid item xs={12} className='d-flex'>
+								<Grid container mt={2}>
+									<Grid item mr={2}>
+										<button
+											className='custom-btn bg-color-primary d-center border-none'
+											style={{
+												borderRadius: "4px 4px 12px",
+												padding: "5px 15px",
+											}}
+											onClickCapture={(e) => {
+												e.preventDefault();
+												console.log("Playing");
 
-								//Checking for membership
-								if (movie) {
-									if (movie?.membership_required === false) {
-										//PLaying video for every user
-										if (movie?.video_link) {
-											setShowMovie(true);
-										} else {
-											Swal.fire({
-												title: "Video is not available",
-												text: "Please contact admin",
-												icon: "warning",
-												allowOutsideClick: () => true,
-											});
-										}
-									} else {
-										if (
-											Object.hasOwn(movie, "video_link")
-										) {
-											//Membership is available, video can be played
-											if (movie?.video_link) {
-												//Video link is available for members
-												if (movie?.video_link) {
-													setShowMovie(true);
+												//Checking for membership
+												if (movie) {
+													if (
+														movie?.membership_required ===
+														false
+													) {
+														//PLaying video for every user
+														if (movie?.video_link) {
+															setShowMovie(true);
+														} else {
+															Swal.fire({
+																title: "Video is not available",
+																text: "Please contact admin",
+																icon: "warning",
+																allowOutsideClick:
+																	() => true,
+															});
+														}
+													} else {
+														if (
+															Object.hasOwn(
+																movie,
+																"video_link"
+															)
+														) {
+															//Membership is available, video can be played
+															if (
+																movie?.video_link
+															) {
+																//Video link is available for members
+																if (
+																	movie?.video_link
+																) {
+																	setShowMovie(
+																		true
+																	);
+																} else {
+																	Swal.fire({
+																		title: "Video is not available",
+																		text: "Please contact admin",
+																		icon: "warning",
+																		allowOutsideClick:
+																			() =>
+																				true,
+																	});
+																}
+															} else {
+																//Video is not available for members
+																Swal.fire({
+																	title: "Video is not available",
+																	text: "Please contact admin",
+																	icon: "warning",
+																	allowOutsideClick:
+																		() =>
+																			true,
+																});
+															}
+														} else {
+															//video_link is not available, check if user is logged in or not
+															if (
+																user?.full_name
+															) {
+																Swal.fire({
+																	title: "Membership Required",
+																	text: "Please subscribe to continue",
+																	icon: "warning",
+																	showConfirmButton:
+																		true,
+																	showCancelButton:
+																		true,
+																	confirmButtonText:
+																		"Subscribe",
+																	cancelButtonText:
+																		"Cancel",
+																	allowOutsideClick:
+																		() =>
+																			true,
+																}).then(
+																	(res) => {
+																		if (
+																			res.isConfirmed
+																		) {
+																			navigate(
+																				"/plans"
+																			);
+																		}
+																	}
+																);
+															} else {
+																Swal.fire({
+																	title: "Login",
+																	text: "Please sign in to continue",
+																	icon: "warning",
+																	showConfirmButton:
+																		true,
+																	showCancelButton:
+																		true,
+																	confirmButtonText:
+																		"Sign in",
+																	cancelButtonText:
+																		"Cancel",
+																	allowOutsideClick:
+																		() =>
+																			true,
+																}).then(
+																	(res) => {
+																		if (
+																			res.isConfirmed
+																		) {
+																			navigate(
+																				"/login"
+																			);
+																		}
+																	}
+																);
+															}
+														}
+													}
+												}
+											}}
+										>
+											<PlayArrow
+												sx={{
+													marginRight: 1,
+												}}
+											/>
+											<Typography fontSize={16}>
+												Play
+											</Typography>
+										</button>
+									</Grid>
+									<Grid item>
+										<button
+											className='custom-btn bg-color-alternate color-primary d-center border-none'
+											style={{
+												borderRadius: "4px 4px 12px",
+												padding: "5px 15px",
+												border: "0.5px solid white",
+											}}
+											onClickCapture={(e) => {
+												e.preventDefault();
+												if (movie?.trailer_link) {
+													console.log(
+														"Watching Trailer"
+													);
+													setShowTrailer(true);
 												} else {
 													Swal.fire({
-														title: "Video is not available",
+														title: "Trailer not available",
 														text: "Please contact admin",
 														icon: "warning",
 														allowOutsideClick: () =>
 															true,
 													});
 												}
-											} else {
-												//Video is not available for members
-												Swal.fire({
-													title: "Video is not available",
-													text: "Please contact admin",
-													icon: "warning",
-													allowOutsideClick: () =>
-														true,
-												});
-											}
-										} else {
-											//video_link is not available, check if user is logged in or not
-											if (user?.full_name) {
-												Swal.fire({
-													title: "Membership Required",
-													text: "Please subscribe to continue",
-													icon: "warning",
-													showConfirmButton: true,
-													showCancelButton: true,
-													confirmButtonText:
-														"Subscribe",
-													cancelButtonText: "Cancel",
-													allowOutsideClick: () =>
-														true,
-												}).then((res) => {
-													if (res.isConfirmed) {
-														navigate("/plans");
-													}
-												});
-											} else {
-												Swal.fire({
-													title: "Login",
-													text: "Please sign in to continue",
-													icon: "warning",
-													showConfirmButton: true,
-													showCancelButton: true,
-													confirmButtonText:
-														"Sign in",
-													cancelButtonText: "Cancel",
-													allowOutsideClick: () =>
-														true,
-												}).then((res) => {
-													if (res.isConfirmed) {
-														navigate("/login");
-													}
-												});
-											}
-										}
-									}
-								}
-							}}
-						>
-							<PlayCircleOutlineOutlined
-								className='main-play-button'
-								style={{
-									height: 60,
-									width: 60,
+											}}
+										>
+											<PlayCircleOutlineOutlined
+												sx={{
+													marginRight: 1,
+												}}
+											/>
+											<Typography
+												fontSize={16}
+												className='color-primary'
+											>
+												Watch Trailer
+											</Typography>
+										</button>
+									</Grid>
+								</Grid>
+							</Grid>
+							<Grid
+								item
+								xs={12}
+								mt={3}
+								sx={{
+									borderTop:
+										"1px solid var(--website-primary-color)",
 								}}
-							/>
-						</a>
-					</Box>
+							>
+								<Grid container my={4}>
+									<Grid item xs={12}>
+										<Typography fontSize={20}>
+											Description
+										</Typography>
+									</Grid>
+									<Grid item my={4} xs={12}>
+										<Typography fontSize={16}>
+											{movie?.description}
+										</Typography>
+									</Grid>
+									{movie?.director_name ? (
+										<>
+											<Grid item xs={12}>
+												<Grid container>
+													<Grid item xs={4}>
+														<Typography
+															fontSize={16}
+														>
+															Director
+														</Typography>
+													</Grid>
+													<Grid item xs={8}>
+														<Typography
+															fontSize={16}
+														>
+															{
+																movie?.director_name
+															}
+														</Typography>
+													</Grid>
+												</Grid>
+											</Grid>
+										</>
+									) : null}
+									{movie?.star_cast ? (
+										<>
+											<Grid item xs={12}>
+												<Grid container>
+													<Grid item xs={4}>
+														<Typography
+															fontSize={16}
+														>
+															Cast
+														</Typography>
+													</Grid>
+													<Grid item xs={8}>
+														<Typography
+															fontSize={16}
+														>
+															{movie?.star_cast}
+														</Typography>
+													</Grid>
+												</Grid>
+											</Grid>
+										</>
+									) : null}
+								</Grid>
+							</Grid>
+						</Grid>
+					</Grid>
 				</Grid>
 				<Grid item xs={12}>
 					{similarMovies ? (
