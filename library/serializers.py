@@ -185,7 +185,7 @@ class EpisodesDetailWithoutSeriesSerializer(serializers.ModelSerializer):
 
     def to_representation(self, obj):
         ret = super(
-            serializers.EpisodesDetailWithoutSeriesSerializer, self
+            EpisodesDetailWithoutSeriesSerializer, self
         ).to_representation(obj)
         if not utils.check_user_logged_in_and_has_membership(
             self.context.get("request", None).user, obj

@@ -20,7 +20,6 @@ RUN npm i -g npm@latest yarn
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir --disable-pip-version-check --requirement requirements.txt
 USER docker_user
-RUN mkdir logs
 RUN mkdir media
 RUN mkdir static
 
