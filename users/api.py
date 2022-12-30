@@ -251,4 +251,4 @@ class GoogleCallbackAPI(APIView):
         login(
             request, user_obj, backend="django.contrib.auth.backends.ModelBackend"
         )
-        return redirect(request.build_absolute_uri(reverse("home")))
+        return redirect(os.environ["SERVER_DOMAIN"]+reverse("home"))
