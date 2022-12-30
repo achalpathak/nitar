@@ -52,14 +52,13 @@ const EpisodesList: FC<IEpisodes> = ({
 			container
 			display='flex'
 			alignItems='center'
-			// justifyContent='flex-end'
 			mt={5}
 			className='movie-list'
 			maxWidth='100vw'
 		>
 			<Grid item xs={12}>
 				<Grid container display='flex' justifyContent='center'>
-					<Grid item xs={10}>
+					<Grid item xs={12}>
 						<Grid
 							container
 							display='flex'
@@ -100,7 +99,7 @@ const EpisodesList: FC<IEpisodes> = ({
 					<Grid
 						ref={moviesRef}
 						item
-						xs={11}
+						xs={12}
 						className='movies'
 						mt={3}
 						data-movie={name}
