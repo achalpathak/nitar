@@ -1,4 +1,5 @@
 import json
+import os
 from django.contrib.auth import login
 from rest_framework import status, exceptions
 from rest_framework.response import Response
@@ -14,7 +15,6 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from rest_framework.authtoken.models import Token
-import traceback
 
 User = get_user_model()
 
@@ -197,7 +197,7 @@ class GoogleLoginAPI(APIView):
     def get(self, request):
         request_uri = google_client.prepare_request_uri(
             GOOGLE_DTO.get("authorization_url"),
-            redirect_uri=request.build_absolute_uri(reverse("google_callback")),
+            redirect_uri=os.environ["SERVER_DOMAIN"]+reverse("google_callback"),
             scope=["openid", "email", "profile"],
         )
         return redirect(request_uri)
@@ -228,7 +228,7 @@ class GoogleCallbackAPI(APIView):
         code = self.request.GET.get("code")
         token_url, headers, body = google_client.prepare_token_request(
             GOOGLE_DTO.get("token_url"),
-            redirect_url=request.build_absolute_uri(reverse("google_callback")),
+            redirect_url=os.environ["SERVER_DOMAIN"]+reverse("google_callback"),
             code=code,
         )
         token_response = requests.post(
