@@ -218,7 +218,7 @@ const Login = () => {
 					container
 					display='flex'
 					flexDirection='column'
-					className='input-container'
+					className='input-container d-center'
 				>
 					<Grid item xs={12} className='d-center'>
 						<div className='logo-container d-center'>
@@ -236,7 +236,6 @@ const Login = () => {
 								<label
 									style={{
 										textAlign: "center",
-										whiteSpace: "nowrap",
 									}}
 								>
 									Enter your phone number below to continue
