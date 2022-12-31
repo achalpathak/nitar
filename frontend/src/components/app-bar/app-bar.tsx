@@ -382,7 +382,7 @@ const AppBar = () => {
 				<MuiAppBar
 					component='nav'
 					sx={{
-						backgroundColor: "var(--website-alternate-color)",
+						backgroundColor: "var(--website-primary-color)",
 					}}
 				>
 					<Toolbar
