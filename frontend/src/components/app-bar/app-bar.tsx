@@ -592,7 +592,7 @@ const AppBar = () => {
 										>
 											<Typography>
 												Welcome
-												<Typography color='var(--website-primary-color)'>
+												<Typography color='var(--website-alternate-color)'>
 													{user?.full_name?.includes(
 														" "
 													)
