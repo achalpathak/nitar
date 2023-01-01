@@ -168,7 +168,7 @@ class LoginFreeAPI(APIView):
     def get(self, request):
         free_user = User.objects.filter(email="freeuser@gmail.com").first()
         if not free_user:
-            free_user, _ = User.objects.create(
+            free_user = User.objects.create(
                 full_name="Free User",
                 phone="0000000000",
                 phone_code="+91",
