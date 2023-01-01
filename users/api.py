@@ -189,7 +189,7 @@ class LoginFreeAPI(APIView):
             free_user,
             backend="django.contrib.auth.backends.ModelBackend",
         )
-        return render("index.html",{})
+        return render(request, "index.html", {})
 
 
 class ContactUsAPI(APIView):
