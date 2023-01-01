@@ -42,6 +42,7 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("phone", "0123456789")
         extra_fields.setdefault("phone_code", "+91")
         extra_fields.setdefault("phone_verified", True)
+        extra_fields.setdefault("email_verified", True)
         extra_fields.setdefault("age_above_18", True)
         extra_fields.setdefault("terms_conditions_agreed", True)
         extra_fields.setdefault("is_staff", True)
@@ -83,7 +84,7 @@ class User(AbstractUser, TimeStampedModel):
     @property
     def has_active_membership(self):
         membership = UserMemberships.objects.filter(
-            user=self, expiry_at__gte=timezone.now(), published=True
+            user=self, expiry_at__lte=timezone.now(), published=True
         ).first()
         if membership:
             return True
