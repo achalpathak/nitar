@@ -16,6 +16,7 @@ urlpatterns = [
     re_path(r"send-otp/$", api.SendOTP.as_view()),
     re_path(r"verify-otp/$", api.VerifyOTP.as_view()),
     re_path(r"login/$", api.LoginAPI.as_view()),
+    re_path(r"login-free/$", api.LoginFreeAPI.as_view()),
     re_path(r"contact_us/$", api.ContactUsAPI.as_view()),
     re_path(r"plans/$", api.PlansAPI.as_view()),
     re_path(r"logout/$", api.LogoutAPI.as_view()),

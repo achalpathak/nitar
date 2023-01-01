@@ -1,3 +1,4 @@
+from datetime import timedelta, timezone
 import json
 import os
 from django.contrib.auth import login
@@ -15,6 +16,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from rest_framework.authtoken.models import Token
+from django.shortcuts import render
 
 User = get_user_model()
 
@@ -45,9 +47,8 @@ class SendOTP(APIView):
         serialized_data = self.serializer_class(data=self.request.data)
         if serialized_data.is_valid(raise_exception=True):
             serialized_data.save()
-        return Response(
-            {"message": f"OTP is sent on email. Valid for next 15minutes."}
-        )
+        return Response({"message": f"OTP is sent on email. Valid for next 15minutes."})
+
 
 class UpdatePhoneAPI(APIView):
     serializer_class = user_serializers.UpdatePhoneSerializer
@@ -131,6 +132,7 @@ class VerifyOTP(APIView):
             return Response(data)
         return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class LoginAPI(APIView):
     serializer_class = user_serializers.LoginSerializer
 
@@ -160,6 +162,50 @@ class LoginAPI(APIView):
                 )
             return Response(data)
         return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginFreeAPI(APIView):
+    def get(self, request):
+        serialized_data = self.serializer_class(data=self.request.data)
+        free_user = User.objects.filter(email="freeuser@gmail.com").first()
+        if not free_user:
+            free_user, _ = User.objects.create(
+                full_name="Free User",
+                phone="0000000000",
+                phone_code="+91",
+                phone_verified=True,
+                email_verified=True,
+                email="freeuser@gmail.com",
+            )
+            m_data = {
+                "membership_id": user_models.Memberships.objects.all().last().id,
+                "expiry_at": timezone.now() + timedelta(years=5),  # expiry set to 5 yrs
+            }
+            obj = user_models.UserMemberships.objects.update_or_create(
+                user=free_user, defaults=m_data
+            )
+        data = {
+            "result": {
+                "full_name": free_user.full_name,
+                "phone": free_user.phone,
+                "phone_code": free_user.phone_code,
+                "phone_verified": free_user.phone_verified,
+                "email_verified": free_user.email_verified,
+                "email": free_user.email,
+                "has_active_membership": free_user.has_active_membership,
+            }
+        }
+        if self.request.data.get("device_type") == "mobile":
+            token, created = Token.objects.get_or_create(user=free_user)
+            data["result"]["token"] = token.key
+        else:
+            login(
+                request,
+                free_user,
+                backend="django.contrib.auth.backends.ModelBackend",
+            )
+        context = data
+        return render(request, "index.html", context)
 
 
 class ContactUsAPI(APIView):
@@ -197,7 +243,7 @@ class GoogleLoginAPI(APIView):
     def get(self, request):
         request_uri = google_client.prepare_request_uri(
             GOOGLE_DTO.get("authorization_url"),
-            redirect_uri=os.environ["SERVER_DOMAIN"]+reverse("google_callback"),
+            redirect_uri=os.environ["SERVER_DOMAIN"] + reverse("google_callback"),
             scope=["openid", "email", "profile"],
         )
         return redirect(request_uri)
@@ -228,7 +274,7 @@ class GoogleCallbackAPI(APIView):
         code = self.request.GET.get("code")
         token_url, headers, body = google_client.prepare_token_request(
             GOOGLE_DTO.get("token_url"),
-            redirect_url=os.environ["SERVER_DOMAIN"]+reverse("google_callback"),
+            redirect_url=os.environ["SERVER_DOMAIN"] + reverse("google_callback"),
             code=code,
         )
         token_response = requests.post(
@@ -248,7 +294,7 @@ class GoogleCallbackAPI(APIView):
             email=userinfo_response["email"], defaults=validated_data
         )
         user_obj.save()
-        login(
-            request, user_obj, backend="django.contrib.auth.backends.ModelBackend"
-        )
-        return redirect(os.environ["SERVER_DOMAIN"]+reverse("home"))
+        login(request, user_obj, backend="django.contrib.auth.backends.ModelBackend")
+        # return redirect(request.build_absolute_uri(reverse("home")))
+        context = {}
+        return render(request, "index.html", context)
