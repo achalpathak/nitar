@@ -1,4 +1,5 @@
-from datetime import timedelta, timezone
+from django.utils import timezone
+from datetime import timedelta
 import json
 import os
 from django.contrib.auth import login
@@ -183,28 +184,12 @@ class LoginFreeAPI(APIView):
             obj = user_models.UserMemberships.objects.update_or_create(
                 user=free_user, defaults=m_data
             )
-        data = {
-            "result": {
-                "full_name": free_user.full_name,
-                "phone": free_user.phone,
-                "phone_code": free_user.phone_code,
-                "phone_verified": free_user.phone_verified,
-                "email_verified": free_user.email_verified,
-                "email": free_user.email,
-                "has_active_membership": free_user.has_active_membership,
-            }
-        }
-        if self.request.data.get("device_type") == "mobile":
-            token, created = Token.objects.get_or_create(user=free_user)
-            data["result"]["token"] = token.key
-        else:
-            login(
-                request,
-                free_user,
-                backend="django.contrib.auth.backends.ModelBackend",
-            )
-        context = data
-        return render(request, "index.html", context)
+        login(
+            request,
+            free_user,
+            backend="django.contrib.auth.backends.ModelBackend",
+        )
+        return redirect(request.build_absolute_uri(reverse("home")))
 
 
 class ContactUsAPI(APIView):
@@ -294,6 +279,4 @@ class GoogleCallbackAPI(APIView):
         )
         user_obj.save()
         login(request, user_obj, backend="django.contrib.auth.backends.ModelBackend")
-        # return redirect(request.build_absolute_uri(reverse("home")))
-        context = {}
-        return render(request, "index.html", context)
+        return redirect(request.build_absolute_uri(reverse("home")))
