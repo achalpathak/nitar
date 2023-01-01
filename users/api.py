@@ -189,7 +189,7 @@ class LoginFreeAPI(APIView):
             free_user,
             backend="django.contrib.auth.backends.ModelBackend",
         )
-        return redirect(request.build_absolute_uri(reverse("home")))
+        return Response({"message": "Logged in Successfully"})
 
 
 class ContactUsAPI(APIView):

@@ -7,6 +7,7 @@ export const Routes = {
 	SEND_OTP: "/api/users/send-otp/",
 	VERIFY_OTP: "/api/users/verify-otp/",
 	LOGIN: "/api/users/login/",
+	LOGIN_FREE: "/api/users/login-free/",
 	LOGOUT: "/api/users/logout/",
 	LOGIN_WITH_GOOGLE: "/api/users/login_with_google/",
 	UPDATE_PHONE: "/api/users/update_phone/",

@@ -29,6 +29,7 @@ import Swal from "sweetalert2";
 const Login = lazy(() => import("@pages/login"));
 const Register = lazy(() => import("@pages/register"));
 const ResetPassword = lazy(() => import("@pages/reset-password"));
+const LoginFree = lazy(() => import("@pages/login-free"));
 const _404 = lazy(() => import("@pages/miscellaneous/_404"));
 
 const router = createBrowserRouter([
@@ -57,6 +58,14 @@ const router = createBrowserRouter([
 		element: (
 			<UnauthenticatedRoute>
 				<ResetPassword />
+			</UnauthenticatedRoute>
+		),
+	},
+	{
+		path: "/login-free",
+		element: (
+			<UnauthenticatedRoute>
+				<LoginFree />
 			</UnauthenticatedRoute>
 		),
 	},
