@@ -179,7 +179,7 @@ class LoginFreeAPI(APIView):
             )
             m_data = {
                 "membership_id": user_models.Memberships.objects.all().last().id,
-                "expiry_at": timezone.now() + timedelta(years=5),  # expiry set to 5 yrs
+                "expiry_at": timezone.now() + timedelta(days=365*5),  # expiry set to 5 yrs
             }
             obj = user_models.UserMemberships.objects.update_or_create(
                 user=free_user, defaults=m_data
@@ -189,7 +189,7 @@ class LoginFreeAPI(APIView):
             free_user,
             backend="django.contrib.auth.backends.ModelBackend",
         )
-        return Response({"message": "Logged in Successfully"})
+        return render("index.html",{})
 
 
 class ContactUsAPI(APIView):
