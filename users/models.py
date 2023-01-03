@@ -84,7 +84,7 @@ class User(AbstractUser, TimeStampedModel):
     @property
     def has_active_membership(self):
         membership = UserMemberships.objects.filter(
-            user=self, expiry_at__lte=timezone.now(), published=True
+            user=self, expiry_at__gte=timezone.now(), published=True
         ).first()
         if membership:
             return True
