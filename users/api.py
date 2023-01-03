@@ -2,19 +2,17 @@ from django.utils import timezone
 from datetime import timedelta
 import json
 import os
-from django.contrib.auth import login
 from rest_framework import status, exceptions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from . import models as user_models
 from . import serializers as user_serializers
-from django.contrib.auth import logout
 from oauthlib.oauth2 import WebApplicationClient
 from django.conf import settings
 import requests
 from django.shortcuts import redirect
 from django.urls import reverse
-from django.contrib.auth import get_user_model
+from django.contrib.auth import login, logout, get_user_model, authenticate
 from django.contrib.auth.models import AnonymousUser
 from rest_framework.authtoken.models import Token
 from django.shortcuts import render
@@ -167,6 +165,7 @@ class LoginAPI(APIView):
 
 class LoginFreeAPI(APIView):
     def get(self, request):
+        _pass = "Password"
         free_user = User.objects.filter(email="freeuser@gmail.com").first()
         if not free_user:
             free_user = User.objects.create(
@@ -175,21 +174,26 @@ class LoginFreeAPI(APIView):
                 phone_code="+91",
                 phone_verified=True,
                 email_verified=True,
+                is_active=True,
                 email="freeuser@gmail.com",
             )
+            free_user.set_password(_pass)
+            free_user.save()
             m_data = {
                 "membership_id": user_models.Memberships.objects.all().last().id,
-                "expiry_at": timezone.now() + timedelta(days=365*5),  # expiry set to 5 yrs
+                "expiry_at": timezone.now()
+                + timedelta(days=365 * 5),  # expiry set to 5 yrs
             }
             obj = user_models.UserMemberships.objects.update_or_create(
                 user=free_user, defaults=m_data
             )
+        free_user.backend = settings.AUTHENTICATION_BACKENDS[0]
         login(
             request,
             free_user,
             backend="django.contrib.auth.backends.ModelBackend",
         )
-        return render(request, "index.html", {})
+        return redirect(request.build_absolute_uri(reverse("home")))
 
 
 class ContactUsAPI(APIView):
@@ -278,5 +282,10 @@ class GoogleCallbackAPI(APIView):
             email=userinfo_response["email"], defaults=validated_data
         )
         user_obj.save()
-        login(request, user_obj, backend="django.contrib.auth.backends.ModelBackend")
+        user_obj.backend = settings.AUTHENTICATION_BACKENDS[0]
+        login(
+            request,
+            user_obj,
+            backend="django.contrib.auth.backends.ModelBackend",
+        )
         return redirect(request.build_absolute_uri(reverse("home")))
