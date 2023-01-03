@@ -311,3 +311,10 @@ span {
 .border-none {
 	border: none;
 }
+
+.swal2-icon {
+	&.swal2-warning {
+		color: var(--website-primary-color) !important;
+		border-color: var(--website-primary-color) !important;
+	}
+}

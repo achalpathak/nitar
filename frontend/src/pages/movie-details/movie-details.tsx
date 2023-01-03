@@ -95,7 +95,7 @@ const MovieDetails = (props: any) => {
 					}}
 				>
 					<img
-						src={movie?.poster_large_vertical_image}
+						src={movie?.poster_large_horizontal_image}
 						alt={movie?.name}
 						style={{
 							width: "100%",

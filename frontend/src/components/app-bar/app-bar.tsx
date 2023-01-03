@@ -382,7 +382,7 @@ const AppBar = () => {
 				<MuiAppBar
 					component='nav'
 					sx={{
-						backgroundColor: "var(--website-alternate-color)",
+						backgroundColor: "var(--website-primary-color)",
 					}}
 				>
 					<Toolbar
@@ -592,7 +592,7 @@ const AppBar = () => {
 										>
 											<Typography>
 												Welcome
-												<Typography color='var(--website-primary-color)'>
+												<Typography color='var(--website-alternate-color)'>
 													{user?.full_name?.includes(
 														" "
 													)
