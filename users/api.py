@@ -277,7 +277,11 @@ class GoogleCallbackAPI(APIView):
         # Get user info
         uri, headers, body = google_client.add_token(GOOGLE_DTO.get("userinfo_url"))
         userinfo_response = requests.get(uri, headers=headers, data=body).json()
-        validated_data = {"full_name": userinfo_response["name"]}
+        validated_data = {
+            "full_name": userinfo_response["name"],
+            "is_active": True,
+            "email_verified": True,
+        }
         user_obj, _ = User.objects.update_or_create(
             email=userinfo_response["email"], defaults=validated_data
         )
