@@ -45,9 +45,8 @@ class SendOTP(APIView):
         serialized_data = self.serializer_class(data=self.request.data)
         if serialized_data.is_valid(raise_exception=True):
             serialized_data.save()
-        return Response(
-            {"message": f"OTP is sent on email. Valid for next 15minutes."}
-        )
+        return Response({"message": f"OTP is sent on email. Valid for next 15minutes."})
+
 
 class UpdatePhoneAPI(APIView):
     serializer_class = user_serializers.UpdatePhoneSerializer
@@ -131,6 +130,7 @@ class VerifyOTP(APIView):
             return Response(data)
         return Response({"message": "Error"}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class LoginAPI(APIView):
     serializer_class = user_serializers.LoginSerializer
 
@@ -197,7 +197,7 @@ class GoogleLoginAPI(APIView):
     def get(self, request):
         request_uri = google_client.prepare_request_uri(
             GOOGLE_DTO.get("authorization_url"),
-            redirect_uri=os.environ["SERVER_DOMAIN"]+reverse("google_callback"),
+            redirect_uri=os.environ["SERVER_DOMAIN"] + reverse("google_callback"),
             scope=["openid", "email", "profile"],
         )
         return redirect(request_uri)
@@ -228,7 +228,7 @@ class GoogleCallbackAPI(APIView):
         code = self.request.GET.get("code")
         token_url, headers, body = google_client.prepare_token_request(
             GOOGLE_DTO.get("token_url"),
-            redirect_url=os.environ["SERVER_DOMAIN"]+reverse("google_callback"),
+            redirect_url=os.environ["SERVER_DOMAIN"] + reverse("google_callback"),
             code=code,
         )
         token_response = requests.post(
@@ -243,7 +243,11 @@ class GoogleCallbackAPI(APIView):
         # Get user info
         uri, headers, body = google_client.add_token(GOOGLE_DTO.get("userinfo_url"))
         userinfo_response = requests.get(uri, headers=headers, data=body).json()
-        validated_data = {"full_name": userinfo_response["name"]}
+        validated_data = {
+            "full_name": userinfo_response["name"],
+            "is_active": True,
+            "email_verified": True,
+        }
         user_obj, _ = User.objects.update_or_create(
             email=userinfo_response["email"], defaults=validated_data
         )
