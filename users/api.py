@@ -248,7 +248,10 @@ class GoogleCallbackAPI(APIView):
             email=userinfo_response["email"], defaults=validated_data
         )
         user_obj.save()
+        user_obj.backend = settings.AUTHENTICATION_BACKENDS[0]
         login(
-            request, user_obj, backend="django.contrib.auth.backends.ModelBackend"
+            request,
+            user_obj,
+            backend="django.contrib.auth.backends.ModelBackend",
         )
         return redirect(request.build_absolute_uri(reverse("home")))
