@@ -49,7 +49,7 @@ const PlayerOverlay: React.FC<
 						{name}
 					</Typography>
 				</Fade>
-				<Fade in>
+				{/* <Fade in>
 					<Typography
 						variant='overline'
 						color='white'
@@ -58,7 +58,7 @@ const PlayerOverlay: React.FC<
 						{description?.substring(0, 255)}
 						{description?.length > 255 ? "..." : ""}
 					</Typography>
-				</Fade>
+				</Fade> */}
 			</Box>
 		</StyledPlayerOverlay>
 	);
