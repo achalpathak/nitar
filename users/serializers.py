@@ -113,7 +113,7 @@ class PlansSerializer(serializers.ModelSerializer):
 
 
 class EmailOtpSerializer(serializers.Serializer):
-    phone = serializers.EmailField(required=True)
+    phone = serializers.CharField(required=True)
     phone_code = serializers.CharField(required=True)
 
     def validate_phone(self, phone):

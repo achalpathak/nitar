@@ -40,9 +40,6 @@ const Register = () => {
 	//Register
 	const [name, setName] = useState<string>("");
 	const [email, setEmail] = useState<string>("");
-	const [password, setPassword] = useState<string>("");
-	const [confirmPassword, setConfirmPassword] = useState<string>("");
-
 	const [ageRequirement, setAgeRequirement] = useState<boolean>(false);
 	const [termsAndConditions, setTermsAndConditions] =
 		useState<boolean>(false);
@@ -52,10 +49,8 @@ const Register = () => {
 
 	const initialErrorState: IError = {
 		full_name: [],
-		email: [],
 		phone: [],
 		age: [],
-		password: [],
 		confirmPassword: [],
 	};
 
@@ -99,42 +94,7 @@ const Register = () => {
 			setTermsError(true);
 		}
 
-		if (!password) {
-			setErrors((val) => ({
-				...val,
-				password: ["Password cannot be empty"],
-			}));
-		}
-		if (!confirmPassword) {
-			setErrors((val) => ({
-				...val,
-				confirmPassword: ["Confirm Password cannot be empty"],
-			}));
-		}
-		if (password && confirmPassword) {
-			if (password?.length < 4) {
-				setErrors((val) => ({
-					...val,
-					password: [
-						"Password length cannot be less than 4 characters",
-					],
-				}));
-			} else if (password !== confirmPassword) {
-				setErrors((val) => ({
-					...val,
-					confirmPassword: [
-						"Password and Confirm Password do not match",
-					],
-				}));
-			}
-		}
-		return (
-			ageRequirement &&
-			termsAndConditions &&
-			password &&
-			confirmPassword &&
-			password === confirmPassword
-		);
+		return ageRequirement && termsAndConditions;
 	};
 
 	//? ----Checking if the input is number-----
@@ -162,7 +122,6 @@ const Register = () => {
 				full_name: name,
 				email,
 				phone_code: country?.code,
-				password: password,
 				age_above_18: ageRequirement,
 				terms_conditions_agreed: termsAndConditions,
 			});
@@ -173,7 +132,12 @@ const Register = () => {
 				setTimeout(() => {
 					navigate("/login", {
 						state: {
-							email: email,
+							phone: phone,
+							phone_code: country?.code,
+							type: res.data?.message?.includes("email")
+								? "email"
+								: "phone",
+							message: res.data?.message,
 						},
 					});
 				}, 2000);
@@ -254,36 +218,6 @@ const Register = () => {
 								setEmail(e.target.value);
 							}}
 							errors={errors?.email}
-						/>
-					</Grid>
-					<Grid item xs={12} className='d-center flex-column'>
-						<CustomInput
-							type='password'
-							id='password'
-							name='password'
-							placeholder='Enter your Password'
-							value={password}
-							onChangeCapture={(
-								e: ChangeEvent<HTMLInputElement>
-							) => {
-								setPassword(e.target.value);
-							}}
-							errors={errors?.password}
-						/>
-					</Grid>
-					<Grid item xs={12} className='d-center flex-column'>
-						<CustomInput
-							type='password'
-							id='confirm-password'
-							name='confirm-password'
-							placeholder='Enter Confirm Password'
-							value={confirmPassword}
-							onChangeCapture={(
-								e: ChangeEvent<HTMLInputElement>
-							) => {
-								setConfirmPassword(e.target.value);
-							}}
-							errors={errors?.confirmPassword}
 						/>
 					</Grid>
 					<Grid item xs={12} className='d-center flex-column'>

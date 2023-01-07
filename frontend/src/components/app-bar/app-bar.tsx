@@ -725,17 +725,6 @@ const AppBar = () => {
 				<MenuItem
 					onClickCapture={(e) => {
 						e.preventDefault();
-						setShowUpdatePassword(true);
-					}}
-				>
-					<ListItemIcon>
-						<LockReset fontSize='small' />
-					</ListItemIcon>
-					Update Password
-				</MenuItem>
-				<MenuItem
-					onClickCapture={(e) => {
-						e.preventDefault();
 						logout();
 					}}
 				>

@@ -53,14 +53,6 @@ const router = createBrowserRouter([
 		),
 	},
 	{
-		path: "/forgot-password",
-		element: (
-			<UnauthenticatedRoute>
-				<ResetPassword />
-			</UnauthenticatedRoute>
-		),
-	},
-	{
 		path: "/404",
 		element: <_404 />,
 	},
