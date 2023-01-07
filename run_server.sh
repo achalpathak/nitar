@@ -6,10 +6,11 @@ cd frontend
 yarn install
 echo ".............Building Project............."
 yarn run build
-while ! nc -z mysqldb 3306 ; do
-    echo ".............Waiting for the MySQL Server............."
-    sleep 3
-done
+# !!!!!!!!Commented coz using RDS!!!!!!!!!!!!!!
+# while ! nc -z mysqldb 3306 ; do
+#     echo ".............Waiting for the MySQL Server............."
+#     sleep 3
+# done
 cd ../
 echo ".............Starting Server............."
 python manage.py migrate
