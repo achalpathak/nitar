@@ -72,7 +72,7 @@ const StyledPlayerControls = styled("div")`
 	}
 `;
 
-const PlayerTopControls: React.FC<
+const PlayerBottomControls: React.FC<
 	ReactPlayerProps & {
 		playerRef: React.RefObject<ReactPlayer>;
 		state: ReactPlayerProps;
@@ -96,6 +96,8 @@ const PlayerTopControls: React.FC<
 	const toggleLevels = () => {
 		dispatch({ type: "TOGGLE_LEVELS" });
 	};
+
+	const hlsPlayer = playerRef.current?.getInternalPlayer("hls");
 
 	const renderSeekSlider = () => {
 		return (
@@ -217,7 +219,6 @@ const PlayerTopControls: React.FC<
 	};
 
 	const renderQualityControl = () => {
-		const hlsPlayer = playerRef.current?.getInternalPlayer("hls");
 		return (
 			<IconButton
 				className='custom-btn'
@@ -248,7 +249,7 @@ const PlayerTopControls: React.FC<
 						{hlsPlayer?.levels?.map(
 							(level: any, lvlIndex: number) => (
 								<ListItem
-									key={level?.name}
+									key={level?.name ?? level?.height}
 									disablePadding
 									sx={{
 										padding: "5px 15px",
@@ -261,7 +262,9 @@ const PlayerTopControls: React.FC<
 										hlsPlayer.currentLevel = lvlIndex;
 									}}
 								>
-									<Typography color='white'>{`${level?.name}p`}</Typography>
+									<Typography color='white'>{`${
+										level?.name ?? level?.height
+									}p`}</Typography>
 								</ListItem>
 							)
 						)}
@@ -294,4 +297,4 @@ const PlayerTopControls: React.FC<
 	);
 };
 
-export default PlayerTopControls;
+export default PlayerBottomControls;
