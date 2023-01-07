@@ -2,6 +2,7 @@ import { defineConfig, splitVendorChunkPlugin } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import svgr from "vite-plugin-svgr";
+import fs from "fs";
 // import reactCss from "vite-react-css";
 
 // https://vitejs.dev/config/
@@ -24,6 +25,10 @@ export default defineConfig({
 		},
 	},
 	server: {
+		https: {
+			key: fs.readFileSync("./ssl/localhost-key.pem"),
+			cert: fs.readFileSync("./ssl/localhost.pem"),
+		},
 		watch: {
 			usePolling: true,
 		},
