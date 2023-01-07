@@ -29,11 +29,14 @@ class RegisterUser(APIView):
 
     def post(self, request):
         serialized_data = self.serializer_class(data=self.request.data)
+        msg = "email"
         if serialized_data.is_valid(raise_exception=True):
             serialized_data.save()
+            if serialized_data.data["phone_code"] == "+91":
+                msg = "phone"
         return Response(
             {
-                "message": "User is registered. OTP is sent on email. Valid for next 15minutes."
+                "message": f"User is registered. OTP is sent on {msg}. Valid for next 15minutes."
             }
         )
 
@@ -43,9 +46,13 @@ class SendOTP(APIView):
 
     def post(self, request):
         serialized_data = self.serializer_class(data=self.request.data)
+        msg = "email"
         if serialized_data.is_valid(raise_exception=True):
             serialized_data.save()
-        return Response({"message": f"OTP is sent on email. Valid for next 15minutes."})
+            if serialized_data.data["phone_code"] == "+91":
+                msg = "phone"
+
+        return Response({"message": f"OTP is sent on {msg} Valid for next 15minutes."})
 
 
 class UpdatePhoneAPI(APIView):

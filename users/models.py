@@ -67,10 +67,11 @@ class User(AbstractUser, TimeStampedModel):
     password = models.CharField(_("password"), max_length=250, blank=True, null=True)
     email = models.EmailField(_("email address"), unique=True, blank=True, null=True)
     phone = models.CharField(
-        max_length=10,
+        max_length=20,
         validators=[MinLengthValidator(10)],
         blank=True,
         null=True,
+        unique=True,
     )
     age_above_18 = models.BooleanField(default=False)
     terms_conditions_agreed = models.BooleanField(default=False)
@@ -84,7 +85,7 @@ class User(AbstractUser, TimeStampedModel):
     @property
     def has_active_membership(self):
         membership = UserMemberships.objects.filter(
-            user=self, expiry_at__lte=timezone.now(), published=True
+            user=self, expiry_at__gte=timezone.now(), published=True
         ).first()
         if membership:
             return True

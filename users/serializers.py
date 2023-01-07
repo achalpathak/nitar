@@ -12,7 +12,7 @@ from django.conf import settings
 
 User = get_user_model()
 from django.contrib.auth.models import AnonymousUser
-from config.mail import send_email_otp, send_email_forgot_password
+from config.mail import send_email_otp, send_email_forgot_password, send_phone_otp
 
 
 class RegisterUserSerializer(serializers.Serializer):
@@ -22,17 +22,18 @@ class RegisterUserSerializer(serializers.Serializer):
     age_above_18 = serializers.BooleanField(required=True)
     phone_code = serializers.CharField(required=True)
     terms_conditions_agreed = serializers.BooleanField(required=True)
-    password = serializers.CharField(min_length=4, required=True)
+    password = serializers.CharField(min_length=4, required=False)
 
     def validate_phone(self, phone):
-        if len(phone) != 10:
-            raise serializers.ValidationError("Phone number should be 10 digits.")
+        if self.initial_data["phone_code"] == "+91":
+            if len(phone) != 10:
+                raise serializers.ValidationError("Phone number should be 10 digits.")
         if not phone.isnumeric():
             raise serializers.ValidationError(
                 "Phone number should only contain numbers."
             )
-        # if User.objects.filter(phone=phone).exists():
-        #     raise serializers.ValidationError("Phone number is already registered.")
+        if User.objects.filter(phone=phone).exists():
+            raise serializers.ValidationError("Phone number is already registered.")
         return phone
 
     def validate_email(self, email):
@@ -60,8 +61,6 @@ class RegisterUserSerializer(serializers.Serializer):
             user_obj, _ = User.objects.update_or_create(
                 email=validated_data["email"], defaults=validated_data
             )
-            user_obj.set_password(validated_data["password"])
-            user_obj.save()
             data = {
                 "otp": randint(100000, 999999),
                 "valid_till": datetime.now() + timedelta(minutes=15),
@@ -71,7 +70,10 @@ class RegisterUserSerializer(serializers.Serializer):
                 user=user_obj, defaults=data
             )
             otp_obj.save()
-            send_email_otp(to_email=validated_data["email"], otp=data["otp"])
+            if validated_data["phone_code"] == "+91":  # indian user
+                send_phone_otp(to_phone=validated_data["phone"], otp=data["otp"])
+            else:  # non-indian user
+                send_email_otp(to_email=validated_data["email"], otp=data["otp"])
         return validated_data
 
 
@@ -111,19 +113,24 @@ class PlansSerializer(serializers.ModelSerializer):
 
 
 class EmailOtpSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
+    phone = serializers.EmailField(required=True)
+    phone_code = serializers.CharField(required=True)
 
-    def validate_email(self, email):
-        if email:
-            if User.objects.filter(email=email, email_verified=True).exists():
-                raise serializers.ValidationError("Email is already verified.")
-        return email
+    def validate_phone(self, phone):
+        if self.initial_data["phone_code"] == "+91":
+            if len(phone) != 10:
+                raise serializers.ValidationError("Phone number should be 10 digits.")
+        if not phone.isnumeric():
+            raise serializers.ValidationError(
+                "Phone number should only contain numbers."
+            )
+        return phone
 
     def create(self, validated_data):
         try:
             with transaction.atomic():
                 user_obj = user_models.User.objects.filter(
-                    email=validated_data["email"]
+                    phone=validated_data["phone"]
                 ).last()
                 if user_obj is None:
                     raise user_models.User.DoesNotExist()
@@ -137,15 +144,29 @@ class EmailOtpSerializer(serializers.Serializer):
                     user=user_obj, defaults=data
                 )
                 otp_obj.save()
-                send_email_otp(to_email=validated_data["email"], otp=data["otp"])
+                if validated_data["phone_code"] == "+91":  # indian user
+                    send_phone_otp(to_phone=validated_data["phone"], otp=data["otp"])
+                else:  # non-indian user
+                    send_email_otp(to_email=validated_data["email"], otp=data["otp"])
                 return otp_obj
         except user_models.User.DoesNotExist:
-            raise serializers.ValidationError({"message": "Email is not registered."})
+            raise serializers.ValidationError({"message": "Phone is not registered."})
 
 
 class VerifyOtpSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
+    phone_code = serializers.CharField(required=True)
+    phone = serializers.CharField(required=True)
     otp = serializers.IntegerField(required=True)
+
+    def validate_phone(self, phone):
+        if self.initial_data["phone_code"] == "+91":
+            if len(phone) != 10:
+                raise serializers.ValidationError("Phone number should be 10 digits.")
+        if not phone.isnumeric():
+            raise serializers.ValidationError(
+                "Phone number should only contain numbers."
+            )
+        return phone
 
     def validate_otp(self, otp):
         if len(str(otp)) != 6:
@@ -155,7 +176,7 @@ class VerifyOtpSerializer(serializers.Serializer):
     def create(self, validated_data):
         try:
             email_otp_obj = user_models.LoginEmailOtp.objects.get(
-                user__email=validated_data["email"]
+                user__phone=validated_data["phone"]
             )
             if email_otp_obj.attempts_remaining >= 1:
                 if timezone.now() > email_otp_obj.valid_till:
@@ -174,9 +195,13 @@ class VerifyOtpSerializer(serializers.Serializer):
                         }
                     )
                 # OTP is verifed
-                email_otp_obj.user.email_verified = True
-                email_otp_obj.user.is_active = True
-                email_otp_obj.user.save()
+                if not email_otp_obj.user.last_login: # user registration verification
+                    if validated_data["phone_code"] == "+91":
+                        email_otp_obj.user.phone_verified = True
+                    else:
+                        email_otp_obj.user.email_verified = True
+                    email_otp_obj.user.is_active = True
+                    email_otp_obj.user.save()
                 email_otp_obj.delete()
 
                 return email_otp_obj.user
@@ -185,7 +210,7 @@ class VerifyOtpSerializer(serializers.Serializer):
                     {"message": "OTP attempts exhausted. Retry with new OTP."}
                 )
         except user_models.LoginEmailOtp.DoesNotExist:
-            raise serializers.ValidationError({"message": "Email is not registered."})
+            raise serializers.ValidationError({"message": "User is not registered."})
 
 
 class UpdatePhoneSerializer(serializers.Serializer):
@@ -193,8 +218,9 @@ class UpdatePhoneSerializer(serializers.Serializer):
     phone_code = serializers.CharField(required=True)
 
     def validate_phone(self, phone):
-        if len(phone) != 10:
-            raise serializers.ValidationError("Phone number should be 10 digits.")
+        if self.initial_data["phone_code"] == "+91":
+            if len(phone) != 10:
+                raise serializers.ValidationError("Phone number should be 10 digits.")
         if not phone.isnumeric():
             raise serializers.ValidationError(
                 "Phone number should only contain numbers."
@@ -271,8 +297,12 @@ class ForgotPasswordSendEmailSerializer(serializers.Serializer):
                 algorithm="HS256",
             )
             # send email here
-            reset_link = f"{os.environ['SERVER_DOMAIN']}/forgot-password?token={encoded_jwt}"
-            send_email_forgot_password(to_email=validated_data["email"],reset_link=reset_link)
+            reset_link = (
+                f"{os.environ['SERVER_DOMAIN']}/forgot-password?token={encoded_jwt}"
+            )
+            send_email_forgot_password(
+                to_email=validated_data["email"], reset_link=reset_link
+            )
         return True
 
 
