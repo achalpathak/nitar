@@ -70,10 +70,14 @@ class RegisterUserSerializer(serializers.Serializer):
                 user=user_obj, defaults=data
             )
             otp_obj.save()
-            if validated_data["phone_code"] == "+91":  # indian user
-                send_phone_otp(to_phone=validated_data["phone"], otp=data["otp"])
-            else:  # non-indian user
-                send_email_otp(to_email=validated_data["email"], otp=data["otp"])
+            if os.environ.get('MODE') == 'LOCAL':
+                    print("OTP --> ", data["otp"])
+            else:
+                if validated_data["phone_code"] == "+91":  # indian user
+                    send_phone_otp(to_phone=validated_data["phone"], otp=data["otp"])
+                else:  
+                    # non-indian user
+                    send_email_otp(to_email=validated_data["email"], otp=data["otp"])
         return validated_data
 
 
@@ -144,10 +148,15 @@ class EmailOtpSerializer(serializers.Serializer):
                     user=user_obj, defaults=data
                 )
                 otp_obj.save()
-                if validated_data["phone_code"] == "+91":  # indian user
-                    send_phone_otp(to_phone=validated_data["phone"], otp=data["otp"])
-                else:  # non-indian user
-                    send_email_otp(to_email=validated_data["email"], otp=data["otp"])
+                if os.environ.get('MODE') == 'LOCAL':
+                    print("OTP --> ", data["otp"])
+                else:
+                    if validated_data["phone_code"] == "+91":  # indian user
+                        send_phone_otp(to_phone=validated_data["phone"], otp=data["otp"])
+                    else:  
+                        # non-indian user
+                        send_email_otp(to_email=validated_data["email"], otp=data["otp"])
+
                 return otp_obj
         except user_models.User.DoesNotExist:
             raise serializers.ValidationError({"message": "Phone is not registered."})
