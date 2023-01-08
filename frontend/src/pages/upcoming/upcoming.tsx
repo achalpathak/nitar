@@ -123,9 +123,13 @@ const Upcoming = () => {
 												<Typography fontFamily='Barlow Condensed'>
 													<>
 														Release Date:{" "}
-														{moment(
-															image?.release_date_time
-														).format("DD/MM/YYYY")}
+														{image?.coming_soon_flag
+															? "Coming Soon"
+															: moment(
+																	image?.release_date_time
+															  ).format(
+																	"DD/MM/YYYY"
+															  )}
 													</>
 												</Typography>
 											</div>
