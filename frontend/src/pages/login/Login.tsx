@@ -58,10 +58,8 @@ const Login = () => {
 	const [country, setCountry] = useState<ICountryList>({} as ICountryList);
 
 	const [errors, setErrors] = useState<IError>({
-		full_name: [],
-		email: [],
 		phone: [],
-		age: [],
+		phone_code: [],
 	});
 
 	const interval = useRef<NodeJS.Timer>();
@@ -109,6 +107,7 @@ const Login = () => {
 					);
 					if (india) {
 						setCountry(india);
+						setPhoneCode(india.code);
 					}
 				} else {
 					setCountries([]);
@@ -133,7 +132,7 @@ const Login = () => {
 
 		try {
 			const res = await api.post<IResponse<IUser>>(Routes.SEND_OTP, {
-				phone: _phone,
+				phone: parseInt(_phone),
 				phone_code: _phone_code,
 			});
 
@@ -161,7 +160,7 @@ const Login = () => {
 	const verifyOtp = async () => {
 		try {
 			const res = await api.post<IResponse<IUser>>(Routes.VERIFY_OTP, {
-				phone: phone,
+				phone: parseInt(phone),
 				phone_code: phoneCode,
 				otp: parseInt(otp),
 			});
@@ -237,38 +236,47 @@ const Login = () => {
 								>
 									Enter your phone number below to continue
 								</label>
-								<Select<ICountryList, false>
-									name='country'
-									id='country'
-									closeMenuOnSelect={true}
-									className='w-100'
-									components={animatedComponents}
-									isMulti={false}
-									isSearchable
-									options={countries}
-									value={country}
-									onChange={(newValue) => {
-										if (newValue) {
-											setCountry(newValue);
-											setPhoneCode(newValue?.code);
+								<>
+									<Select<ICountryList, false>
+										name='country'
+										id='country'
+										closeMenuOnSelect={true}
+										className='w-100'
+										components={animatedComponents}
+										isMulti={false}
+										isSearchable
+										options={countries}
+										value={country}
+										onChange={(newValue) => {
+											if (newValue) {
+												setCountry(newValue);
+												setPhoneCode(newValue?.code);
+											}
+										}}
+										noOptionsMessage={() => (
+											<Box>No results found</Box>
+										)}
+										getOptionLabel={(option) =>
+											`(${option.code}) ${option.name}`
 										}
-									}}
-									noOptionsMessage={() => (
-										<Box>No results found</Box>
-									)}
-									getOptionLabel={(option) =>
-										`(${option.code}) ${option.name}`
-									}
-									getOptionValue={(option) => option.name}
-									filterOption={(option, input) =>
-										option.label
-											?.toLowerCase()
-											.includes(input?.toLowerCase())
-									}
-									styles={CustomSelectUtils.customStyles()}
-								/>
+										getOptionValue={(option) => option.name}
+										filterOption={(option, input) =>
+											option.label
+												?.toLowerCase()
+												.includes(input?.toLowerCase())
+										}
+										styles={CustomSelectUtils.customStyles()}
+									/>
+									{errors?.phone_code &&
+										errors?.phone_code?.length > 0 &&
+										errors?.phone_code?.map((v) => (
+											<span className='error' key={v}>
+												{v}
+											</span>
+										))}
+								</>
 								<CustomInput
-									type='phone'
+									type='number'
 									id='phone'
 									name='phone'
 									placeholder='Enter your phone number'
@@ -278,7 +286,7 @@ const Login = () => {
 									) => {
 										setPhone(e.target.value);
 									}}
-									errors={errors?.email}
+									errors={errors?.phone}
 								/>
 							</Grid>
 							<Grid item xs={12} mt={2} className='d-center'>
