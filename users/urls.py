@@ -23,4 +23,7 @@ urlpatterns = [
     re_path(
         r"google_callback/$", api.GoogleCallbackAPI.as_view(), name="google_callback"
     ),
+    re_path(
+        r"google_callback_android/$", api.GoogleCallbackAndroidAPI.as_view(), name="google_callback_android"
+    ),
 ]

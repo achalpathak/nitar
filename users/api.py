@@ -1,5 +1,6 @@
 import json
 import os
+import traceback
 from django.contrib.auth import login
 from rest_framework import status, exceptions
 from rest_framework.response import Response
@@ -15,6 +16,8 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from rest_framework.authtoken.models import Token
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
 User = get_user_model()
 
@@ -266,3 +269,39 @@ class GoogleCallbackAPI(APIView):
             backend="django.contrib.auth.backends.ModelBackend",
         )
         return redirect(request.build_absolute_uri(reverse("home")))
+
+
+class GoogleCallbackAndroidAPI(APIView):
+    def get(self, request):
+        try:
+            token = self.request.GET["token"]
+            idinfo = id_token.verify_oauth2_token(
+                token, requests.Request(), GOOGLE_DTO.get("android_client_id")
+            )
+
+            validated_data = {
+                "full_name": idinfo["name"],
+                "is_active": True,
+                "email_verified": True,
+            }
+            user_obj, _ = User.objects.update_or_create(
+                email=idinfo["email"], defaults=validated_data
+            )
+            user_obj.save()
+            auth_token, created = Token.objects.get_or_create(user=user_obj)
+            data = {
+                "result": {
+                    "full_name": user_obj.full_name,
+                    "phone": user_obj.phone,
+                    "phone_code": user_obj.phone_code,
+                    "phone_verified": user_obj.phone_verified,
+                    "email_verified": user_obj.email_verified,
+                    "email": user_obj.email,
+                    "has_active_membership": user_obj.has_active_membership,
+                    "token": auth_token.key,
+                }
+            }
+            return Response(data)
+        except Exception as e:
+            traceback.print_exc()
+            return Response({"result": "Error"}, status=status.HTTP_400_BAD_REQUEST)
