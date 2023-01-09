@@ -1,3 +1,4 @@
+import os
 from django.conf import settings
 import razorpay
 from django.urls import reverse
@@ -53,7 +54,7 @@ class RazorPayPayments:
         return_resp["razorpay_merchant_key"] = settings.RAZORPAY_KEY_ID
         return_resp["razorpay_amount"] = amount
         return_resp["currency"] = currency
-        return_resp["callback_url"] = self.request.build_absolute_uri(reverse("payment_handler"))
+        return_resp["callback_url"] = os.environ["SERVER_DOMAIN"] + reverse("payment_handler")
         
         return return_resp
     

@@ -1,3 +1,4 @@
+import os
 from django.conf import settings
 from django.urls import reverse
 from payments.models import Order, PaymentStatus
@@ -48,7 +49,7 @@ class PayTmPayments:
             # ('EMAIL', request.user.email),
             # ('MOBILE_N0', '9911223388'),
             ("INDUSTRY_TYPE_ID", settings.PAYTM_INDUSTRY_TYPE_ID),
-            ("CALLBACK_URL", self.request.build_absolute_uri(reverse("paytm_payment_handler"))),
+            ("CALLBACK_URL", os.environ["SERVER_DOMAIN"] + reverse("paytm_payment_handler")),
             # ('PAYMENT_MODE_ONLY', 'NO'),
         )
 
