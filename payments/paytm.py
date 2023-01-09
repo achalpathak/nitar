@@ -16,8 +16,8 @@ class PayTmPayments:
         order = Order.objects.create(
             user=self.request.user,
             amount=dto["amount"],
-            membership=dto["memberhip_obj"],
-            membership_plan=dto["memberhip_obj"].name,
+            membership=dto["membership_obj"],
+            membership_plan=dto["membership_obj"].name,
             currency=self.request.user.currency_mode,
             gateway="paytm",
         )
@@ -25,15 +25,15 @@ class PayTmPayments:
 
     def start_payment(self):
         currency = self.request.user.currency_mode
-        memberhip_obj = Memberships.objects.get(id=self.request.data["membership_id"])
+        membership_obj = Memberships.objects.get(id=self.request.data["membership_id"])
         if currency == "INR":
-            amount = memberhip_obj.price_in_inr
+            amount = membership_obj.price_in_inr
         else:
-            amount = memberhip_obj.price_in_dollar
+            amount = membership_obj.price_in_dollar
             
         dto={
             "amount": amount,
-            "membership_obj": memberhip_obj,
+            "membership_obj": membership_obj,
         }
         
         order = self.create_order(dto)

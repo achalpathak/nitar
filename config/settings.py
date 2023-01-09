@@ -164,8 +164,6 @@ except Exception as e:
 GOOGLE_DTO = {
     "client_id": os.environ.get("GOOGLE_CLIENT_ID"),
     "client_secret": os.environ.get("GOOGLE_CLIENT_SECRET"),
-    "android_client_id": os.environ.get("GOOGLE_ANDROID_CLIENT_ID"),
-    "android_client_secret": os.environ.get("GOOGLE_ANDROID_CLIENT_SECRET"),
     "authorization_url": "https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent",
     "token_url": "https://oauth2.googleapis.com/token",
     "userinfo_url": "https://openidconnect.googleapis.com/v1/userinfo",
