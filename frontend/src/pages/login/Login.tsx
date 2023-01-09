@@ -102,12 +102,14 @@ const Login = () => {
 
 				if (res.status === 200) {
 					setCountries(res.data?.result);
-					const india = res.data?.result?.find(
-						(v) => v.name === "India"
-					);
-					if (india) {
-						setCountry(india);
-						setPhoneCode(india.code);
+					if (process !== "otp") {
+						const india = res.data?.result?.find(
+							(v) => v.name === "India"
+						);
+						if (india) {
+							setCountry(india);
+							setPhoneCode(india.code);
+						}
 					}
 				} else {
 					setCountries([]);
@@ -290,7 +292,10 @@ const Login = () => {
 								/>
 							</Grid>
 							<Grid item xs={12} mt={2} className='d-center'>
-								<Typography mt={1}>
+								<Typography
+									mt={1}
+									color='var(--website-secondary-color)'
+								>
 									<>
 										Don't have an account?{" "}
 										<Link

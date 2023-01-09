@@ -540,7 +540,9 @@ const Plans = () => {
 							xl={4}
 							sx={{
 								position: "relative",
+								backgroundColor: "dimgray",
 							}}
+							borderRadius={3}
 						>
 							<IconButton
 								onClickCapture={(e) => {
@@ -692,16 +694,46 @@ const Plans = () => {
 							xl={4}
 							sx={{
 								position: "relative",
-								backgroundColor: "rgba(0,0,0,1)",
+								backgroundColor: "dimgray",
 							}}
 							paddingTop={2}
 							paddingBottom={4}
+							borderRadius={3}
 						>
 							<div className='d-center flex-column'>
-								<Typography variant='h6'>
+								<Typography
+									variant='h6'
+									color='var(--website-primary-color)'
+									mb={2}
+								>
 									Update your phone number
 								</Typography>
-								<Box className='d-center flex-column'>
+								<IconButton
+									onClickCapture={(e) => {
+										e.preventDefault();
+										showPhoneVerification(false);
+										setCurrentPlan(undefined);
+									}}
+									className='custom-btn'
+									sx={{
+										position: "absolute",
+										top: 10,
+										right: 10,
+									}}
+								>
+									<Close
+										height={30}
+										sx={{
+											color: "var(--website-secondary-color)",
+										}}
+									/>
+								</IconButton>
+								<Box
+									className='d-center flex-column'
+									sx={{
+										width: "80%",
+									}}
+								>
 									<Select<ICountryList, false>
 										name='country'
 										id='country'

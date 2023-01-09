@@ -124,12 +124,6 @@ const ContactUs = () => {
 								flexDirection='column'
 								className='w-100'
 							>
-								<Typography
-									color='var(--website-secondary-color)'
-									mb={1}
-								>
-									Full Name
-								</Typography>
 								<CustomInput
 									required
 									placeholder='Enter Your Full Name'
@@ -147,12 +141,6 @@ const ContactUs = () => {
 								flexDirection='column'
 								className='w-100'
 							>
-								<Typography
-									color='var(--website-secondary-color)'
-									mb={1}
-								>
-									Email Address
-								</Typography>
 								<CustomInput
 									placeholder='Enter Your Email Address'
 									className='no-outline input-area'
@@ -173,12 +161,6 @@ const ContactUs = () => {
 								flexDirection='column'
 								className='w-100'
 							>
-								<Typography
-									color='var(--website-secondary-color)'
-									mb={1}
-								>
-									Phone Number
-								</Typography>
 								<CustomInput
 									placeholder='Enter Your Phone Number'
 									className='no-outline input-area'
@@ -202,12 +184,6 @@ const ContactUs = () => {
 								flexDirection='column'
 								className='w-100'
 							>
-								<Typography
-									color='var(--website-secondary-color)'
-									mb={1}
-								>
-									Subject
-								</Typography>
 								<CustomInput
 									required
 									placeholder='Enter Subject'
@@ -224,12 +200,6 @@ const ContactUs = () => {
 								flexDirection='column'
 								className='w-100'
 							>
-								<Typography
-									color='var(--website-secondary-color)'
-									mb={1}
-								>
-									Your Message
-								</Typography>
 								<textarea
 									required
 									placeholder='Describe Your Issue'

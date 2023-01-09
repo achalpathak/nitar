@@ -388,7 +388,10 @@ const Register = () => {
 						/>
 					</Grid>
 					<Grid item xs={12} mt={2} className='d-center'>
-						<Typography mt={2}>
+						<Typography
+							mt={2}
+							color='var(--website-secondary-color)'
+						>
 							<>
 								Already have an account?{" "}
 								<Link
