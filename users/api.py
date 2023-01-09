@@ -233,36 +233,81 @@ class UserInfo(APIView):
 class GoogleCallbackAPI(APIView):
     def get(self, request):
         code = self.request.GET.get("code")
-        token_url, headers, body = google_client.prepare_token_request(
-            GOOGLE_DTO.get("token_url"),
-            redirect_url=os.environ["SERVER_DOMAIN"] + reverse("google_callback"),
-            code=code,
-        )
-        token_response = requests.post(
-            token_url,
-            headers=headers,
-            data=body,
-            auth=(GOOGLE_DTO.get("client_id"), GOOGLE_DTO.get("client_secret")),
-        )
-        # Parse the tokens!
-        google_client.parse_request_body_response(json.dumps(token_response.json()))
+        device_type = self.request.GET.get("device_type")
+        if device_type == "mobile":
+            google_client = WebApplicationClient(GOOGLE_DTO.get("android_client_id"))
+            token_url, headers, body = google_client.prepare_token_request(
+                GOOGLE_DTO.get("token_url"),
+                redirect_url=os.environ["SERVER_DOMAIN"] + reverse("google_callback"),
+                code=code,
+            )
+            token_response = requests.post(
+                token_url,
+                headers=headers,
+                data=body,
+                auth=(GOOGLE_DTO.get("client_id"), GOOGLE_DTO.get("android_client_secret")),
+            )
+            # Parse the tokens!
+            google_client.parse_request_body_response(json.dumps(token_response.json()))
 
-        # Get user info
-        uri, headers, body = google_client.add_token(GOOGLE_DTO.get("userinfo_url"))
-        userinfo_response = requests.get(uri, headers=headers, data=body).json()
-        validated_data = {
-            "full_name": userinfo_response["name"],
-            "is_active": True,
-            "email_verified": True,
-        }
-        user_obj, _ = User.objects.update_or_create(
-            email=userinfo_response["email"], defaults=validated_data
-        )
-        user_obj.save()
-        user_obj.backend = settings.AUTHENTICATION_BACKENDS[0]
-        login(
-            request,
-            user_obj,
-            backend="django.contrib.auth.backends.ModelBackend",
-        )
-        return redirect(request.build_absolute_uri(reverse("home")))
+            # Get user info
+            uri, headers, body = google_client.add_token(GOOGLE_DTO.get("userinfo_url"))
+            userinfo_response = requests.get(uri, headers=headers, data=body).json()
+            validated_data = {
+                "full_name": userinfo_response["name"],
+                "is_active": True,
+                "email_verified": True,
+            }
+            user_obj, _ = User.objects.update_or_create(
+                email=userinfo_response["email"], defaults=validated_data
+            )
+            user_obj.save()
+
+            token, created = Token.objects.get_or_create(user=user_obj)
+            data = {
+                "result": {
+                    "full_name": user_obj.full_name,
+                    "phone": user_obj.phone,
+                    "phone_code": user_obj.phone_code,
+                    "phone_verified": user_obj.phone_verified,
+                    "email_verified": user_obj.email_verified,
+                    "email": user_obj.email,
+                    "has_active_membership": user_obj.has_active_membership,
+                    "token": token.key
+                }
+            }
+            return Response(data)
+        else:
+            token_url, headers, body = google_client.prepare_token_request(
+                GOOGLE_DTO.get("token_url"),
+                redirect_url=os.environ["SERVER_DOMAIN"] + reverse("google_callback"),
+                code=code,
+            )
+            token_response = requests.post(
+                token_url,
+                headers=headers,
+                data=body,
+                auth=(GOOGLE_DTO.get("client_id"), GOOGLE_DTO.get("client_secret")),
+            )
+            # Parse the tokens!
+            google_client.parse_request_body_response(json.dumps(token_response.json()))
+
+            # Get user info
+            uri, headers, body = google_client.add_token(GOOGLE_DTO.get("userinfo_url"))
+            userinfo_response = requests.get(uri, headers=headers, data=body).json()
+            validated_data = {
+                "full_name": userinfo_response["name"],
+                "is_active": True,
+                "email_verified": True,
+            }
+            user_obj, _ = User.objects.update_or_create(
+                email=userinfo_response["email"], defaults=validated_data
+            )
+            user_obj.save()
+            user_obj.backend = settings.AUTHENTICATION_BACKENDS[0]
+            login(
+                request,
+                user_obj,
+                backend="django.contrib.auth.backends.ModelBackend",
+            )
+            return redirect(request.build_absolute_uri(reverse("home")))

@@ -19,7 +19,7 @@ class InitiatePayments(APIView):
             gateway = request.data["gateway"]
             user = request.user
             print(user)
-            if not user.phone_number:
+            if not user.phone:
                 return Response(
                     {"message": f"Phone number is not updated."},
                     status=status.HTTP_400_BAD_REQUEST,
