@@ -9,4 +9,9 @@ urlpatterns = [
         api.RazorPayCallback.as_view(),
         name="payment_handler",
     ),
+    re_path(
+        "paytm_payment_handler/",
+        api.PayTmCallback.as_view(),
+        name="paytm_payment_handler",
+    ),
 ]
