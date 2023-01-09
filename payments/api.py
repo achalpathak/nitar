@@ -74,7 +74,7 @@ class PayTmCallback(APIView):
 
     def post(self, request):
         try:
-            request_data = request.data
+            request_data = request
             paytm_class = PayTmPayments(request_data)
             resp = paytm_class.validate_payment()
             

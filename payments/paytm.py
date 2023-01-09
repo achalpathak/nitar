@@ -31,12 +31,12 @@ class PayTmPayments:
             amount = membership_obj.price_in_inr
         else:
             amount = membership_obj.price_in_dollar
-            
-        dto={
+
+        dto = {
             "amount": amount,
             "membership_obj": membership_obj,
         }
-        
+
         order = self.create_order(dto)
 
         params = (
@@ -44,12 +44,18 @@ class PayTmPayments:
             ("ORDER_ID", str(order.id)),
             ("CUST_ID", str(self.request.user.email)),
             ("TXN_AMOUNT", str(amount)),
-            ("CHANNEL_ID", "APP" if self.request.data.get("device_type") == "mobile" else "WEB"),
+            (
+                "CHANNEL_ID",
+                "APP" if self.request.data.get("device_type") == "mobile" else "WEB",
+            ),
             ("WEBSITE", settings.PAYTM_WEBSITE),
             # ('EMAIL', request.user.email),
             # ('MOBILE_N0', '9911223388'),
             ("INDUSTRY_TYPE_ID", settings.PAYTM_INDUSTRY_TYPE_ID),
-            ("CALLBACK_URL", os.environ["SERVER_DOMAIN"] + reverse("paytm_payment_handler")),
+            (
+                "CALLBACK_URL",
+                os.environ["SERVER_DOMAIN"] + reverse("paytm_payment_handler"),
+            ),
             # ('PAYMENT_MODE_ONLY', 'NO'),
         )
 
@@ -63,16 +69,19 @@ class PayTmPayments:
 
     def validate_payment(self):
         paytm_params = {}
-        paytm_checksum = self.request.data['CHECKSUMHASH'][0]
-        order = Order.objects.get(signature_id=paytm_checksum)
+        paytm_checksum = self.request.data["CHECKSUMHASH"][0]
+        paytm_orderid = self.request.data["ORDERID"][0]
+        order = Order.objects.get(id=paytm_orderid, gateway="paytm")
         for key, value in self.request.data.items():
-            if key == 'CHECKSUMHASH':
+            if key == "CHECKSUMHASH":
                 paytm_checksum = value[0]
             else:
                 paytm_params[key] = str(value[0])
-                
+
         # Verify checksum
-        is_valid_checksum = verify_checksum(paytm_params, settings.PAYTM_SECRET_KEY, str(paytm_checksum))
+        is_valid_checksum = verify_checksum(
+            paytm_params, settings.PAYTM_SECRET_KEY, str(paytm_checksum)
+        )
         if is_valid_checksum:
             order.status = PaymentStatus.SUCCESS
             obj = UserMemberships.objects.create(
