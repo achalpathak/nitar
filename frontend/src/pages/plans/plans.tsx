@@ -13,6 +13,7 @@ import {
 	ICountryList,
 	IError,
 	IPaymentGateways,
+	IPaytm,
 	IPlanItem,
 	IPlans,
 	IResponse,
@@ -23,7 +24,7 @@ import {
 import { AxiosError } from "axios";
 import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import useRazorpay, { RazorpayOptions } from "react-razorpay";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import OldSwal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import "./plans.scss";
@@ -34,7 +35,6 @@ import { CustomInput } from "@components";
 import { CustomSelectUtils } from "@utils";
 import makeAnimated from "react-select/animated";
 import Select from "react-select";
-import OtpInput from "react-otp-input";
 import { useAlert } from "@hooks";
 
 const animatedComponents = makeAnimated();
@@ -164,7 +164,7 @@ const Plans = () => {
 			showRenderingGateway(true);
 			showPaymentGateways(false);
 
-			if (type === "razor_pay" || type === "stripe") {
+			if (type === "razor_pay" || type === "stripe" || type === "paytm") {
 				const res = await api.post<ISuccess<any>>(Routes.PAYMENT, {
 					membership_id: currentPlan?.id,
 					gateway: type,
@@ -199,6 +199,9 @@ const Plans = () => {
 									sessionId: res.data?.result?.sessionId,
 								});
 							}
+						} else if (type === "paytm") {
+							console.log("Paytm", res.data?.result);
+							initiatePaytm(res.data?.result);
 						}
 					}, 1500);
 				}
@@ -274,6 +277,42 @@ const Plans = () => {
 		} catch (error) {
 			console.error(error);
 		}
+	};
+
+	const initiatePaytm = (res: IPaytm) => {
+		// separate key and values from the res object which is nothing but param_dict
+
+		// when we start the payment verification we will hide our Product form
+		const paymentForm = document.getElementById("paymentFrm");
+		if (paymentForm) {
+			paymentForm.style.display = "none";
+		}
+
+		//create a form that will send necessary details to the paytm
+		let frm = document.createElement("form");
+		frm.action = "https://securegw-stage.paytm.in/order/process/";
+		frm.method = "post";
+		frm.name = "TaakPaytmForm";
+
+		// we have to pass all the credentials that we've got from param_dict
+		Object.entries(res).map(([key, value], i) => {
+			// create an input element
+			let inp = document.createElement("input");
+			inp.setAttribute("key", i.toString());
+			inp.setAttribute("type", "hidden");
+			inp.setAttribute("name", key);
+			inp.setAttribute("value", value);
+			frm.appendChild(inp);
+		});
+
+		// append all the above tags into the body tag
+		document.body.appendChild(frm);
+		// finally submit that form
+		frm.submit();
+
+		// if you remember, the param_dict also has "'CALLBACK_URL': 'http://127.0.0.1:8000/api/handlepayment/'"
+		// so as soon as Paytm gets the payment it will hit that callback URL with some response and
+		// on the basis of that response we are displaying the "payment successful" or "failed" message
 	};
 
 	const handlePaymentConfirmation = async (
