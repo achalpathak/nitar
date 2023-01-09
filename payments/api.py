@@ -14,7 +14,7 @@ class InitiatePayments(APIView):
 
     def post(self, request):
         try:
-            request_data = request.data
+            request_data = request
             membership_id = request.data["membership_id"]
             gateway = request.data["gateway"]
             user = request.user
