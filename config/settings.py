@@ -178,3 +178,11 @@ EMAIL_FORGOT_PASSWORD_TEMPLATE_ID = os.environ.get("EMAIL_FORGOT_PASSWORD_TEMPLA
 
 SMS_AUTH_KEY = os.environ.get("SMS_AUTH_KEY")
 SMS_SENDER_ID = os.environ.get("SMS_SENDER_ID")
+
+
+############# PAYTM CREDS #############
+PAYTM_MERCHANT_ID = os.environ.get("PAYTM_MERCHANT_ID")
+PAYTM_SECRET_KEY = os.environ.get("PAYTM_SECRET_KEY")
+PAYTM_WEBSITE = os.environ.get("PAYTM_WEBSITE")
+PAYTM_CHANNEL_ID = os.environ.get("PAYTM_CHANNEL_ID")
+PAYTM_INDUSTRY_TYPE_ID = os.environ.get("PAYTM_INDUSTRY_TYPE_ID")
