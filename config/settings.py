@@ -187,3 +187,4 @@ PAYTM_SECRET_KEY = os.environ.get("PAYTM_SECRET_KEY")
 PAYTM_WEBSITE = os.environ.get("PAYTM_WEBSITE")
 PAYTM_CHANNEL_ID = os.environ.get("PAYTM_CHANNEL_ID")
 PAYTM_INDUSTRY_TYPE_ID = os.environ.get("PAYTM_INDUSTRY_TYPE_ID")
+PAYTM_INITIATE_URL = "https://securegw-stage.paytm.in/theia/api/v1/initiateTransaction?mid=%s&orderId=%s"

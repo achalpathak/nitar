@@ -3,8 +3,9 @@ from django.conf import settings
 from django.urls import reverse
 from payments.models import Order, PaymentStatus
 from users.models import Memberships, UserMemberships
-from .paytm_utils import generate_checksum, verify_checksum
-
+from .paytm_utils import generate_checksum, verify_checksum, generateSignature
+import requests
+import json
 
 class PayTmPayments:
     def __init__(self, request):
@@ -39,33 +40,36 @@ class PayTmPayments:
 
         order = self.create_order(dto)
 
-        params = (
-            ("MID", settings.PAYTM_MERCHANT_ID),
-            ("ORDER_ID", str(order.id)),
-            ("CUST_ID", str(self.request.user.email)),
-            ("TXN_AMOUNT", str(amount)),
-            (
-                "CHANNEL_ID",
-                "APP" if self.request.data.get("device_type") == "mobile" else "WEB",
-            ),
-            ("WEBSITE", settings.PAYTM_WEBSITE),
-            # ('EMAIL', request.user.email),
-            # ('MOBILE_N0', '9911223388'),
-            ("INDUSTRY_TYPE_ID", settings.PAYTM_INDUSTRY_TYPE_ID),
-            (
-                "CALLBACK_URL",
-                os.environ["SERVER_DOMAIN"] + reverse("paytm_payment_handler"),
-            ),
-            # ('PAYMENT_MODE_ONLY', 'NO'),
-        )
+        paytmParams = dict()
+        paytmParams["body"] = {
+            "requestType"   : "Payment",
+            "mid"           : settings.PAYTM_MERCHANT_ID,
+            "websiteName"   : settings.PAYTM_WEBSITE,
+            "orderId"       : str(order.id),
+            "callbackUrl"   : os.environ["SERVER_DOMAIN"] + reverse("paytm_payment_handler"),
+            "txnAmount"     : {
+                "value"     : str(amount),
+                "currency"  : currency,
+            },
+            "userInfo"      : {
+                "custId"    : str(self.request.user.email),
+            },
+        }
+        checksum = generateSignature(json.dumps(paytmParams["body"]), settings.PAYTM_SECRET_KEY)
 
-        paytm_params = dict(params)
-        checksum = generate_checksum(paytm_params, settings.PAYTM_SECRET_KEY)
-
+        paytmParams["head"] = {
+            "signature"    : checksum
+        }
+        
         order.signature_id = checksum
         order.save()
-        paytm_params["CHECKSUMHASH"] = checksum
-        return paytm_params
+
+        post_data = json.dumps(paytmParams)
+
+        url = settings.PAYTM_INITIATE_URL % ( settings.PAYTM_MERCHANT_ID, str(order.id))
+
+        response = requests.post(url, data = post_data, headers = {"Content-type": "application/json"}).json()
+        return response
 
     def validate_payment(self):
         paytm_params = {}
