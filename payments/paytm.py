@@ -3,7 +3,7 @@ from django.conf import settings
 from django.urls import reverse
 from payments.models import Order, PaymentStatus
 from users.models import Memberships, UserMemberships
-from .paytm_utils import generate_checksum, verify_checksum, generateSignature
+from .paytm_utils import generateSignature
 import requests
 import json
 
