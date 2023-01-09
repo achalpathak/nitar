@@ -105,8 +105,9 @@ const Plans = () => {
 	useEffect(() => {
 		if (searchParams.get("success")) {
 			if (
-				paymentInitiate?.type === "stripe" &&
-				paymentInitiate?.status === null
+				paymentInitiate?.type === "stripe" ||
+				(paymentInitiate?.type === "paytm" &&
+					paymentInitiate?.status === null)
 			) {
 				if (searchParams.get("success") === "true") {
 					//Got Success True
@@ -279,40 +280,121 @@ const Plans = () => {
 		}
 	};
 
-	const initiatePaytm = (res: IPaytm) => {
-		// separate key and values from the res object which is nothing but param_dict
+	// const initiatePaytm = (res: IPaytm) => {
+	// 	// separate key and values from the res object which is nothing but param_dict
 
-		// when we start the payment verification we will hide our Product form
-		const paymentForm = document.getElementById("paymentFrm");
-		if (paymentForm) {
-			paymentForm.style.display = "none";
-		}
+	// 	// when we start the payment verification we will hide our Product form
+	// 	const paymentForm = document.getElementById("paymentFrm");
+	// 	if (paymentForm) {
+	// 		paymentForm.style.display = "none";
+	// 	}
 
-		//create a form that will send necessary details to the paytm
-		let frm = document.createElement("form");
-		frm.action = "https://securegw-stage.paytm.in/order/process/";
-		frm.method = "post";
-		frm.name = "TaakPaytmForm";
+	// 	//create a form that will send necessary details to the paytm
+	// 	let frm = document.createElement("form");
+	// 	frm.action = "https://securegw-stage.paytm.in/order/process/";
+	// 	// frm.action = `https://securegw-stage.paytm.in/theia/api/v1/showPaymentPage?mid=${res.MID}&orderId=${res.ORDER_ID}`;
+	// 	frm.method = "post";
+	// 	frm.name = "TaakPaytmForm";
+	// 	frm.target = "_blank";
 
-		// we have to pass all the credentials that we've got from param_dict
-		Object.entries(res).map(([key, value], i) => {
-			// create an input element
-			let inp = document.createElement("input");
-			inp.setAttribute("key", i.toString());
-			inp.setAttribute("type", "hidden");
-			inp.setAttribute("name", key);
-			inp.setAttribute("value", value);
-			frm.appendChild(inp);
+	// 	// we have to pass all the credentials that we've got from param_dict
+	// 	Object.entries(res).map(([key, value], i) => {
+	// 		// create an input element
+	// 		let inp = document.createElement("input");
+	// 		inp.setAttribute("key", i.toString());
+	// 		inp.setAttribute("type", "hidden");
+	// 		inp.setAttribute("name", key);
+	// 		inp.setAttribute("value", value);
+	// 		frm.appendChild(inp);
+	// 	});
+
+	// 	// append all the above tags into the body tag
+	// 	document.body.appendChild(frm);
+	// 	// finally submit that form
+	// 	frm.submit();
+
+	// 	// if you remember, the param_dict also has "'CALLBACK_URL': 'http://127.0.0.1:8000/api/handlepayment/'"
+	// 	// so as soon as Paytm gets the payment it will hit that callback URL with some response and
+	// 	// on the basis of that response we are displaying the "payment successful" or "failed" message
+	// };
+
+	const paytmTranactionStatus = (status: any) => {
+		console.log("Paytm Status", status);
+	};
+
+	const paytmNotifyMerchange = (event: any, data: any) => {
+		console.log("Paytm Notify Merchant", event, data);
+	};
+
+	const loadPaytm = (host: string, mid: string, callback: () => void) => {
+		const script = document.createElement("script");
+		script.src = `${host}/merchantpgpui/checkoutjs/merchants/${mid}.js`;
+		script.id = "paytm";
+		script.type = "application/javascript";
+		script.crossOrigin = "anonymous";
+
+		document.body.appendChild(script);
+		script.onload = () => {
+			if (callback) callback();
+		};
+	};
+
+	const initiatePaytm = (data: IPaytm) => {
+		const config = {
+			root: "",
+			style: {
+				bodyBackgroundColor: "#fafafb",
+				bodyColor: "",
+				themeBackgroundColor: "#0FB8C9",
+				themeColor: "#ffffff",
+				headerBackgroundColor: "#284055",
+				headerColor: "#ffffff",
+				errorColor: "",
+				successColor: "",
+				card: {
+					padding: "",
+					backgroundColor: "",
+				},
+			},
+			data: {
+				orderId: "",
+				token: "",
+				tokenType: "TXN_TOKEN",
+				amount: "" /* update amount */,
+			},
+			payMode: {
+				labels: {},
+				filter: {
+					exclude: [],
+				},
+				order: ["CC", "DC", "NB", "UPI", "PPBL", "PPI", "BALANCE"],
+			},
+			website: "WEBSTAGING",
+			flow: "DEFAULT",
+			merchant: {
+				mid: "",
+				redirect: false,
+			},
+			handler: {
+				transactionStatus: paytmTranactionStatus,
+			},
+			notifyMerchant: paytmNotifyMerchange,
+		};
+
+		const staging = "https://securegw-stage.paytm.in";
+		const production = " https://securegw.paytm.in";
+
+		loadPaytm(staging, data.MID, () => {
+			if ((window as any).Paytm && (window as any).Paytm.CheckoutJS) {
+				(window as any).Paytm.CheckoutJS.init(config)
+					.then(function onSuccess() {
+						(window as any).Paytm.CheckoutJS.invoke();
+					})
+					.catch(function onError(error: any) {
+						console.log("Error => ", error);
+					});
+			}
 		});
-
-		// append all the above tags into the body tag
-		document.body.appendChild(frm);
-		// finally submit that form
-		frm.submit();
-
-		// if you remember, the param_dict also has "'CALLBACK_URL': 'http://127.0.0.1:8000/api/handlepayment/'"
-		// so as soon as Paytm gets the payment it will hit that callback URL with some response and
-		// on the basis of that response we are displaying the "payment successful" or "failed" message
 	};
 
 	const handlePaymentConfirmation = async (
