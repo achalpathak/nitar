@@ -3,9 +3,12 @@ from django.conf import settings
 from django.urls import reverse
 from payments.models import Order, PaymentStatus
 from users.models import Memberships, UserMemberships
-from .paytm_utils import generateSignature
+
+# from .paytm_utils import generateSignature, verifySignature
+from paytmchecksum import PaytmChecksum
 import requests
 import json
+
 
 class PayTmPayments:
     def __init__(self, request):
@@ -39,37 +42,46 @@ class PayTmPayments:
         }
 
         order = self.create_order(dto)
-
         paytmParams = dict()
         paytmParams["body"] = {
-            "requestType"   : "Payment",
-            "mid"           : settings.PAYTM_MERCHANT_ID,
-            "websiteName"   : settings.PAYTM_WEBSITE,
-            "orderId"       : str(order.id),
-            "callbackUrl"   : os.environ["SERVER_DOMAIN"] + reverse("paytm_payment_handler"),
-            "txnAmount"     : {
-                "value"     : str(amount),
-                "currency"  : currency,
+            "requestType": "Payment",
+            "mid": settings.PAYTM_MERCHANT_ID,
+            "websiteName": settings.PAYTM_WEBSITE,
+            "orderId": str(order.id),
+            "callbackUrl": os.environ["SERVER_DOMAIN"]
+            + reverse("paytm_payment_handler"),
+            "txnAmount": {
+                "value": str(amount),
+                "currency": currency,
             },
-            "userInfo"      : {
-                "custId"    : str(self.request.user.email),
+            "userInfo": {
+                "custId": str(self.request.user.email),
             },
         }
-        checksum = generateSignature(json.dumps(paytmParams["body"]), settings.PAYTM_SECRET_KEY)
+        checksum = PaytmChecksum.generateSignature(
+            json.dumps(paytmParams["body"]), settings.PAYTM_SECRET_KEY
+        )
 
-        paytmParams["head"] = {
-            "signature"    : checksum
-        }
-        
+        paytmParams["head"] = {"signature": checksum}
+
         order.signature_id = checksum
         order.save()
 
         post_data = json.dumps(paytmParams)
+        headers = {
+            "Content-type": "application/json",
+            "signature": checksum,
+            "version": "v1",
+        }
 
-        url = settings.PAYTM_INITIATE_URL % ( settings.PAYTM_MERCHANT_ID, str(order.id))
-
-        response = requests.post(url, data = post_data, headers = {"Content-type": "application/json"}).json()
-        return response
+        url = settings.PAYTM_INITIATE_URL % (settings.PAYTM_MERCHANT_ID, str(order.id))
+        response = requests.post(url, data=post_data, headers=headers).json()
+        final_resp = {
+            "mid": settings.PAYTM_MERCHANT_ID,
+            "orderId": str(order.id),
+            "txnToken": response["body"]["txnToken"],
+        }
+        return final_resp
 
     def validate_payment(self):
         paytm_params = {}
