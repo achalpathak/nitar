@@ -17,7 +17,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from rest_framework.authtoken.models import Token
 from google.oauth2 import id_token
-from google.auth.transport import requests
+from google.auth.transport import requests as google_requests
 
 User = get_user_model()
 
@@ -276,7 +276,7 @@ class GoogleCallbackAndroidAPI(APIView):
         try:
             token = self.request.GET["token"]
             idinfo = id_token.verify_oauth2_token(
-                token, requests.Request(), GOOGLE_DTO.get("android_client_id")
+                token, google_requests.Request(), GOOGLE_DTO.get("android_client_id")
             )
 
             validated_data = {
