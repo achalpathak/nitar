@@ -102,7 +102,7 @@ class PayTmPayments:
             param_dict = {}
 
             for key, value in self.request.data.items():
-                param_dict[key] = key
+                param_dict[key] = value
             checksum = self.request.data.get("CHECKSUMHASH")
             is_verified = PaytmChecksum.verifySignature(
                 param_dict, settings.PAYTM_SECRET_KEY, checksum

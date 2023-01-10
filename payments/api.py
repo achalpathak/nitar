@@ -7,6 +7,8 @@ import traceback
 from django.shortcuts import redirect
 from .razorpay import RazorPayPayments
 from .paytm import PayTmPayments
+from django.conf import settings
+import os
 
 
 class InitiatePayments(APIView):
@@ -48,8 +50,8 @@ class InitiatePayments(APIView):
 
 
 class RazorPayCallback(APIView):
-    # permission_classes = ()
-    # authentication_classes = ()
+    permission_classes = ()
+    authentication_classes = ()
 
     def post(self, request):
         try:
@@ -68,10 +70,9 @@ class RazorPayCallback(APIView):
             print("[x] Some other error", str(e))
             return Response({"result": "Failed"}, status=status.HTTP_400_BAD_REQUEST)
 
-
 class PayTmCallback(APIView):
-    # permission_classes = ()
-    # authentication_classes = ()
+    permission_classes = ()
+    authentication_classes = ()
 
     def post(self, request):
         try:
@@ -79,13 +80,21 @@ class PayTmCallback(APIView):
             paytm_class = PayTmPayments(request_data)
             resp = paytm_class.validate_payment()
 
-            return redirect(
-                request.build_absolute_uri(reverse("paytm_payment_handler")),
-                {"success": resp},
-            )
+            if(os.environ.get('MODE') == 'LOCAL'):
+                return redirect(f"https://localhost/plans?success={resp}")
+            else:
+                return redirect(
+                    f"{request.build_absolute_uri(reverse('plans'))}?success={resp}"
+                )
 
         except Exception as e:
             # for any error
             traceback.print_exc()
             print("[x] Some other error", str(e))
-            return Response({"result": "Failed"}, status=status.HTTP_400_BAD_REQUEST)
+            resp = False
+            if(os.environ.get('MODE') == 'LOCAL'):
+                return redirect(f"https://localhost/plans?success={resp}")
+            else:
+                return redirect(
+                    f"{request.build_absolute_uri(reverse('plans'))}?success={resp}"
+                )
