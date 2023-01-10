@@ -180,17 +180,17 @@ EMAIL_FORGOT_PASSWORD_TEMPLATE_ID = os.environ.get("EMAIL_FORGOT_PASSWORD_TEMPLA
 SMS_AUTH_KEY = os.environ.get("SMS_AUTH_KEY")
 SMS_SENDER_ID = os.environ.get("SMS_SENDER_ID")
 
-
 ############# PAYTM CREDS #############
 if os.environ.get("MODE") != "PROD":
-    paytm_domain = "https://securegw-stage.paytm.in"
+    PAYTM_DOMAIN = "https://securegw-stage.paytm.in"
 else:
-    paytm_domain = "https://securegw.paytm.in"
+    PAYTM_DOMAIN = "https://securegw.paytm.in"
+    
 PAYTM_DTO = {
     "merchant_key": os.environ.get("PAYTM_MERCHANT_ID"),
     "secret_key": os.environ.get("PAYTM_SECRET_KEY"),
     "website": os.environ.get("PAYTM_WEBSITE"),
     "channel_id": os.environ.get("PAYTM_CHANNEL_ID"),
     "industry_type_id": os.environ.get("PAYTM_INDUSTRY_TYPE_ID"),
-    "payment_initiate_url": "%s/theia/api/v1/initiateTransaction?mid=%s&orderId=%s"
+    "payment_initiate_url": "%s/theia/api/v1/initiateTransaction?mid=%s&orderId=%s",
 }
