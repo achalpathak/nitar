@@ -92,12 +92,13 @@ class PayTmPayments:
         res_msg = self.request.data.get("RESPMSG")
 
         order = Order.objects.get(id=order_id, gateway="paytm")
+        order.message = res_msg
         # payment FAILED
         if res_msg != "Txn Success":
             order.status = PaymentStatus.FAILURE
             order.payment_id = transaction_id
             order.save()
-            return False
+            return False, res_msg
         else:  # payment SUCCESS
             param_dict = {}
 
@@ -117,9 +118,9 @@ class PayTmPayments:
                 order.user_membership = obj
                 order.payment_id = transaction_id
                 order.save()
-                return True
+                return True, res_msg
             else:
                 order.status = PaymentStatus.FAILURE
                 order.payment_id = transaction_id
                 order.save()
-                return False
+                return False, res_msg

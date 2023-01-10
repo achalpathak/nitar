@@ -78,13 +78,13 @@ class PayTmCallback(APIView):
         try:
             request_data = request
             paytm_class = PayTmPayments(request_data)
-            resp = paytm_class.validate_payment()
-
+            resp, msg = paytm_class.validate_payment()
+            msg = "Payment is completed."
             if(os.environ.get('MODE') == 'LOCAL'):
-                return redirect(f"https://localhost/plans?success={resp}")
+                return redirect(f"{os.environ.get('SERVER_DOMAIN')}/plans?success={resp}&message={msg}")
             else:
                 return redirect(
-                    f"{request.build_absolute_uri(reverse('plans'))}?success={resp}"
+                    f"{request.build_absolute_uri(reverse('plans'))}?success={resp}&message={msg}"
                 )
 
         except Exception as e:
@@ -93,8 +93,8 @@ class PayTmCallback(APIView):
             print("[x] Some other error", str(e))
             resp = False
             if(os.environ.get('MODE') == 'LOCAL'):
-                return redirect(f"https://localhost/plans?success={resp}")
+                return redirect(f"{os.environ.get('SERVER_DOMAIN')}/plans?success={resp}&message={str(e)}")
             else:
                 return redirect(
-                    f"{request.build_absolute_uri(reverse('plans'))}?success={resp}"
+                    f"{request.build_absolute_uri(reverse('plans'))}?success={resp}&message={str(e)}"
                 )

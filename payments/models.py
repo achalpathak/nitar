@@ -35,6 +35,7 @@ class Order(models.Model):
         _("Order ID"), max_length=40, null=True, blank=True
     )
     payment_id = models.CharField(_("Payment ID"), max_length=36, null=True, blank=True)
+    message = models.TextField(_("Message"), max_length=100, null=True, blank=True)
     signature_id = models.CharField(
         _("Signature ID"), max_length=128, null=True, blank=True
     )
