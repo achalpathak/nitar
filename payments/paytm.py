@@ -4,7 +4,6 @@ from django.urls import reverse
 from payments.models import Order, PaymentStatus
 from users.models import Memberships, UserMemberships
 
-# from .paytm_utils import generateSignature, verifySignature
 from paytmchecksum import PaytmChecksum
 import requests
 import json

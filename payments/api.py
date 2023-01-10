@@ -53,21 +53,22 @@ class RazorPayCallback(APIView):
 
     def post(self, request):
         try:
-            request_data = request.data
+            request_data = request
             razorpay_class = RazorPayPayments(request_data)
             resp = razorpay_class.validate_payment()
             if resp:
                 return Response({"result": "Success"})
             else:
                 return Response(
-                        {"result": "Failed"}, status=status.HTTP_400_BAD_REQUEST
-                    )
+                    {"result": "Failed"}, status=status.HTTP_400_BAD_REQUEST
+                )
         except Exception as e:
             # for any error
             traceback.print_exc()
             print("[x] Some other error", str(e))
             return Response({"result": "Failed"}, status=status.HTTP_400_BAD_REQUEST)
-        
+
+
 class PayTmCallback(APIView):
     # permission_classes = ()
     # authentication_classes = ()
@@ -77,8 +78,11 @@ class PayTmCallback(APIView):
             request_data = request
             paytm_class = PayTmPayments(request_data)
             resp = paytm_class.validate_payment()
-            
-            return redirect(request.build_absolute_uri(reverse("paytm_payment_handler")), {"success": resp})
+
+            return redirect(
+                request.build_absolute_uri(reverse("paytm_payment_handler")),
+                {"success": resp},
+            )
 
         except Exception as e:
             # for any error
