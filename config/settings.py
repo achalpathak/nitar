@@ -182,9 +182,15 @@ SMS_SENDER_ID = os.environ.get("SMS_SENDER_ID")
 
 
 ############# PAYTM CREDS #############
-PAYTM_MERCHANT_ID = os.environ.get("PAYTM_MERCHANT_ID")
-PAYTM_SECRET_KEY = os.environ.get("PAYTM_SECRET_KEY")
-PAYTM_WEBSITE = os.environ.get("PAYTM_WEBSITE")
-PAYTM_CHANNEL_ID = os.environ.get("PAYTM_CHANNEL_ID")
-PAYTM_INDUSTRY_TYPE_ID = os.environ.get("PAYTM_INDUSTRY_TYPE_ID")
-PAYTM_INITIATE_URL = "https://securegw-stage.paytm.in/theia/api/v1/initiateTransaction?mid=%s&orderId=%s"
+if os.environ.get("MODE") != "PROD":
+    pay_tm_domain = "https://securegw-stage.paytm.in"
+else:
+    pay_tm_domain = "https://securegw.paytm.in"
+PAYTM_DTO = {
+    "merchant_key": os.environ.get("PAYTM_MERCHANT_ID"),
+    "secret_key": os.environ.get("PAYTM_SECRET_KEY"),
+    "website": os.environ.get("PAYTM_WEBSITE"),
+    "channel_id": os.environ.get("PAYTM_CHANNEL_ID"),
+    "industry_type_id": os.environ.get("PAYTM_INDUSTRY_TYPE_ID"),
+    "payment_initiate_url": "%s/theia/api/v1/initiateTransaction?mid=%s&orderId=%s"
+}

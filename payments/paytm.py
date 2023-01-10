@@ -12,8 +12,8 @@ import json
 class PayTmPayments:
     def __init__(self, request):
         self.request = request
-        self.merchant_id = settings.PAYTM_MERCHANT_ID
-        self.merchant_key = settings.PAYTM_SECRET_KEY
+        self.merchant_id = settings.PAYTM_DTO["merchant_key"]
+        self.merchant_key = settings.PAYTM_DTO["secret_key"]
 
     def create_order(self, dto):
         # Save the order in DB
@@ -44,8 +44,8 @@ class PayTmPayments:
         paytmParams = dict()
         paytmParams["body"] = {
             "requestType": "Payment",
-            "mid": settings.PAYTM_MERCHANT_ID,
-            "websiteName": settings.PAYTM_WEBSITE,
+            "mid": settings.PAYTM_DTO["merchant_key"],
+            "websiteName": settings.PAYTM_DTO["website"],
             "orderId": str(order.id),
             "callbackUrl": os.environ["SERVER_DOMAIN"]
             + reverse("paytm_payment_handler"),
@@ -58,7 +58,7 @@ class PayTmPayments:
             },
         }
         checksum = PaytmChecksum.generateSignature(
-            json.dumps(paytmParams["body"]), settings.PAYTM_SECRET_KEY
+            json.dumps(paytmParams["body"]), settings.PAYTM_DTO["secret_key"]
         )
 
         paytmParams["head"] = {"signature": checksum}
@@ -73,12 +73,18 @@ class PayTmPayments:
             "version": "v1",
         }
 
-        url = settings.PAYTM_INITIATE_URL % (settings.PAYTM_MERCHANT_ID, str(order.id))
+        url = settings.PAYTM_DTO["payment_initiate_url"] % (
+            settings.pay_tm_domain,
+            settings.PAYTM_MERCHANT_ID,
+            str(order.id),
+        )
         response = requests.post(url, data=post_data, headers=headers).json()
         final_resp = {
-            "mid": settings.PAYTM_MERCHANT_ID,
+            "mid": settings.PAYTM_DTO["merchant_key"],
             "orderId": str(order.id),
             "txnToken": response["body"]["txnToken"],
+            "website": settings.PAYTM_DTO["website"],
+            "pay_tm_domain": settings.pay_tm_domain,
         }
         return final_resp
 
@@ -106,7 +112,7 @@ class PayTmPayments:
                 param_dict[key] = value
             checksum = self.request.data.get("CHECKSUMHASH")
             is_verified = PaytmChecksum.verifySignature(
-                param_dict, settings.PAYTM_SECRET_KEY, checksum
+                param_dict, settings.PAYTM_DTO["secret_key"], checksum
             )
 
             if is_verified:

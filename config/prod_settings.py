@@ -35,5 +35,3 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "frontend", "dist", "static")]
 
 
 CSRF_TRUSTED_ORIGINS = [os.environ["SERVER_DOMAIN"]]
-
-PAYTM_INITIATE_URL = "https://securegw.paytm.in/theia/api/v1/initiateTransaction?mid=%s&orderId=%s"
