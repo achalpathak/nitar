@@ -84,30 +84,43 @@ class PayTmPayments:
         return final_resp
 
     def validate_payment(self):
-        paytm_params = {}
-        paytm_checksum = self.request.data["CHECKSUMHASH"][0]
-        paytm_orderid = self.request.data["ORDERID"][0]
-        order = Order.objects.get(id=paytm_orderid, gateway="paytm")
-        for key, value in self.request.data.items():
-            if key == "CHECKSUMHASH":
-                paytm_checksum = value[0]
-            else:
-                paytm_params[key] = str(value[0])
+        order_id = self.request.data.get("ORDERID")
+        # payment_mode = self.request.data.get("PAYMENTMODE")
+        transaction_id = self.request.data.get("TXNID")
+        # bank_transaction_id = self.request.data.get("BANKTXNID")
+        # transaction_date = self.request.data.get("TXNDATE")
 
-        # Verify checksum
-        is_valid_checksum = verify_checksum(
-            paytm_params, settings.PAYTM_SECRET_KEY, str(paytm_checksum)
-        )
-        if is_valid_checksum:
-            order.status = PaymentStatus.SUCCESS
-            obj = UserMemberships.objects.create(
-                user=order.user,
-                membership=order.membership,
-            )
-            order.user_membership = obj
-            order.save()
-            return True
-        else:
+        res_msg = self.request.data.get("RESPMSG")
+
+        order = Order.objects.get(id=order_id, gateway="paytm")
+        # payment FAILED
+        if res_msg != "Txn Success":
             order.status = PaymentStatus.FAILURE
+            order.payment_id = transaction_id
             order.save()
             return False
+        else:  # payment SUCCESS
+            param_dict = {}
+
+            for key, value in self.request.data.items():
+                param_dict[key] = key
+            checksum = self.request.data.get("CHECKSUMHASH")
+            is_verified = PaytmChecksum.verifySignature(
+                param_dict, settings.PAYTM_SECRET_KEY, checksum
+            )
+
+            if is_verified:
+                order.status = PaymentStatus.SUCCESS
+                obj = UserMemberships.objects.create(
+                    user=order.user,
+                    membership=order.membership,
+                )
+                order.user_membership = obj
+                order.payment_id = transaction_id
+                order.save()
+                return True
+            else:
+                order.status = PaymentStatus.FAILURE
+                order.payment_id = transaction_id
+                order.save()
+                return False
