@@ -75,7 +75,7 @@ class PayTmPayments:
 
         url = settings.PAYTM_DTO["payment_initiate_url"] % (
             settings.PAYTM_DOMAIN,
-            settings.PAYTM_MERCHANT_ID,
+            settings.PAYTM_DTO["merchant_key"],
             str(order.id),
         )
         response = requests.post(url, data=post_data, headers=headers).json()

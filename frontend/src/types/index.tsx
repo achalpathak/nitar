@@ -247,6 +247,8 @@ export type IPaytm = {
 	mid: string;
 	orderId: string;
 	txnToken: string;
+	website: string;
+	paytm_domain: string;
 };
 
 export type IPaymentGateways = "razor_pay" | "stripe" | "paytm";

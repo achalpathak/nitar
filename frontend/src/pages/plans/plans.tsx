@@ -379,7 +379,7 @@ const Plans = () => {
 				},
 				order: ["CC", "DC", "NB", "UPI", "PPBL", "PPI", "BALANCE"],
 			},
-			website: "WEBSTAGING",
+			website: data?.website,
 			flow: "DEFAULT",
 			merchant: {
 				mid: data?.mid,
@@ -391,10 +391,7 @@ const Plans = () => {
 			},
 		};
 
-		const staging = "https://securegw-stage.paytm.in";
-		const production = " https://securegw.paytm.in";
-
-		loadPaytm(staging, data.mid, () => {
+		loadPaytm(data?.paytm_domain, data?.mid, () => {
 			if ((window as any).Paytm && (window as any).Paytm.CheckoutJS) {
 				(window as any).Paytm.CheckoutJS.onLoad(() => {
 					(window as any).Paytm.CheckoutJS.init(config)
