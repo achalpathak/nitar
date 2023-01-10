@@ -79,7 +79,6 @@ class PayTmCallback(APIView):
             request_data = request
             paytm_class = PayTmPayments(request_data)
             resp, msg = paytm_class.validate_payment()
-            msg = "Payment is completed."
             if(os.environ.get('MODE') == 'LOCAL'):
                 return redirect(f"{os.environ.get('SERVER_DOMAIN')}/plans?success={resp}&message={msg}")
             else:

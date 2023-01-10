@@ -118,7 +118,7 @@ class PayTmPayments:
                 order.user_membership = obj
                 order.payment_id = transaction_id
                 order.save()
-                return True, res_msg
+                return True, "Payment is completed."
             else:
                 order.status = PaymentStatus.FAILURE
                 order.payment_id = transaction_id
