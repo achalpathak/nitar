@@ -227,6 +227,11 @@ class VerifyOtpSerializer(serializers.Serializer):
 class UpdatePhoneSerializer(serializers.Serializer):
     phone = serializers.CharField(required=True)
     phone_code = serializers.CharField(required=True)
+    otp = serializers.IntegerField(required=True)
+    def validate_otp(self, otp):
+        if len(str(otp)) != 6:
+            raise serializers.ValidationError("OTP should be 6 digits.")
+        return otp
 
     def validate_phone(self, phone):
         if self.initial_data["phone_code"] == "+91":
@@ -247,10 +252,31 @@ class UpdatePhoneSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 "Phone number is already linked with another user."
             )
-        user = self.context.get("request", None).user
-        user.phone = validated_data["phone"]
-        user.phone_code = validated_data["phone_code"]
-        user.save()
+        email_otp_obj = user_models.LoginEmailOtp.objects.get(
+                user__phone=validated_data["phone"]
+            )
+        if email_otp_obj.attempts_remaining >= 1:
+            if timezone.now() > email_otp_obj.valid_till:
+                raise serializers.ValidationError(
+                    {"message": "OTP has expired. Retry with new OTP."}
+                )
+
+            if validated_data["otp"] != int(email_otp_obj.otp):
+                email_otp_obj.attempts_remaining = (
+                    email_otp_obj.attempts_remaining - 1
+                )
+                email_otp_obj.save()
+                raise serializers.ValidationError(
+                    {
+                        "message": f"Wrong OTP. { email_otp_obj.attempts_remaining} attempts remaining."
+                    }
+                )
+            # OTP is verifed
+            email_otp_obj.delete()
+            user = self.context.get("request", None).user
+            user.phone = validated_data["phone"]
+            user.phone_code = validated_data["phone_code"]
+            user.save()
         return user
 
 
