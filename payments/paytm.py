@@ -74,7 +74,7 @@ class PayTmPayments:
         }
 
         url = settings.PAYTM_DTO["payment_initiate_url"] % (
-            settings.pay_tm_domain,
+            settings.paytm_domain,
             settings.PAYTM_MERCHANT_ID,
             str(order.id),
         )
@@ -84,7 +84,7 @@ class PayTmPayments:
             "orderId": str(order.id),
             "txnToken": response["body"]["txnToken"],
             "website": settings.PAYTM_DTO["website"],
-            "pay_tm_domain": settings.pay_tm_domain,
+            "paytm_domain": settings.paytm_domain,
         }
         return final_resp
 

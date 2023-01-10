@@ -183,9 +183,9 @@ SMS_SENDER_ID = os.environ.get("SMS_SENDER_ID")
 
 ############# PAYTM CREDS #############
 if os.environ.get("MODE") != "PROD":
-    pay_tm_domain = "https://securegw-stage.paytm.in"
+    paytm_domain = "https://securegw-stage.paytm.in"
 else:
-    pay_tm_domain = "https://securegw.paytm.in"
+    paytm_domain = "https://securegw.paytm.in"
 PAYTM_DTO = {
     "merchant_key": os.environ.get("PAYTM_MERCHANT_ID"),
     "secret_key": os.environ.get("PAYTM_SECRET_KEY"),
