@@ -109,11 +109,13 @@ const Plans = () => {
 				(paymentInitiate?.type === "paytm" &&
 					paymentInitiate?.status === null)
 			) {
-				if (searchParams.get("success") === "true") {
+				if (searchParams.get("success")?.toLowerCase() === "true") {
 					//Got Success True
 					Swal.fire({
 						title: "Payment Successful",
-						text: "Your payment is successful",
+						text:
+							searchParams.get("message") ??
+							"Your payment is successful",
 						icon: "success",
 						confirmButtonText: "Continue to Home",
 					}).then((res) => {
@@ -128,11 +130,15 @@ const Plans = () => {
 							status: true,
 						},
 					});
-				} else if (searchParams.get("success") === "false") {
+				} else if (
+					searchParams.get("success")?.toLowerCase() === "false"
+				) {
 					//Got Success False
 					Swal.fire({
 						title: "Payment Failed",
-						text: "Your payment has failed",
+						text:
+							searchParams.get("message") ??
+							"Your payment has failed",
 						icon: "error",
 					});
 
@@ -142,6 +148,13 @@ const Plans = () => {
 					});
 				}
 			}
+
+			searchParams.delete("success");
+			searchParams.delete("message");
+
+			navigate("/plans", {
+				replace: true,
+			});
 		}
 	}, [searchParams]);
 
@@ -201,6 +214,7 @@ const Plans = () => {
 								});
 							}
 						} else if (type === "paytm") {
+							dispatch({ type: Actions.SET_LOADING });
 							console.log("Paytm", res.data?.result);
 							initiatePaytm(res.data?.result);
 						}
@@ -244,9 +258,6 @@ const Plans = () => {
 					email: user?.email,
 					contact: user?.phone,
 				},
-				// notes: {
-				// 	address: "Razorpay Corporate Office",
-				// },
 				theme: {
 					color: prefs?.color_primary?.value ?? "#fff",
 					backdrop_color: "rgba(0, 0, 0, 0.5)",
@@ -343,24 +354,23 @@ const Plans = () => {
 		const config = {
 			root: "",
 			style: {
-				bodyBackgroundColor: "#fafafb",
-				bodyColor: "",
-				themeBackgroundColor: "#0FB8C9",
-				themeColor: "#ffffff",
-				headerBackgroundColor: "#284055",
-				headerColor: "#ffffff",
+				headerColor: "#00baf2",
+				bodyColor: "#00baf2",
+				themeColor: "#00baf2",
+				headerBackgroundColor: "var(--website-secondary-color)",
+				bodyBackgroundColor: "var(--website-secondary-color)",
+				themeBackgroundColor: "var(--website-secondary-color)",
 				errorColor: "",
 				successColor: "",
 				card: {
 					padding: "",
-					backgroundColor: "",
+					backgroundColor: "var(--website-secondary-color)",
 				},
 			},
 			data: {
-				orderId: "",
-				token: "",
+				orderId: data?.orderId,
+				token: data?.txnToken,
 				tokenType: "TXN_TOKEN",
-				amount: "" /* update amount */,
 			},
 			payMode: {
 				labels: {},
@@ -372,27 +382,30 @@ const Plans = () => {
 			website: "WEBSTAGING",
 			flow: "DEFAULT",
 			merchant: {
-				mid: "",
-				redirect: false,
+				mid: data?.mid,
+				redirect: true,
 			},
 			handler: {
 				transactionStatus: paytmTranactionStatus,
+				notifyMerchant: paytmNotifyMerchange,
 			},
-			notifyMerchant: paytmNotifyMerchange,
 		};
 
 		const staging = "https://securegw-stage.paytm.in";
 		const production = " https://securegw.paytm.in";
 
-		loadPaytm(staging, data.MID, () => {
+		loadPaytm(staging, data.mid, () => {
 			if ((window as any).Paytm && (window as any).Paytm.CheckoutJS) {
-				(window as any).Paytm.CheckoutJS.init(config)
-					.then(function onSuccess() {
-						(window as any).Paytm.CheckoutJS.invoke();
-					})
-					.catch(function onError(error: any) {
-						console.log("Error => ", error);
-					});
+				(window as any).Paytm.CheckoutJS.onLoad(() => {
+					(window as any).Paytm.CheckoutJS.init(config)
+						.then(() => {
+							dispatch({ type: Actions.REMOVE_LOADING });
+							(window as any).Paytm.CheckoutJS.invoke();
+						})
+						.catch((error: any) => {
+							console.log("Error => ", error);
+						});
+				});
 			}
 		});
 	};

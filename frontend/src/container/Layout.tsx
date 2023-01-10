@@ -157,9 +157,10 @@ const TheContent = () => {
 								path='/extras/:slug'
 								element={<ExtrasDetails />}
 							/>
-							{!payment?.status ? (
+							{/* {!payment?.status ? (
 								<Route path='/plans' element={<Plans />} />
-							) : null}
+							) : null} */}
+							<Route path='/plans' element={<Plans />} />
 							<Route path='/contact-us' element={<ContactUs />} />
 							<Route
 								path='/terms-and-conditions'

@@ -136,9 +136,9 @@ const AppBar = () => {
 		}
 	}, [showUpdatePassword]);
 
-	if (payment?.status) {
-		routes = routes.filter((v) => v.title !== "Plans");
-	}
+	// if (payment?.status) {
+	// 	routes = routes.filter((v) => v.title !== "Plans");
+	// }
 
 	const errorHandler = () => {
 		if (!password) {

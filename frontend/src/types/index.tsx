@@ -244,15 +244,9 @@ export type IStripe = {
 };
 
 export type IPaytm = {
-	MID: string;
-	ORDER_ID: string;
-	CUST_ID: string;
-	TXN_AMOUNT: string;
-	CHANNEL_ID: string;
-	WEBSITE: string;
-	INDUSTRY_TYPE_ID: string;
-	CALLBACK_URL: string;
-	CHECKSUMHASH: string;
+	mid: string;
+	orderId: string;
+	txnToken: string;
 };
 
 export type IPaymentGateways = "razor_pay" | "stripe" | "paytm";

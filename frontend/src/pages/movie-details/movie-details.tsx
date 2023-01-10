@@ -109,7 +109,7 @@ const MovieDetails = (props: any) => {
 							}}
 						/>
 
-						<Box className='position-absolute d-center'>
+						<Box className='position-absolute d-center play-btn'>
 							<a
 								href=''
 								onClickCapture={(e) => {
