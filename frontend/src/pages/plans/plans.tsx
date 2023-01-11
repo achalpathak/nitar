@@ -360,10 +360,7 @@ const Plans = () => {
 				headerBackgroundColor: "var(--website-secondary-color)",
 				bodyBackgroundColor: "var(--website-secondary-color)",
 				themeBackgroundColor: "var(--website-secondary-color)",
-				errorColor: "",
-				successColor: "",
 				card: {
-					padding: "",
 					backgroundColor: "var(--website-secondary-color)",
 				},
 			},
@@ -371,13 +368,6 @@ const Plans = () => {
 				orderId: data?.orderId,
 				token: data?.txnToken,
 				tokenType: "TXN_TOKEN",
-			},
-			payMode: {
-				labels: {},
-				filter: {
-					exclude: [],
-				},
-				order: ["CC", "DC", "NB", "UPI", "PPBL", "PPI", "BALANCE"],
 			},
 			website: data?.website,
 			flow: "DEFAULT",
@@ -731,7 +721,8 @@ const Plans = () => {
 									>
 										Select a payment method to continue
 									</Typography>
-									{prefs?.razor_pay?.toggle_value ? (
+									{prefs?.razor_pay?.toggle_value &&
+									user?.phone_code === "+91" ? (
 										<IconButton
 											onClickCapture={(e) => {
 												e.preventDefault();
@@ -754,7 +745,8 @@ const Plans = () => {
 											<RazorpayWhite height={30} />
 										</IconButton>
 									) : null}
-									{prefs?.paytm?.toggle_value ? (
+									{prefs?.paytm?.toggle_value &&
+									user?.phone_code === "+91" ? (
 										<IconButton
 											onClickCapture={(e) => {
 												e.preventDefault();
