@@ -261,6 +261,8 @@ class GoogleCallbackAPI(APIView):
         user_obj, _ = User.objects.update_or_create(
             email=userinfo_response["email"], defaults=validated_data
         )
+        if not user_obj.is_active:
+            return Response({"result": "Error: User is disabled."}, status=status.HTTP_400_BAD_REQUEST)
         user_obj.save()
         user_obj.backend = settings.AUTHENTICATION_BACKENDS[0]
         login(
@@ -287,7 +289,11 @@ class GoogleCallbackAndroidAPI(APIView):
             user_obj, _ = User.objects.update_or_create(
                 email=idinfo["email"], defaults=validated_data
             )
+            
             user_obj.save()
+            if not user_obj.is_active:
+                return Response({"result": "Error: User is disabled."}, status=status.HTTP_400_BAD_REQUEST)
+            
             auth_token, created = Token.objects.get_or_create(user=user_obj)
             data = {
                 "result": {

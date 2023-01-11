@@ -213,8 +213,14 @@ class VerifyOtpSerializer(serializers.Serializer):
                         email_otp_obj.user.email_verified = True
                     email_otp_obj.user.is_active = True
                     email_otp_obj.user.save()
+                if not email_otp_obj.user.is_active: #disabled user
+                    email_otp_obj.delete()
+                    raise serializers.ValidationError(
+                        {
+                            "message": f"User is disabled. Contact admin."
+                        }
+                    )
                 email_otp_obj.delete()
-
                 return email_otp_obj.user
             else:
                 raise serializers.ValidationError(
