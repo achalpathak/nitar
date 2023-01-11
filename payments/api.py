@@ -91,9 +91,4 @@ class PayTmCallback(APIView):
             traceback.print_exc()
             print("[x] Some other error", str(e))
             resp = False
-            if(os.environ.get('MODE') == 'LOCAL'):
-                return redirect(f"{os.environ.get('SERVER_DOMAIN')}/plans?success={resp}&message={str(e)}")
-            else:
-                return redirect(
-                    f"{request.build_absolute_uri(reverse('plans'))}?success={resp}&message={str(e)}"
-                )
+            return redirect(f"{os.environ.get('SERVER_DOMAIN')}/plans?success={resp}&message={str(e)}")
