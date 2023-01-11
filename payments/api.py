@@ -79,12 +79,7 @@ class PayTmCallback(APIView):
             request_data = request
             paytm_class = PayTmPayments(request_data)
             resp, msg = paytm_class.validate_payment()
-            if(os.environ.get('MODE') == 'LOCAL'):
-                return redirect(f"{os.environ.get('SERVER_DOMAIN')}/plans?success={resp}&message={msg}")
-            else:
-                return redirect(
-                    f"{request.build_absolute_uri(reverse('plans'))}?success={resp}&message={msg}"
-                )
+            return redirect(f"{os.environ.get('SERVER_DOMAIN')}/plans?success={resp}&message={msg}")
 
         except Exception as e:
             # for any error
