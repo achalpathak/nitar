@@ -5,7 +5,6 @@ import { useAlert } from "@hooks";
 import {
 	AccountCircle,
 	Close,
-	LockReset,
 	Logout,
 	Menu as MenuIcon,
 	SearchOutlined,
@@ -266,6 +265,7 @@ const AppBar = () => {
 								my: 2,
 								width: "100%",
 								height: 50,
+								maxWidth: 100,
 							}}
 						>
 							<img
@@ -426,6 +426,7 @@ const AppBar = () => {
 									style={{
 										width: "100%",
 										height: 50,
+										maxWidth: 100,
 									}}
 								>
 									<img
@@ -455,6 +456,7 @@ const AppBar = () => {
 								style={{
 									width: "100%",
 									height: 50,
+									maxWidth: 100,
 								}}
 							>
 								{/* <LogoText width={60} height={30} /> */}
@@ -463,6 +465,9 @@ const AppBar = () => {
 									src={prefs?.logo_url?.image}
 									height='100%'
 									width='100%'
+									style={{
+										objectFit: "contain",
+									}}
 								/>
 							</Link>
 						</Box>

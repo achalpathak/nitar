@@ -60,6 +60,7 @@ const Policy = () => {
 							style={{
 								textAlign: "center",
 								textTransform: "uppercase",
+								color: "var(--website-secondary-color)",
 							}}
 						>
 							{currentPath?.name}
