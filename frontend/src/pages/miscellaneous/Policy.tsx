@@ -122,13 +122,18 @@ const Policy = () => {
 							commodo sed risus at non. Molestie massa enim.
 						</span>
 					</div> */}
-					<h3>Didn't Get Your Answer?</h3>
+					<h3
+						style={{
+							color: "var(--website-primary-color)",
+						}}
+					>
+						Didn't Get Your Answer?
+					</h3>
 					<div className='btn-container'>
 						<Button
 							title={"Contact Us Now"}
 							style={{
 								width: "20rem",
-								marginBottom: "20px",
 								border: "none",
 							}}
 							onClickCapture={async (
